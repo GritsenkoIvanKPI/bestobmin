@@ -1,0 +1,129 @@
+
+<!-- ============================ EXCHANGE REQUEST ============================ -->
+<section class="section exchange" id="exchange">
+  <div class="shell exchange__grid">
+    <div class="exchange__intro reveal">
+      <span class="eyebrow">Швидка заявка</span>
+      <h2 class="h-section">Порахуйте суму<br>та <span class="accent">зафіксуйте курс</span></h2>
+      <p class="lede">Вкажіть валюту й суму — ми одразу покажемо, скільки ви отримаєте в касі. Після заявки курс закріплюється за вами, поки ви їдете до відділення.</p>
+      <ul class="checklist">
+        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Курс фіксується на 60 хвилин після підтвердження</li>
+        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Жодних комісій понад вказану суму</li>
+        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Готуємо потрібну суму та номінали заздалегідь</li>
+        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Від 400 у.о. — оптовий курс без черги</li>
+      </ul>
+    </div>
+
+    <form class="card form-card reveal" id="exchangeForm" novalidate>
+      <div class="form-card__head">
+        <span class="eyebrow eyebrow--plain">Калькулятор обміну</span>
+        <div class="seg" role="group" aria-label="Напрямок обміну">
+          <button type="button" data-dir="sell" aria-pressed="true">Продати валюту</button>
+          <button type="button" data-dir="buy" aria-pressed="false">Купити валюту</button>
+        </div>
+      </div>
+
+      <div class="swap">
+        <label class="field">
+          <span class="field__k" id="lblFrom">Ви віддаєте</span>
+          <span class="field__row">
+            <input type="text" inputmode="decimal" id="amount" value="1000" aria-labelledby="lblFrom">
+            <span class="mono field__cur" id="leftCur" hidden>UAH</span>
+            <select id="curFrom" aria-label="Валюта обміну">
+              <option value="USD" selected>USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+              <option value="PLN">PLN</option>
+              <option value="CHF">CHF</option>
+              <option value="CAD">CAD</option>
+              <option value="CZK">CZK</option>
+              <option value="SEK">SEK</option>
+              <option value="HUF">HUF</option>
+            </select>
+          </span>
+        </label>
+
+        <button type="button" class="swap__btn" id="swapBtn" aria-label="Змінити напрямок обміну">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 2.5 2.5 5 5 7.5M2.5 5H12M11 13.5 13.5 11 11 8.5M13.5 11H4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
+        <div class="field field--out">
+          <span class="field__k">Ви отримуєте</span>
+          <span class="field__row">
+            <span class="field__v" id="result">44 650</span>
+            <span class="mono field__cur" id="resultCur">UAH</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="field field--text">
+          <span class="field__k">Ваше імʼя</span>
+          <input type="text" name="name" placeholder="Олександр" autocomplete="name" required>
+        </label>
+        <label class="field field--text">
+          <span class="field__k">Телефон</span>
+          <input type="tel" name="phone" placeholder="+38 (0__) ___-__-__" autocomplete="tel" required>
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label class="field field--text" style="grid-column:1 / -1">
+          <span class="field__k">Відділення</span>
+          <span class="field__row">
+            <select id="branchSelect" class="field__select--text" aria-label="Відділення">
+              <option>вул. Чорновола, 4</option>
+              <option>вул. Лепкого, 14</option>
+              <option>вул. Вовчинецька, 190</option>
+              <option>Обмін з доставкою за адресою</option>
+            </select>
+          </span>
+        </label>
+      </div>
+
+      <div class="rate-line">
+        <span>Курс за заявкою: <b id="usedRate">1 USD = 44.65 UAH</b></span>
+        <span>Фіксація на <b>60 хв</b></span>
+      </div>
+
+      <button class="btn btn--accent" type="submit"><span class="dot"></span>Залишити заявку
+        <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p class="form-ok" id="formOk">Заявку прийнято. Менеджер зателефонує протягом 5 хвилин і підтвердить курс.</p>
+      <p class="form-note">Натискаючи кнопку, ви погоджуєтесь з <a href="#contacts">політикою конфіденційності</a>. Розрахунок орієнтовний — фінальний курс підтверджує оператор.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ============================ STEPS ============================ -->
+<section class="section section--tight steps">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Три кроки обміну</span>
+        <h2 class="h-section">Від заявки до готівки<br>— <span class="accent">за 5–15 хвилин</span></h2>
+      </div>
+      <div class="section-head__aside">
+        <p class="lede">Ніякої реєстрації та верифікації. Ви залишаєте заявку, ми готуємо суму — ви забираєте гроші у зручному відділенні.</p>
+      </div>
+    </div>
+
+    <div class="steps__grid">
+      <article class="card step reveal">
+        <div class="step__top"><h3 class="h-card">Створіть заявку</h3><span class="step__n">01</span></div>
+        <div class="step__media"><img src="images/step-1.jpg" alt="Хромований калькулятор курсу валют" loading="lazy" width="600" height="600"></div>
+        <p class="step__text">Оберіть валюту та суму — калькулятор одразу покаже, скільки ви отримаєте.</p>
+      </article>
+      <article class="card step reveal" style="transition-delay:.08s">
+        <div class="step__top"><h3 class="h-card">Зафіксуйте курс</h3><span class="step__n">02</span></div>
+        <div class="step__media"><img src="images/step-2.jpg" alt="Хромований щит із замком — символ захищеної угоди" loading="lazy" width="600" height="600"></div>
+        <p class="step__text">Оператор передзвонює та закріплює курс за вами на 60 хвилин.</p>
+      </article>
+      <article class="card step reveal" style="transition-delay:.16s">
+        <div class="step__top"><h3 class="h-card">Обміняйте у відділенні</h3><span class="step__n">03</span></div>
+        <div class="step__media"><img src="images/step-3.jpg" alt="Металеві долоні з монетами" loading="lazy" width="600" height="600"></div>
+        <p class="step__text">Приходьте у зручний пункт — сума й номінали вже підготовлені, без черги.</p>
+      </article>
+    </div>
+  </div>
+</section>

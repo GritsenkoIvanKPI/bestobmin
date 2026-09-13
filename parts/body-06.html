@@ -1,0 +1,282 @@
+
+<!-- ============================ REVIEWS ============================ -->
+<section class="reviews-section" id="reviews">
+  <div class="shell">
+    <div class="reviews__head reveal">
+      <div>
+        <span class="eyebrow" style="margin-bottom:1.25rem;display:inline-flex">Відгуки</span>
+        <h2 class="h-section">Чому обирають нас</h2>
+      </div>
+      <div class="reviews__nav">
+        <button class="icon-btn" id="revPrev" aria-label="Попередній відгук" disabled><svg viewBox="0 0 12 12" fill="none"><path d="M7.5 1.5 3 6l4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="icon-btn" id="revNext" aria-label="Наступний відгук"><svg viewBox="0 0 12 12" fill="none"><path d="M4.5 1.5 9 6l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+    </div>
+
+    <div class="reviews__viewport reveal">
+      <div class="reviews__track" id="revTrack">
+        <article class="card review">
+          <div class="review__body">
+            <img class="review__ava" src="images/avatar-1.jpg" alt="" loading="lazy" width="92" height="92">
+            <p class="review__quote">«Прийшов без попереднього запису, але мене швидко проконсультували і провели обмін. Персонал ввічливий, атмосфера комфортна»</p>
+          </div>
+          <div class="review__foot"><b>Андрій Коваленко</b><span>Підприємець, 42 роки</span></div>
+        </article>
+
+        <article class="card review">
+          <div class="review__body">
+            <img class="review__ava" src="images/avatar-2.jpg" alt="" loading="lazy" width="92" height="92">
+            <p class="review__quote">«Одразу було зрозуміло, скільки отримаю після обміну. Без прихованих умов і неприємних сюрпризів — сума збіглася до копійки»</p>
+          </div>
+          <div class="review__foot"><b>Оксана Мельник</b><span>Маркетологиня, 31 рік</span></div>
+        </article>
+
+        <article class="card review">
+          <div class="review__body">
+            <img class="review__ava" src="images/avatar-3.jpg" alt="" loading="lazy" width="92" height="92">
+            <p class="review__quote">«Привіз із Польщі надірвані купюри — у банку відмовили, тут прийняли без питань і за нормальним курсом. Тепер міняю тільки тут»</p>
+          </div>
+          <div class="review__foot"><b>Тарас Гриценко</b><span>Водій-міжнародник, 54 роки</span></div>
+        </article>
+
+        <article class="card review">
+          <div class="review__body">
+            <img class="review__ava" src="images/avatar-2.jpg" alt="" loading="lazy" width="92" height="92">
+            <p class="review__quote">«Замовляла доставку валюти в офіс на суму понад 10 тисяч доларів. Приїхали вчасно, перерахували при мені, курс був саме той, що погодили»</p>
+          </div>
+          <div class="review__foot"><b>Ірина Сенчук</b><span>Фінансова директорка, 38 років</span></div>
+        </article>
+      </div>
+    </div>
+    <div class="reviews__bar" aria-hidden="true"><i id="revBar"></i></div>
+  </div>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section class="section faq" id="faq">
+  <div class="shell faq__grid">
+    <div class="faq__intro reveal">
+      <span class="eyebrow">Поширені запитання</span>
+      <h2 class="h-section">Ми відповімо на<br>всі ваші <span class="accent">питання</span></h2>
+      <p class="lede">Не знайшли відповідь? Зателефонуйте у найближче відділення — відповімо за хвилину.</p>
+      <a class="btn btn--sm" href="tel:+380664972619" style="margin-top:1.75rem">Зателефонувати
+        <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="faq__list">
+      <article class="card acc is-open">
+        <button class="acc__btn" aria-expanded="true">
+          <h3>Скільки часу займає обмін?</h3>
+          <span class="acc__chev" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 4.5 6 9l4.5-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc__panel"><div><p>Зазвичай 5–15 хвилин разом із перерахунком та перевіркою купюр. Якщо ви залишили заявку заздалегідь, потрібна сума й номінали вже підготовлені — залишиться лише забрати гроші. Для великих сум радимо попередити за годину.</p></div></div>
+      </article>
+
+      <article class="card acc">
+        <button class="acc__btn" aria-expanded="false">
+          <h3>Чи є додаткова комісія за послуги?</h3>
+          <span class="acc__chev" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 4.5 6 9l4.5-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc__panel"><div><p>Ні. Курс, який ви бачите на сайті та чуєте від оператора, — фінальний. Ми не додаємо комісій, відсотків за перерахунок чи плати за великі суми. Єдиний нюанс: оптовий курс діє від 400 у.о., для менших сум курс може незначно відрізнятися.</p></div></div>
+      </article>
+
+      <article class="card acc">
+        <button class="acc__btn" aria-expanded="false">
+          <h3>Наскільки безпечний обмін?</h3>
+          <span class="acc__chev" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 4.5 6 9l4.5-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc__panel"><div><p>Кожна банкнота проходить через детектор валют і лічильну машину у вашій присутності. Відділення обладнані відеоспостереженням, а операції проводяться у закритій касовій зоні. Ви завжди можете перерахувати суму на місці перед тим, як піти.</p></div></div>
+      </article>
+
+      <article class="card acc">
+        <button class="acc__btn" aria-expanded="false">
+          <h3>Чи потрібна верифікація або реєстрація?</h3>
+          <span class="acc__chev" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 4.5 6 9l4.5-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc__panel"><div><p>Для стандартних сум реєстрація не потрібна — достатньо прийти у відділення. Для операцій, що перевищують встановлений законодавством поріг, знадобиться паспорт або інший документ, що посвідчує особу. Оператор попередить про це заздалегідь.</p></div></div>
+      </article>
+
+      <article class="card acc">
+        <button class="acc__btn" aria-expanded="false">
+          <h3>Чи можна обміняти пошкоджені купюри?</h3>
+          <span class="acc__chev" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 4.5 6 9l4.5-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc__panel"><div><p>Так, це один із наших основних напрямків. Ми приймаємо надірвані, забруднені, підписані та зношені банкноти, а також купюри старих серій. Курс залежить від ступеня пошкодження — оцінюємо на місці й одразу називаємо суму.</p></div></div>
+      </article>
+
+      <article class="card acc">
+        <button class="acc__btn" aria-expanded="false">
+          <h3>Чи можна замовити валюту з доставкою?</h3>
+          <span class="acc__chev" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 4.5 6 9l4.5-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <div class="acc__panel"><div><p>Так, для великих сум ми організовуємо обмін за вашою адресою в Івано-Франківську. Узгоджуємо курс, час і місце — приїжджаємо з підготовленою сумою та потрібними номіналами. Замовляйте доставку через форму заявки або за телефоном.</p></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ NEWS ============================ -->
+<section class="section news" id="news">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Новини та аналітика</span>
+        <h2 class="h-section">Що відбувається<br>з <span class="accent">курсом валют</span></h2>
+      </div>
+      <div class="section-head__aside">
+        <p class="lede">Коротко пояснюємо, що впливає на курс цього тижня і коли вигідніше обмінювати валюту.</p>
+      </div>
+    </div>
+
+    <div class="news__grid">
+      <article class="card post reveal">
+        <div class="post__media">
+          <span class="post__date">13 вересня</span>
+          <img src="images/news-1.jpg" alt="Долар і євро крупним планом" loading="lazy" width="900" height="563">
+        </div>
+        <div class="post__body">
+          <h3 class="h-card">Долар тримається біля 44,90 — чого чекати далі</h3>
+          <p>Тиждень минув без різких стрибків: міжбанк рухався у вузькому коридорі, готівковий курс підріс на 10 копійок. Розбираємо, що впливає на котирування у вересні.</p>
+          <a class="post__more" href="#news">Читати
+            <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="card post reveal" style="transition-delay:.08s">
+        <div class="post__media">
+          <span class="post__date">9 вересня</span>
+          <img src="images/news-2.jpg" alt="Злоті, крони та монети" loading="lazy" width="900" height="563">
+        </div>
+        <div class="post__body">
+          <h3 class="h-card">Злотий і крона: чому зростає попит восени</h3>
+          <p>Сезон повернень із заробітків підвищує обіг польського злотого та чеської крони. Пояснюємо, чому курс цих валют у нас вигідніший, ніж у банках.</p>
+          <a class="post__more" href="#news">Читати
+            <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="card post reveal" style="transition-delay:.16s">
+        <div class="post__media">
+          <span class="post__date">2 вересня</span>
+          <img src="images/news-3.jpg" alt="Графік динаміки курсу" loading="lazy" width="900" height="563">
+        </div>
+        <div class="post__body">
+          <h3 class="h-card">Коли вигідніше обмінювати: ранок чи вечір</h3>
+          <p>Аналізуємо статистику наших кас за півроку: у які години курс найстабільніший, коли бувають найкращі котирування і чому варто фіксувати курс заявкою.</p>
+          <a class="post__more" href="#news">Читати
+            <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTACTS ============================ -->
+<section class="section contacts" id="contacts">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div>
+        <span class="eyebrow">Карта та контакти</span>
+        <h2 class="h-section">Знайдіть нас<br>в <span class="accent">Івано-Франківську</span></h2>
+      </div>
+      <div class="section-head__aside">
+        <p class="lede">Оберіть відділення на карті, зателефонуйте або приїжджайте — курс однаковий у всіх трьох пунктах мережі.</p>
+      </div>
+    </div>
+
+    <div class="contacts__grid">
+      <div class="card contacts__panel reveal">
+        <div class="map-tabs" role="tablist" aria-label="Відділення на карті">
+          <button class="map-tab" role="tab" aria-selected="true" data-idx="0">Чорновола, 4</button>
+          <button class="map-tab" role="tab" aria-selected="false" data-idx="1">Лепкого, 14</button>
+          <button class="map-tab" role="tab" aria-selected="false" data-idx="2">Вовчинецька, 190</button>
+        </div>
+
+        <div class="contact-block">
+          <div class="contact-row">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 14.5s5-4.2 5-8a5 5 0 0 0-10 0c0 3.8 5 8 5 8Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><circle cx="8" cy="6.4" r="1.8" stroke="currentColor" stroke-width="1.2"/></svg>
+            <div><div class="contact-row__k">Адреса</div><div class="contact-row__v" id="cAddr">м. Івано-Франківськ, вул. Чорновола, 4</div></div>
+          </div>
+          <div class="contact-row">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 2.5 3 3.5c-.7 3.6 3.9 8.2 7.5 7.5l1-2.5-2.2-1.4-1.1 1.1c-.9-.5-1.9-1.5-2.4-2.4l1.1-1.1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            <div><div class="contact-row__k">Телефони</div><div class="contact-row__v" id="cPhones"><a class="mono" href="tel:+380664972619">(066) 49-72-619</a><a class="mono" href="tel:+380989248391">(098) 92-48-391</a></div></div>
+          </div>
+          <div class="contact-row">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.5V8l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <div><div class="contact-row__k">Графік роботи</div><div class="contact-row__v" id="cHours">Пн–Пт 9:00–18:30<br>Сб 9:00–17:30<br><span style="color:var(--text-4)">Нд — вихідний</span></div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:auto;display:flex;gap:.6rem;flex-wrap:wrap;padding-top:1.35rem">
+          <a class="btn btn--sm" id="cRoute" href="https://maps.google.com/?q=Івано-Франківськ, вулиця Чорновола, 4" target="_blank" rel="noopener">Прокласти маршрут
+            <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn btn--sm" href="#exchange">Залишити заявку
+            <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="card map-card reveal">
+        <iframe id="mapFrame" title="Карта відділень BEST в Івано-Франківську" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=%D0%86%D0%B2%D0%B0%D0%BD%D0%BE-%D0%A4%D1%80%D0%B0%D0%BD%D0%BA%D1%96%D0%B2%D1%81%D1%8C%D0%BA%2C%20%D0%B2%D1%83%D0%BB%D0%B8%D1%86%D1%8F%20%D0%A7%D0%BE%D1%80%D0%BD%D0%BE%D0%B2%D0%BE%D0%BB%D0%B0%2C%204&z=16&output=embed&hl=uk"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="site-footer">
+  <div class="shell">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a class="logo" href="#top" aria-label="BESTOBMIN — на головну">
+          <img class="logo__img" src="images/logo.svg" alt="BESTOBMIN — обмін валют"
+               width="1975" height="531">
+        </a>
+        <p>Мережа обмінних пунктів в Івано-Франківську. Актуальні курси, чесні умови та швидке обслуговування з 2014 року.</p>
+      </div>
+
+      <div class="footer__col">
+        <h4>Контакти</h4>
+        <ul>
+          <li><a href="tel:+380664972619">+38 (066) 49-72-619</a></li>
+          <li><a href="tel:+380996469697">+38 (099) 64-69-697</a></li>
+          <li><a href="tel:+380960963778">+38 (096) 09-63-778</a></li>
+          <li><a href="https://t.me/best_obmin" target="_blank" rel="noopener">Telegram</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4>Обмін</h4>
+        <ul>
+          <li><a href="#rates">Курси валют</a></li>
+          <li><a href="#exchange">Заявка на обмін</a></li>
+          <li><a href="#routes">Популярні напрямки</a></li>
+          <li><a href="#services">Послуги</a></li>
+          <li><a href="#branches">Відділення</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4>Безпека та правила</h4>
+        <ul>
+          <li><a href="#security">Безпека обміну</a></li>
+          <li><a href="#faq">Поширені запитання</a></li>
+          <li><a href="#news">Новини та аналітика</a></li>
+          <li><a href="#contacts">Політика конфіденційності</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>© 2026 BEST — обмін валют в Івано-Франківську</span>
+      <span>Оптовий курс від 400 у.о. · Курси оновлено 13.09</span>
+    </div>
+  </div>
+</footer>

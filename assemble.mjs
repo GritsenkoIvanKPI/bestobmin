@@ -1,0 +1,12 @@
+import fs from 'fs';
+const p = 'parts/';
+const f = fs.readdirSync(p);
+const pick = (re) => f.filter(x => re.test(x)).sort();
+let out = fs.readFileSync(p + '00-head.html', 'utf8');
+out += '<style>\n';
+for (const c of pick(/^css-\d+\.css$/)) out += fs.readFileSync(p + c, 'utf8');
+out += '</style>\n</head>\n<body>\n';
+for (const b of pick(/^body-\d+\.html$/)) out += fs.readFileSync(p + b, 'utf8');
+out += fs.existsSync(p + 'zz-tail.html') ? fs.readFileSync(p + 'zz-tail.html', 'utf8') : '</main>\n</body>\n</html>\n';
+fs.writeFileSync('index.html', out);
+console.log('index.html assembled:', out.length, 'bytes /', pick(/^css-/).length, 'css /', pick(/^body-/).length, 'body');

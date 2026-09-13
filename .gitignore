@@ -1,0 +1,31 @@
+# dependencies (node_modules here is a symlink to a sibling project)
+node_modules
+
+# working artefacts
+temporary screenshots/
+*.log
+.DS_Store
+
+# 1.4 GB ProRes master — only the encoded media/ output is needed to run the site
+video.mov
+
+# design reference screenshot (not part of the site)
+desktop.png
+
+# private working notes / briefs — one of these holds a live API key
+CLAUDE *.md
+GEMINI_IMAGE_GENERATION *.md
+SKILL *.md
+SKILL canvas *.md
+
+# local QA / dev tooling — not needed to run or maintain the site
+audit.mjs
+interact.mjs
+contrast.mjs
+typecheck.mjs
+colorcheck.mjs
+screenshot.mjs
+
+# client brief and loose source copies (logo lives in images/)
+content.txt
+/logo.svg

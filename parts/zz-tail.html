@@ -1,0 +1,229 @@
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- scroll reveal ---------- */
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+  document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+
+  /* ---------- sticky header ---------- */
+  var header = document.querySelector('.site-header');
+  var onScroll = function () { header.classList.toggle('is-stuck', window.scrollY > 24); };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ---------- mobile nav ---------- */
+  var burger = document.getElementById('burger');
+  var nav = document.getElementById('nav');
+  burger.addEventListener('click', function () {
+    var open = burger.getAttribute('aria-expanded') === 'true';
+    burger.setAttribute('aria-expanded', String(!open));
+    nav.classList.toggle('is-open', !open);
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') { burger.setAttribute('aria-expanded', 'false'); nav.classList.remove('is-open'); }
+  });
+
+  /* ---------- branch dropdown ---------- */
+  var pick = document.getElementById('branchPick');
+  pick.addEventListener('click', function (e) {
+    e.stopPropagation();
+    pick.setAttribute('aria-expanded', String(pick.getAttribute('aria-expanded') !== 'true'));
+  });
+  document.addEventListener('click', function () { pick.setAttribute('aria-expanded', 'false'); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { pick.setAttribute('aria-expanded', 'false'); }
+  });
+
+  /* ---------- rates timestamp ---------- */
+  var t = document.getElementById('ratesTime');
+  if (t) {
+    var d = new Date();
+    t.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  /* ---------- exchange calculator ---------- */
+  var RATES = {
+    USD: { buy: 44.65, sell: 44.90 },
+    EUR: { buy: 51.70, sell: 51.93 },
+    GBP: { buy: 59.80, sell: 60.35 },
+    PLN: { buy: 11.87, sell: 12.00 },
+    CHF: { buy: 54.90, sell: 55.59 },
+    CAD: { buy: 31.30, sell: 31.99 },
+    CZK: { buy: 2.02,  sell: 2.12  },
+    SEK: { buy: 3.95,  sell: 4.25  },
+    HUF: { buy: 0.12,  sell: 0.142 }
+  };
+  var dir = 'sell'; // client sells foreign currency
+  var amountEl = document.getElementById('amount');
+  var curEl = document.getElementById('curFrom');
+  var resEl = document.getElementById('result');
+  var resCurEl = document.getElementById('resultCur');
+  var usedRateEl = document.getElementById('usedRate');
+  var lblFrom = document.getElementById('lblFrom');
+  var leftCurEl = document.getElementById('leftCur');
+  var leftRow = amountEl.parentNode;
+  var rightRow = resEl.parentNode;
+
+  var nf = function (n, dec) {
+    return n.toLocaleString('uk-UA', { minimumFractionDigits: dec, maximumFractionDigits: dec }).replace(/ /g, ' ');
+  };
+
+  function calc() {
+    var cur = curEl.value;
+    var r = RATES[cur];
+    var raw = parseFloat(String(amountEl.value).replace(/[^\d.,]/g, '').replace(',', '.'));
+    if (!isFinite(raw) || raw < 0) raw = 0;
+
+    if (dir === 'sell') {
+      resEl.textContent = nf(raw * r.buy, 2);
+      resCurEl.textContent = 'UAH';
+      usedRateEl.textContent = '1 ' + cur + ' = ' + nf(r.buy, 2) + ' UAH (курс купівлі)';
+      lblFrom.textContent = 'Ви віддаєте';
+    } else {
+      resEl.textContent = nf(raw / r.sell, 2);
+      resCurEl.textContent = '';
+      usedRateEl.textContent = '1 ' + cur + ' = ' + nf(r.sell, 2) + ' UAH (курс продажу)';
+      lblFrom.textContent = 'Ви віддаєте, гривні';
+    }
+  }
+
+  function setDir(next) {
+    dir = next;
+    document.querySelectorAll('.seg button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.dir === dir));
+    });
+    if (dir === 'sell') {
+      leftRow.appendChild(curEl);
+      leftCurEl.hidden = true;
+      resCurEl.hidden = false;
+    } else {
+      rightRow.appendChild(curEl);
+      leftCurEl.hidden = false;
+      resCurEl.hidden = true;
+    }
+    amountEl.value = dir === 'sell' ? '1000' : '50000';
+    calc();
+  }
+
+  document.querySelectorAll('.seg button').forEach(function (b) {
+    b.addEventListener('click', function () { setDir(b.dataset.dir); });
+  });
+  document.getElementById('swapBtn').addEventListener('click', function () {
+    setDir(dir === 'sell' ? 'buy' : 'sell');
+  });
+  amountEl.addEventListener('input', calc);
+  curEl.addEventListener('change', calc);
+  calc();
+
+  /* ---------- forms ---------- */
+  function handleForm(formId, okId) {
+    var form = document.getElementById(formId);
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var phone = form.querySelector('input[type="tel"]');
+      if (phone && phone.value.replace(/\D/g, '').length < 9) { phone.focus(); return; }
+      document.getElementById(okId).classList.add('is-on');
+      form.querySelectorAll('input[type="tel"],input[type="text"][name]').forEach(function (i) { i.value = ''; });
+    });
+  }
+  handleForm('exchangeForm', 'formOk');
+  handleForm('callbackForm', 'callbackOk');
+
+  /* ---------- reviews carousel ---------- */
+  var track = document.getElementById('revTrack');
+  var prev = document.getElementById('revPrev');
+  var next = document.getElementById('revNext');
+  var bar = document.getElementById('revBar');
+  var idx = 0;
+
+  function perView() { return window.matchMedia('(max-width:880px)').matches ? 1 : 2; }
+  function maxIdx() { return Math.max(0, track.children.length - perView()); }
+
+  function render() {
+    idx = Math.min(idx, maxIdx());
+    var card = track.children[0];
+    var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    track.style.transform = 'translate3d(-' + (idx * (card.offsetWidth + gap)) + 'px,0,0)';
+    prev.disabled = idx === 0;
+    next.disabled = idx >= maxIdx();
+    var total = maxIdx() + 1;
+    bar.style.width = (100 / total) + '%';
+    bar.style.transform = 'translateX(' + (idx * 100) + '%)';
+  }
+  prev.addEventListener('click', function () { idx = Math.max(0, idx - 1); render(); });
+  next.addEventListener('click', function () { idx = Math.min(maxIdx(), idx + 1); render(); });
+  window.addEventListener('resize', render);
+  render();
+
+  /* ---------- FAQ accordion ---------- */
+  document.querySelectorAll('.acc').forEach(function (acc) {
+    var btn = acc.querySelector('.acc__btn');
+    btn.addEventListener('click', function () {
+      var open = acc.classList.contains('is-open');
+      document.querySelectorAll('.acc').forEach(function (a) {
+        a.classList.remove('is-open');
+        a.querySelector('.acc__btn').setAttribute('aria-expanded', 'false');
+      });
+      if (!open) { acc.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); }
+    });
+  });
+
+  /* ---------- map tabs ---------- */
+  var BRANCHES = [
+    {
+      q: 'Івано-Франківськ, вулиця Чорновола, 4',
+      addr: 'м. Івано-Франківськ, вул. Чорновола, 4',
+      phones: [['+380664972619', '(066) 49-72-619'], ['+380989248391', '(098) 92-48-391']],
+      hours: 'Пн–Пт 9:00–18:30<br>Сб 9:00–17:30<br><span style="color:var(--text-4)">Нд — вихідний</span>'
+    },
+    {
+      q: 'Івано-Франківськ, вулиця Лепкого, 14',
+      addr: 'м. Івано-Франківськ, вул. Лепкого, 14',
+      phones: [['+380996469697', '(099) 64-69-697'], ['+380676781337', '(067) 67-81-337']],
+      hours: 'Щодня 8:00–19:00<br><span style="color:var(--text-4)">Без вихідних</span>'
+    },
+    {
+      q: 'Івано-Франківськ, вулиця Вовчинецька, 190',
+      addr: 'м. Івано-Франківськ, вул. Вовчинецька, 190',
+      phones: [['+380960963778', '(096) 09-63-778']],
+      hours: 'Пн–Сб 9:00–18:30<br>Нд 9:00–19:00'
+    }
+  ];
+
+  var frame = document.getElementById('mapFrame');
+  document.querySelectorAll('.map-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var b = BRANCHES[+tab.dataset.idx];
+      document.querySelectorAll('.map-tab').forEach(function (t2) { t2.setAttribute('aria-selected', String(t2 === tab)); });
+      frame.src = 'https://www.google.com/maps?q=' + encodeURIComponent(b.q) + '&z=16&output=embed&hl=uk';
+      document.getElementById('cAddr').textContent = b.addr;
+      document.getElementById('cPhones').innerHTML = b.phones.map(function (p) {
+        return '<a class="mono" href="tel:' + p[0] + '">' + p[1] + '</a>';
+      }).join('');
+      document.getElementById('cHours').innerHTML = b.hours;
+      document.getElementById('cRoute').href = 'https://maps.google.com/?q=' + encodeURIComponent(b.q);
+    });
+  });
+
+  /* ---------- smooth anchor scroll ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = a.getAttribute('href');
+      if (id.length < 2) return;
+      var target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+</body>
+</html>
