@@ -584,50 +584,77 @@ body::after{
 
 .form-card{padding:clamp(1.5rem,2.6vw,2.5rem)}
 .form-card__head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.75rem;flex-wrap:wrap}
-.seg{display:inline-flex;padding:4px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
-.seg button{
-  padding:.62rem 1.15rem;border-radius:999px;border:0;background:transparent;cursor:pointer;
-  font-family:var(--ff-mono);font-size:var(--fs-micro-2);letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);
-  transition:background-color .4s var(--ease-out),color .4s var(--ease-out);
+/* ---------- converter: any currency to any currency ---------- */
+.calc{display:grid;gap:.5rem;margin-bottom:1rem}
+.calc__group{display:grid;gap:.5rem}
+.calc__k{
+  font-family:var(--ff-mono);font-size:var(--fs-micro);letter-spacing:.12em;
+  text-transform:uppercase;color:#fff;opacity:.6;
 }
-.seg button[aria-pressed="true"]{background:rgba(88,162,77,.22);color:#fff;box-shadow:inset 0 0 0 1px rgba(88,162,77,.5)}
-.seg button:focus-visible{outline:2px solid var(--green-400);outline-offset:2px}
+.calc__row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:.5rem}
+.calc__box{
+  display:flex;align-items:center;gap:.75rem;min-width:0;
+  border:1px solid var(--line);border-radius:var(--r-md);background:rgba(255,255,255,.025);
+  padding:.85rem 1rem;cursor:pointer;
+  transition:border-color .4s var(--ease-out),background-color .4s var(--ease-out);
+}
+.calc__box:focus-within{border-color:var(--green-600);background:rgba(88,162,77,.06)}
+.calc__box .cur-badge{width:36px;height:36px;border-radius:11px}
+.calc__select{
+  flex:1;min-width:0;border:0;background:transparent;outline:none;cursor:pointer;
+  font-family:var(--ff-mono);font-size:1rem;font-weight:500;letter-spacing:.01em;color:#fff;
+  -webkit-appearance:none;appearance:none;padding-right:1.1rem;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' fill='none'%3E%3Cpath d='M1 1l3.5 3.5L8 1' stroke='%23ffffff' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right center;
+  text-overflow:ellipsis;
+}
+.calc__select option{background:#0c0c0c;color:#fff}
+.calc__box--amt{justify-content:flex-end}
+.calc__amt{
+  width:100%;min-width:0;border:0;background:transparent;outline:none;padding:0;text-align:right;
+  font-family:var(--ff-display);font-size:1.5rem;font-weight:500;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;color:#fff;
+}
+.calc__swap{
+  justify-self:center;width:46px;height:46px;border-radius:50%;
+  border:1px solid var(--line-2);background:var(--surface-2);color:var(--green-300);
+  display:grid;place-items:center;cursor:pointer;margin-block:.15rem;
+  transition:transform .55s var(--ease-spring),border-color .4s var(--ease-out),background-color .4s;
+}
+.calc__swap svg{width:16px;height:16px}
+.calc__swap:hover{border-color:var(--green-500);background:rgba(88,162,77,.12);transform:rotate(180deg)}
+.calc__swap:focus-visible{outline:2px solid var(--green-400);outline-offset:3px}
 
-.swap{display:grid;grid-template-columns:1fr auto 1fr;gap:.75rem;align-items:center}
+@media (max-width:560px){
+  .calc__row{grid-template-columns:minmax(0,1fr)}
+  .calc__box--amt{justify-content:flex-start}
+  .calc__amt{text-align:left}
+}
+
+.form-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.75rem;margin-top:.75rem}
+/* ---------- text fields: name, phone, branch ---------- */
 .field{
   min-width:0;
   border:1px solid var(--line);border-radius:var(--r-md);background:rgba(255,255,255,.025);
-  padding:1rem 1.15rem;transition:border-color .4s var(--ease-out),background-color .4s var(--ease-out);
+  padding:1rem 1.15rem;
+  transition:border-color .4s var(--ease-out),background-color .4s var(--ease-out);
 }
 .field:focus-within{border-color:var(--green-600);background:rgba(88,162,77,.06)}
-.field__k{display:block;font-family:var(--ff-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--text-4);margin-bottom:.6rem}
+.field__k{display:block;font-family:var(--ff-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:#fff;opacity:.6;margin-bottom:.6rem}
 .field__row{display:flex;align-items:center;gap:.6rem}
 .field input,.field select{
   width:100%;min-width:0;border:0;background:transparent;padding:0;outline:none;
-  font-family:var(--ff-display);font-size:1.65rem;letter-spacing:-.03em;font-variant-numeric:tabular-nums;font-weight:400;
+  font-family:var(--ff-body);font-size:1.0625rem;letter-spacing:0;color:#fff;
 }
-.field input::placeholder{color:var(--text-4)}
+.field input::placeholder{color:#fff;opacity:.45}
 .field select{
-  font-family:var(--ff-mono);font-size:1rem;letter-spacing:.04em;width:auto;flex:none;cursor:pointer;
-  -webkit-appearance:none;appearance:none;padding-right:1.1rem;
+  cursor:pointer;-webkit-appearance:none;appearance:none;padding-right:1.1rem;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='6' fill='none'%3E%3Cpath d='M1 1l3.5 3.5L8 1' stroke='%23ffffff' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right center;
 }
 .field select option{background:#0c0c0c;color:#fff}
-.field__select--text{width:100%;max-width:100%;min-width:0;font-family:var(--ff-body);font-size:1.0625rem;letter-spacing:0}
-.field__cur{font-size:1rem;color:var(--text-3);letter-spacing:.04em;flex:none}
-.field--out{background:rgba(88,162,77,.06);border-color:rgba(88,162,77,.22)}
-.field--out .field__v{font-family:var(--ff-display);font-size:1.65rem;letter-spacing:-.03em;color:var(--green-200);font-variant-numeric:tabular-nums}
-.swap__btn{
-  width:42px;height:42px;border-radius:50%;border:1px solid var(--line-2);background:var(--surface-2);
-  display:grid;place-items:center;cursor:pointer;
-  transition:transform .55s var(--ease-spring),border-color .4s var(--ease-out),background-color .4s}
-.swap__btn svg{width:14px;height:14px}
-.swap__btn:hover{border-color:var(--green-500);background:rgba(88,162,77,.12);transform:rotate(180deg)}
-.swap__btn:focus-visible{outline:2px solid var(--green-400);outline-offset:3px}
+.field__select--text{width:100%;max-width:100%;min-width:0}
 
-.form-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.75rem;margin-top:.75rem}
-.field--text input{font-family:var(--ff-body);font-size:1.0625rem;letter-spacing:0}
 .rate-line{
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem 1.5rem;
   margin:1.5rem 0 0;padding-top:1.35rem;border-top:1px solid var(--line);
@@ -660,8 +687,6 @@ body::after{
 }
 @media (max-width:560px){
   .swap{grid-template-columns:1fr;gap:.6rem}
-  .swap__btn{justify-self:center;transform:rotate(90deg)}
-  .swap__btn:hover{transform:rotate(270deg)}
   .form-row{grid-template-columns:minmax(0,1fr)}
 }
 
@@ -1068,17 +1093,15 @@ body::after{
 
   .btn--sm{padding:1.05em 1.6em}
 
-  .seg{width:100%}
-  .seg button{flex:1;padding:.95rem .9rem;min-height:46px}
 
   /* inline text controls sit inside a padded .field label, but give the
      control itself a real height so a direct tap always lands */
-  .field input,.field select,.field__v{min-height:30px}
+  .field input,.field select{min-height:30px}
   .field{padding-block:1.1rem}
   .plain-field{min-height:52px}
 
   .icon-btn{width:46px;height:46px}
-  .swap__btn{width:46px;height:46px}
+  .calc__swap{width:48px;height:48px}
 
   .svc__link,.post__more{min-height:44px;align-items:center}
 
@@ -1113,7 +1136,6 @@ body::after{
 
 @media (max-width:480px){
   /* labels wrap onto two even lines rather than being clipped by the card */
-  .seg button{padding:.85rem .55rem;letter-spacing:.06em;white-space:normal;line-height:1.25}
   /* the tracked-out head labels need wider columns at this size */
   .rate-row{grid-template-columns:minmax(0,1fr) 4.8rem 4.8rem}
   .rate-row--head span{letter-spacing:.04em}
@@ -1448,7 +1470,7 @@ body::after{
         <div class="rate-row rate-row--head"><span>Валюта</span><span class="ta-right">Купівля</span><span class="ta-right">Продаж</span><span class="ta-right">Зміна</span></div>
 
         <div class="rate-row is-featured">
-          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Долар США"><use href="#fl-usd"/></svg></span><span><span class="rate-row__code">USD 100 $</span><span class="rate-row__label">Оптовий курс від 400 у.о.</span></span></div>
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Долар США"><use href="#fl-usd"/></svg></span><span><span class="rate-row__code">USD 100 $</span><span class="rate-row__label">Купюри 100 $</span></span></div>
           <div class="rate-row__num is-buy">44.65</div>
           <div class="rate-row__num">44.90</div>
           <div class="rate-row__delta"><span class="delta up">+0.10</span></div>
@@ -1564,42 +1586,63 @@ body::after{
     <form class="card form-card reveal" id="exchangeForm" novalidate>
       <div class="form-card__head">
         <span class="eyebrow eyebrow--plain">Калькулятор обміну</span>
-        <div class="seg" role="group" aria-label="Напрямок обміну">
-          <button type="button" data-dir="sell" aria-pressed="true">Продати валюту</button>
-          <button type="button" data-dir="buy" aria-pressed="false">Купити валюту</button>
-        </div>
       </div>
 
-      <div class="swap">
-        <label class="field">
-          <span class="field__k" id="lblFrom">Ви віддаєте</span>
-          <span class="field__row">
-            <input type="text" inputmode="decimal" id="amount" value="1000" aria-labelledby="lblFrom">
-            <span class="mono field__cur" id="leftCur" hidden>UAH</span>
-            <select id="curFrom" aria-label="Валюта обміну">
-              <option value="USD" selected>USD</option>
-              <option value="EUR">EUR</option>
-              <option value="GBP">GBP</option>
-              <option value="PLN">PLN</option>
-              <option value="CHF">CHF</option>
-              <option value="CAD">CAD</option>
-              <option value="CZK">CZK</option>
-              <option value="SEK">SEK</option>
-              <option value="HUF">HUF</option>
-            </select>
-          </span>
-        </label>
-
-        <button type="button" class="swap__btn" id="swapBtn" aria-label="Змінити напрямок обміну">
-          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 2.5 2.5 5 5 7.5M2.5 5H12M11 13.5 13.5 11 11 8.5M13.5 11H4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="calc">
+        <div class="calc__group">
+          <span class="calc__k">Ви віддаєте</span>
+          <div class="calc__row">
+            <label class="calc__box calc__box--cur">
+              <span class="cur-badge"><svg class="flag" id="flagFrom" role="img" aria-hidden="true"><use href="#fl-usd"/></svg></span>
+              <select class="calc__select" id="curFrom" aria-label="Ви віддаєте — валюта">
+              <option value="UAH">Гривня</option>
+              <option value="USD100" selected>USD · купюри 100 $</option>
+              <option value="USD">USD · дрібні номінали</option>
+              <option value="EUR">EUR · євро</option>
+              <option value="USDT">USDT · Tether</option>
+              <option value="GBP">GBP · фунт стерлінгів</option>
+              <option value="PLN">PLN · злотий</option>
+              <option value="CHF">CHF · франк</option>
+              <option value="CAD">CAD · канадський долар</option>
+              <option value="CZK">CZK · чеська крона</option>
+              <option value="SEK">SEK · шведська крона</option>
+              <option value="HUF">HUF · форинт</option>
+              </select>
+            </label>
+            <label class="calc__box calc__box--amt">
+              <input class="calc__amt" id="amtFrom" type="text" inputmode="decimal"
+                     value="100" aria-label="Ви віддаєте — сума">
+            </label>
+          </div>
+        </div>
+        <button type="button" class="calc__swap" id="swapBtn" aria-label="Поміняти валюти місцями">
+          <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 14V3.5M5 3.5 2.5 6M5 3.5 7.5 6M11 2v10.5M11 12.5 8.5 10M11 12.5 13.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-
-        <div class="field field--out">
-          <span class="field__k">Ви отримуєте</span>
-          <span class="field__row">
-            <span class="field__v" id="result">44 650</span>
-            <span class="mono field__cur" id="resultCur">UAH</span>
-          </span>
+        <div class="calc__group">
+          <span class="calc__k">Ви отримуєте</span>
+          <div class="calc__row">
+            <label class="calc__box calc__box--cur">
+              <span class="cur-badge"><svg class="flag" id="flagTo" role="img" aria-hidden="true"><use href="#fl-uah"/></svg></span>
+              <select class="calc__select" id="curTo" aria-label="Ви отримуєте — валюта">
+              <option value="UAH" selected>Гривня</option>
+              <option value="USD100">USD · купюри 100 $</option>
+              <option value="USD">USD · дрібні номінали</option>
+              <option value="EUR">EUR · євро</option>
+              <option value="USDT">USDT · Tether</option>
+              <option value="GBP">GBP · фунт стерлінгів</option>
+              <option value="PLN">PLN · злотий</option>
+              <option value="CHF">CHF · франк</option>
+              <option value="CAD">CAD · канадський долар</option>
+              <option value="CZK">CZK · чеська крона</option>
+              <option value="SEK">SEK · шведська крона</option>
+              <option value="HUF">HUF · форинт</option>
+              </select>
+            </label>
+            <label class="calc__box calc__box--amt">
+              <input class="calc__amt" id="amtTo" type="text" inputmode="decimal"
+                     value="4 465,00" aria-label="Ви отримуєте — сума">
+            </label>
+          </div>
         </div>
       </div>
 
@@ -2345,103 +2388,99 @@ body::after{
   });
 
   /* ---------- exchange calculator ---------- */
-  var RATES = {
-    USD: { buy: 44.65, sell: 44.90 },
-    EUR: { buy: 51.70, sell: 51.93 },
-    GBP: { buy: 59.80, sell: 60.35 },
-    PLN: { buy: 11.87, sell: 12.00 },
-    CHF: { buy: 54.90, sell: 55.59 },
-    CAD: { buy: 31.30, sell: 31.99 },
-    CZK: { buy: 2.02,  sell: 2.12  },
-    SEK: { buy: 3.95,  sell: 4.25  },
-    HUF: { buy: 0.12,  sell: 0.142 }
+  /* Rates are quoted against UAH: `buy` is what the office pays the client
+     for 1 unit, `sell` is what the client pays to get 1 unit. */
+  var CUR = {
+    UAH:    { flag: 'uah',  code: 'UAH',  buy: 1,     sell: 1     },
+    USD100: { flag: 'usd',  code: 'USD',  buy: 44.65, sell: 44.90 },
+    USD:    { flag: 'usd',  code: 'USD',  buy: 44.55, sell: 44.79 },
+    EUR:    { flag: 'eur',  code: 'EUR',  buy: 51.70, sell: 51.93 },
+    GBP:    { flag: 'gbp',  code: 'GBP',  buy: 59.80, sell: 60.35 },
+    PLN:    { flag: 'pln',  code: 'PLN',  buy: 11.87, sell: 12.00 },
+    CHF:    { flag: 'chf',  code: 'CHF',  buy: 54.90, sell: 55.59 },
+    CAD:    { flag: 'cad',  code: 'CAD',  buy: 31.30, sell: 31.99 },
+    CZK:    { flag: 'czk',  code: 'CZK',  buy: 2.02,  sell: 2.12  },
+    SEK:    { flag: 'sek',  code: 'SEK',  buy: 3.95,  sell: 4.25  },
+    HUF:    { flag: 'huf',  code: 'HUF',  buy: 0.12,  sell: 0.142 },
+    /* USDT is quoted as a spread on the cash dollar: +1.6% / +2.9% */
+    USDT:   { flag: 'usdt', code: 'USDT', buy: 44.65 * 1.016, sell: 44.90 * 1.029 }
   };
-  // USD has two published tiers: wholesale from 400 у.о., and a slightly
-  // different rate below that. RATES holds the wholesale figures.
-  var RATES_RETAIL = { USD: { buy: 44.55, sell: 44.79 } };
-  var WHOLESALE_MIN = 400;
 
-  function tierFor(cur, foreignAmount) {
-    var retail = RATES_RETAIL[cur];
-    if (retail && foreignAmount < WHOLESALE_MIN) return { r: retail, wholesale: false };
-    return { r: RATES[cur], wholesale: !!retail };
-  }
+  /* Published cross rates win over the one derived through UAH. */
+  var CROSS = {
+    'EUR>USD100': 1.156, 'EUR>USD': 1.156,
+    'USD100>EUR': 1 / 1.165, 'USD>EUR': 1 / 1.165
+  };
 
-  var dir = 'sell'; // client sells foreign currency
-  var amountEl = document.getElementById('amount');
-  var curEl = document.getElementById('curFrom');
-  var resEl = document.getElementById('result');
-  var resCurEl = document.getElementById('resultCur');
+  var curFrom  = document.getElementById('curFrom');
+  var curTo    = document.getElementById('curTo');
+  var amtFrom  = document.getElementById('amtFrom');
+  var amtTo    = document.getElementById('amtTo');
+  var flagFrom = document.getElementById('flagFrom');
+  var flagTo   = document.getElementById('flagTo');
   var usedRateEl = document.getElementById('usedRate');
-  var lblFrom = document.getElementById('lblFrom');
-  var leftCurEl = document.getElementById('leftCur');
-  var sumFromEl = document.getElementById('sumFrom');
-  var sumToEl = document.getElementById('sumTo');
-  var leftRow = amountEl.parentNode;
-  var rightRow = resEl.parentNode;
+  var sumFromEl  = document.getElementById('sumFrom');
+  var sumToEl    = document.getElementById('sumTo');
 
-  var nf = function (n, dec) {
-    return n.toLocaleString('uk-UA', { minimumFractionDigits: dec, maximumFractionDigits: dec }).replace(/ /g, ' ');
-  };
+  function nf(n, dec) {
+    return n.toLocaleString('uk-UA', { minimumFractionDigits: dec, maximumFractionDigits: dec })
+            .replace(/\u00a0/g, ' ');
+  }
+  function parseAmt(v) {
+    var n = parseFloat(String(v).replace(/[^\d.,-]/g, '').replace(/\s/g, '').replace(',', '.'));
+    return isFinite(n) && n > 0 ? n : 0;
+  }
+  /* how many units of `to` one unit of `from` buys */
+  function rateBetween(from, to) {
+    if (from === to) return 1;
+    var key = from + '>' + to;
+    if (CROSS[key]) return CROSS[key];
+    return CUR[from].buy / CUR[to].sell;
+  }
+  function decimalsFor(code) { return code === 'UAH' ? 2 : 2; }
 
-  function calc() {
-    var cur = curEl.value;
-    var r = RATES[cur];
-    var raw = parseFloat(String(amountEl.value).replace(/[^\d.,]/g, '').replace(',', '.'));
-    if (!isFinite(raw) || raw < 0) raw = 0;
-
-    var tier, rate;
-    if (dir === 'sell') {
-      tier = tierFor(cur, raw);
-      rate = tier.r.buy;
-      resEl.textContent = nf(raw * rate, 2);
-      resCurEl.textContent = 'UAH';
-      lblFrom.textContent = 'Ви віддаєте';
-      sumFromEl.textContent = nf(raw, raw % 1 ? 2 : 0) + ' ' + cur;
-      sumToEl.textContent = nf(raw * rate, 2) + ' UAH';
-    } else {
-      // pick the tier from how much foreign currency the client walks away with
-      tier = tierFor(cur, raw / RATES[cur].sell);
-      rate = tier.r.sell;
-      resEl.textContent = nf(raw / rate, 2);
-      resCurEl.textContent = '';
-      lblFrom.textContent = 'Ви віддаєте, гривні';
-      sumFromEl.textContent = nf(raw, raw % 1 ? 2 : 0) + ' UAH';
-      sumToEl.textContent = nf(raw / rate, 2) + ' ' + cur;
-    }
-    usedRateEl.innerHTML = '1 ' + cur + ' = ' + nf(rate, 2) + ' UAH'
-      + (RATES_RETAIL[cur]
-          ? '<span class="rate-line__tier">' + (tier.wholesale ? 'оптовий, від 400 у.о.' : 'до 400 у.о.') + '</span>'
-          : '');
+  function setFlag(el, cur) {
+    el.firstElementChild.setAttribute('href', '#fl-' + CUR[cur].flag);
   }
 
-  function setDir(next) {
-    dir = next;
-    document.querySelectorAll('.seg button').forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b.dataset.dir === dir));
-    });
-    if (dir === 'sell') {
-      leftRow.appendChild(curEl);
-      leftCurEl.hidden = true;
-      resCurEl.hidden = false;
+  /* recompute the side the user is NOT typing into */
+  function recalc(source) {
+    var f = curFrom.value, t = curTo.value;
+    setFlag(flagFrom, f); setFlag(flagTo, t);
+    var rate = rateBetween(f, t);
+
+    if (source === 'to') {
+      var got = parseAmt(amtTo.value);
+      amtFrom.value = nf(rate ? got / rate : 0, decimalsFor(CUR[f].code));
     } else {
-      rightRow.appendChild(curEl);
-      leftCurEl.hidden = false;
-      resCurEl.hidden = true;
+      var give = parseAmt(amtFrom.value);
+      amtTo.value = nf(give * rate, decimalsFor(CUR[t].code));
     }
-    amountEl.value = dir === 'sell' ? '1000' : '50000';
-    calc();
+
+    var give2 = parseAmt(amtFrom.value), got2 = parseAmt(amtTo.value);
+    usedRateEl.textContent = '1 ' + CUR[f].code + ' = ' + nf(rate, rate >= 10 ? 2 : 4) + ' ' + CUR[t].code;
+    sumFromEl.textContent = nf(give2, decimalsFor(CUR[f].code)) + ' ' + CUR[f].code;
+    sumToEl.textContent   = nf(got2,  decimalsFor(CUR[t].code)) + ' ' + CUR[t].code;
   }
 
-  document.querySelectorAll('.seg button').forEach(function (b) {
-    b.addEventListener('click', function () { setDir(b.dataset.dir); });
-  });
+  /* keep the two sides from selecting the same currency */
+  function avoidSame(changed) {
+    if (curFrom.value !== curTo.value) return;
+    var other = changed === curFrom ? curTo : curFrom;
+    other.value = (changed.value === 'UAH') ? 'USD100' : 'UAH';
+  }
+
+  amtFrom.addEventListener('input', function () { recalc('from'); });
+  amtTo.addEventListener('input',   function () { recalc('to'); });
+  curFrom.addEventListener('change', function () { avoidSame(curFrom); recalc('from'); });
+  curTo.addEventListener('change',   function () { avoidSame(curTo);   recalc('from'); });
   document.getElementById('swapBtn').addEventListener('click', function () {
-    setDir(dir === 'sell' ? 'buy' : 'sell');
+    var f = curFrom.value, a = amtFrom.value;
+    curFrom.value = curTo.value; amtFrom.value = amtTo.value;
+    curTo.value = f; amtTo.value = a;
+    recalc('from');
   });
-  amountEl.addEventListener('input', calc);
-  curEl.addEventListener('change', calc);
-  calc();
+  recalc('from');
 
   /* ---------- forms ---------- */
   function handleForm(formId, okId) {

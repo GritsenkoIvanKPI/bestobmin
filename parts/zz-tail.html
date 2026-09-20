@@ -60,103 +60,99 @@
   });
 
   /* ---------- exchange calculator ---------- */
-  var RATES = {
-    USD: { buy: 44.65, sell: 44.90 },
-    EUR: { buy: 51.70, sell: 51.93 },
-    GBP: { buy: 59.80, sell: 60.35 },
-    PLN: { buy: 11.87, sell: 12.00 },
-    CHF: { buy: 54.90, sell: 55.59 },
-    CAD: { buy: 31.30, sell: 31.99 },
-    CZK: { buy: 2.02,  sell: 2.12  },
-    SEK: { buy: 3.95,  sell: 4.25  },
-    HUF: { buy: 0.12,  sell: 0.142 }
+  /* Rates are quoted against UAH: `buy` is what the office pays the client
+     for 1 unit, `sell` is what the client pays to get 1 unit. */
+  var CUR = {
+    UAH:    { flag: 'uah',  code: 'UAH',  buy: 1,     sell: 1     },
+    USD100: { flag: 'usd',  code: 'USD',  buy: 44.65, sell: 44.90 },
+    USD:    { flag: 'usd',  code: 'USD',  buy: 44.55, sell: 44.79 },
+    EUR:    { flag: 'eur',  code: 'EUR',  buy: 51.70, sell: 51.93 },
+    GBP:    { flag: 'gbp',  code: 'GBP',  buy: 59.80, sell: 60.35 },
+    PLN:    { flag: 'pln',  code: 'PLN',  buy: 11.87, sell: 12.00 },
+    CHF:    { flag: 'chf',  code: 'CHF',  buy: 54.90, sell: 55.59 },
+    CAD:    { flag: 'cad',  code: 'CAD',  buy: 31.30, sell: 31.99 },
+    CZK:    { flag: 'czk',  code: 'CZK',  buy: 2.02,  sell: 2.12  },
+    SEK:    { flag: 'sek',  code: 'SEK',  buy: 3.95,  sell: 4.25  },
+    HUF:    { flag: 'huf',  code: 'HUF',  buy: 0.12,  sell: 0.142 },
+    /* USDT is quoted as a spread on the cash dollar: +1.6% / +2.9% */
+    USDT:   { flag: 'usdt', code: 'USDT', buy: 44.65 * 1.016, sell: 44.90 * 1.029 }
   };
-  // USD has two published tiers: wholesale from 400 у.о., and a slightly
-  // different rate below that. RATES holds the wholesale figures.
-  var RATES_RETAIL = { USD: { buy: 44.55, sell: 44.79 } };
-  var WHOLESALE_MIN = 400;
 
-  function tierFor(cur, foreignAmount) {
-    var retail = RATES_RETAIL[cur];
-    if (retail && foreignAmount < WHOLESALE_MIN) return { r: retail, wholesale: false };
-    return { r: RATES[cur], wholesale: !!retail };
-  }
+  /* Published cross rates win over the one derived through UAH. */
+  var CROSS = {
+    'EUR>USD100': 1.156, 'EUR>USD': 1.156,
+    'USD100>EUR': 1 / 1.165, 'USD>EUR': 1 / 1.165
+  };
 
-  var dir = 'sell'; // client sells foreign currency
-  var amountEl = document.getElementById('amount');
-  var curEl = document.getElementById('curFrom');
-  var resEl = document.getElementById('result');
-  var resCurEl = document.getElementById('resultCur');
+  var curFrom  = document.getElementById('curFrom');
+  var curTo    = document.getElementById('curTo');
+  var amtFrom  = document.getElementById('amtFrom');
+  var amtTo    = document.getElementById('amtTo');
+  var flagFrom = document.getElementById('flagFrom');
+  var flagTo   = document.getElementById('flagTo');
   var usedRateEl = document.getElementById('usedRate');
-  var lblFrom = document.getElementById('lblFrom');
-  var leftCurEl = document.getElementById('leftCur');
-  var sumFromEl = document.getElementById('sumFrom');
-  var sumToEl = document.getElementById('sumTo');
-  var leftRow = amountEl.parentNode;
-  var rightRow = resEl.parentNode;
+  var sumFromEl  = document.getElementById('sumFrom');
+  var sumToEl    = document.getElementById('sumTo');
 
-  var nf = function (n, dec) {
-    return n.toLocaleString('uk-UA', { minimumFractionDigits: dec, maximumFractionDigits: dec }).replace(/ /g, ' ');
-  };
+  function nf(n, dec) {
+    return n.toLocaleString('uk-UA', { minimumFractionDigits: dec, maximumFractionDigits: dec })
+            .replace(/\u00a0/g, ' ');
+  }
+  function parseAmt(v) {
+    var n = parseFloat(String(v).replace(/[^\d.,-]/g, '').replace(/\s/g, '').replace(',', '.'));
+    return isFinite(n) && n > 0 ? n : 0;
+  }
+  /* how many units of `to` one unit of `from` buys */
+  function rateBetween(from, to) {
+    if (from === to) return 1;
+    var key = from + '>' + to;
+    if (CROSS[key]) return CROSS[key];
+    return CUR[from].buy / CUR[to].sell;
+  }
+  function decimalsFor(code) { return code === 'UAH' ? 2 : 2; }
 
-  function calc() {
-    var cur = curEl.value;
-    var r = RATES[cur];
-    var raw = parseFloat(String(amountEl.value).replace(/[^\d.,]/g, '').replace(',', '.'));
-    if (!isFinite(raw) || raw < 0) raw = 0;
-
-    var tier, rate;
-    if (dir === 'sell') {
-      tier = tierFor(cur, raw);
-      rate = tier.r.buy;
-      resEl.textContent = nf(raw * rate, 2);
-      resCurEl.textContent = 'UAH';
-      lblFrom.textContent = 'Ви віддаєте';
-      sumFromEl.textContent = nf(raw, raw % 1 ? 2 : 0) + ' ' + cur;
-      sumToEl.textContent = nf(raw * rate, 2) + ' UAH';
-    } else {
-      // pick the tier from how much foreign currency the client walks away with
-      tier = tierFor(cur, raw / RATES[cur].sell);
-      rate = tier.r.sell;
-      resEl.textContent = nf(raw / rate, 2);
-      resCurEl.textContent = '';
-      lblFrom.textContent = 'Ви віддаєте, гривні';
-      sumFromEl.textContent = nf(raw, raw % 1 ? 2 : 0) + ' UAH';
-      sumToEl.textContent = nf(raw / rate, 2) + ' ' + cur;
-    }
-    usedRateEl.innerHTML = '1 ' + cur + ' = ' + nf(rate, 2) + ' UAH'
-      + (RATES_RETAIL[cur]
-          ? '<span class="rate-line__tier">' + (tier.wholesale ? 'оптовий, від 400 у.о.' : 'до 400 у.о.') + '</span>'
-          : '');
+  function setFlag(el, cur) {
+    el.firstElementChild.setAttribute('href', '#fl-' + CUR[cur].flag);
   }
 
-  function setDir(next) {
-    dir = next;
-    document.querySelectorAll('.seg button').forEach(function (b) {
-      b.setAttribute('aria-pressed', String(b.dataset.dir === dir));
-    });
-    if (dir === 'sell') {
-      leftRow.appendChild(curEl);
-      leftCurEl.hidden = true;
-      resCurEl.hidden = false;
+  /* recompute the side the user is NOT typing into */
+  function recalc(source) {
+    var f = curFrom.value, t = curTo.value;
+    setFlag(flagFrom, f); setFlag(flagTo, t);
+    var rate = rateBetween(f, t);
+
+    if (source === 'to') {
+      var got = parseAmt(amtTo.value);
+      amtFrom.value = nf(rate ? got / rate : 0, decimalsFor(CUR[f].code));
     } else {
-      rightRow.appendChild(curEl);
-      leftCurEl.hidden = false;
-      resCurEl.hidden = true;
+      var give = parseAmt(amtFrom.value);
+      amtTo.value = nf(give * rate, decimalsFor(CUR[t].code));
     }
-    amountEl.value = dir === 'sell' ? '1000' : '50000';
-    calc();
+
+    var give2 = parseAmt(amtFrom.value), got2 = parseAmt(amtTo.value);
+    usedRateEl.textContent = '1 ' + CUR[f].code + ' = ' + nf(rate, rate >= 10 ? 2 : 4) + ' ' + CUR[t].code;
+    sumFromEl.textContent = nf(give2, decimalsFor(CUR[f].code)) + ' ' + CUR[f].code;
+    sumToEl.textContent   = nf(got2,  decimalsFor(CUR[t].code)) + ' ' + CUR[t].code;
   }
 
-  document.querySelectorAll('.seg button').forEach(function (b) {
-    b.addEventListener('click', function () { setDir(b.dataset.dir); });
-  });
+  /* keep the two sides from selecting the same currency */
+  function avoidSame(changed) {
+    if (curFrom.value !== curTo.value) return;
+    var other = changed === curFrom ? curTo : curFrom;
+    other.value = (changed.value === 'UAH') ? 'USD100' : 'UAH';
+  }
+
+  amtFrom.addEventListener('input', function () { recalc('from'); });
+  amtTo.addEventListener('input',   function () { recalc('to'); });
+  curFrom.addEventListener('change', function () { avoidSame(curFrom); recalc('from'); });
+  curTo.addEventListener('change',   function () { avoidSame(curTo);   recalc('from'); });
   document.getElementById('swapBtn').addEventListener('click', function () {
-    setDir(dir === 'sell' ? 'buy' : 'sell');
+    var f = curFrom.value, a = amtFrom.value;
+    curFrom.value = curTo.value; amtFrom.value = amtTo.value;
+    curTo.value = f; amtTo.value = a;
+    recalc('from');
   });
-  amountEl.addEventListener('input', calc);
-  curEl.addEventListener('change', calc);
-  calc();
+  recalc('from');
 
   /* ---------- forms ---------- */
   function handleForm(formId, okId) {
