@@ -46,7 +46,7 @@
 .rate-row__cur > span:last-child{display:flex;flex-direction:column;min-width:0}
 .rate-row__code{font-family:var(--ff-mono);font-size:1rem;font-weight:500;letter-spacing:.03em}
 .rate-row__label{font-size:.875rem;color:var(--text-3);margin-top:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rate-row__num{font-family:var(--ff-mono);font-size:1.0625rem;font-variant-numeric:tabular-nums;text-align:right}
+.rate-row__num{font-family:var(--ff-mono);font-size:1.0625rem;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
 .rate-row__num.is-buy{color:#fff}
 .rate-row__delta{text-align:right}
 .rate-row__delta .delta{margin:0;justify-content:flex-end}

@@ -69,7 +69,7 @@
   text-transform:uppercase;color:#fff;opacity:.6;margin-bottom:.35rem;
 }
 .rate-line dd{
-  margin:0;font-family:var(--ff-mono);font-size:1rem;font-weight:500;
+  margin:0;font-family:var(--ff-mono);font-size:1rem;font-weight:700;
   color:#fff;font-variant-numeric:tabular-nums;
 }
 .rate-line dd.is-lock{color:var(--green-200)}

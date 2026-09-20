@@ -220,7 +220,7 @@
 .hr-row__id{display:flex;flex-direction:column;min-width:0}
 .hr-row__code{font-family:var(--ff-mono);font-size:.9375rem;font-weight:500}
 .hr-row__name{font-size:.875rem;opacity:.68;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hr-row__num{font-family:var(--ff-mono);font-size:.9375rem;font-variant-numeric:tabular-nums}
+.hr-row__num{font-family:var(--ff-mono);font-size:.9375rem;font-weight:700;font-variant-numeric:tabular-nums}
 .hr-row__delta .delta{margin:0;justify-content:flex-end;font-size:.875rem}
 .hero-rates__foot{margin-top:.85rem}
 .hero-rates__foot .btn{width:100%;justify-content:center}
