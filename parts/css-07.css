@@ -74,9 +74,6 @@
   .rate-row__cur > span:last-child{gap:.15rem}
   .rate-table__col{padding-inline:clamp(.75rem,3vw,1rem)}
 
-  .rate-hero__card{gap:1.5rem}
-  .rate-hero__vals{gap:.75rem}
-
   .rates__note{flex-direction:column;align-items:stretch}
   .rates__note .btn{justify-content:center}
 
