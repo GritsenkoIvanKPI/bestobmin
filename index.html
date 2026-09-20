@@ -10,7 +10,7 @@
 <meta property="og:locale" content="uk_UA">
 <meta property="og:site_name" content="BEST — обмін валют">
 <meta property="og:title" content="BEST — обмін валют в Івано-Франківську">
-<meta property="og:description" content="Три відділення в Івано-Франківську. Актуальні курси USD, EUR, GBP, PLN, CHF. Обмін з доставкою, пошкоджені банкноти, монети. Фіксація курсу на 60 хвилин.">
+<meta property="og:description" content="Три відділення в Івано-Франківську. Актуальні курси USD, EUR, GBP, PLN, CHF. Обмін з доставкою, пошкоджені банкноти, монети. Фіксація курсу на 30 хвилин.">
 <meta property="og:image" content="images/hero-bg.jpg">
 <meta name="twitter:card" content="summary_large_image">
 
@@ -636,11 +636,21 @@ body::after{
 .form-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.75rem;margin-top:.75rem}
 .field--text input{font-family:var(--ff-body);font-size:1.0625rem;letter-spacing:0}
 .rate-line{
-  display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between;align-items:center;
-  margin-top:1.5rem;padding-top:1.35rem;border-top:1px solid var(--line);
-  font-family:var(--ff-mono);font-size:.875rem;letter-spacing:.06em;color:var(--text-3);
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem 1.5rem;
+  margin:1.5rem 0 0;padding-top:1.35rem;border-top:1px solid var(--line);
 }
-.rate-line b{color:#fff;font-weight:600}
+.rate-line dt{
+  font-family:var(--ff-mono);font-size:var(--fs-micro);letter-spacing:.08em;
+  text-transform:uppercase;color:#fff;opacity:.6;margin-bottom:.35rem;
+}
+.rate-line dd{
+  margin:0;font-family:var(--ff-mono);font-size:1rem;font-weight:500;
+  color:#fff;font-variant-numeric:tabular-nums;
+}
+.rate-line dd.is-lock{color:var(--green-200)}
+.rate-line__tier{display:block;margin-top:.3rem;font-size:var(--fs-micro);
+  letter-spacing:.04em;font-weight:400;color:#fff;opacity:.6}
+@media (max-width:480px){.rate-line{grid-template-columns:minmax(0,1fr);gap:.85rem}}
 .form-card .btn{width:100%;justify-content:center;margin-top:1.35rem}
 .form-note{margin-top:1rem;font-size:.875rem;color:var(--text-4);line-height:1.6;text-align:center}
 .form-note a{color:var(--text-3);text-decoration:underline;text-underline-offset:3px}
@@ -1252,7 +1262,7 @@ body::after{
       <ul class="hero__usps">
         <li><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="m8 1 2 4.5 4.9.5-3.7 3.3 1.1 4.8L8 11.6 3.7 14.1l1.1-4.8L1.1 6l4.9-.5Z"/></svg>4.9 / 5 — 100+ відгуків</li>
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M9.2 1.5 3.5 9h4l-.2 5.5L12.5 7H8.8z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Швидко та безпечно</li>
-        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Фіксація курсу 60 хв</li>
+        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Фіксація курсу 30 хв</li>
       </ul>
     </div>
 
@@ -1613,7 +1623,7 @@ body::after{
       <h2 class="h-section">Порахуйте суму<br>та <span class="accent">зафіксуйте курс</span></h2>
       <p class="lede">Вкажіть валюту й суму — ми одразу покажемо, скільки ви отримаєте в касі. Після заявки курс закріплюється за вами, поки ви їдете до відділення.</p>
       <ul class="checklist">
-        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Курс фіксується на 60 хвилин після підтвердження</li>
+        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Курс фіксується на 30 хвилин після підтвердження</li>
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Жодних комісій понад вказану суму</li>
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Готуємо потрібну суму та номінали заздалегідь</li>
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Від 400 у.о. — оптовий курс без черги</li>
@@ -1687,15 +1697,17 @@ body::after{
         </label>
       </div>
 
-      <div class="rate-line">
-        <span>Курс за заявкою: <b id="usedRate">1 USD = 44.65 UAH</b></span>
-        <span>Фіксація на <b>60 хв</b></span>
-      </div>
+      <dl class="rate-line" aria-label="Умови заявки">
+        <div><dt>Курс за заявкою</dt><dd id="usedRate">1 USD = 44.65 UAH</dd></div>
+        <div><dt>Ви віддаєте</dt><dd id="sumFrom">1 000 USD</dd></div>
+        <div><dt>Ви отримуєте</dt><dd id="sumTo">44 650,00 UAH</dd></div>
+        <div><dt>Курс зафіксовано на</dt><dd class="is-lock">30 хвилин</dd></div>
+      </dl>
 
       <button class="btn btn--accent" type="submit"><span class="dot"></span>Залишити заявку
         <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
-      <p class="form-ok" id="formOk">Заявку прийнято. Менеджер зателефонує протягом 5 хвилин і підтвердить курс.</p>
+      <p class="form-ok" id="formOk">Заявку прийнято. Курс і суму зафіксовано на 30 хвилин — менеджер зателефонує протягом 5 хвилин для підтвердження.</p>
       <p class="form-note">Натискаючи кнопку, ви погоджуєтесь з <a href="#contacts">політикою конфіденційності</a>. Розрахунок орієнтовний — фінальний курс підтверджує оператор.</p>
     </form>
   </div>
@@ -1723,7 +1735,7 @@ body::after{
       <article class="card step reveal" style="transition-delay:.08s">
         <div class="step__top"><h3 class="h-card">Зафіксуйте курс</h3><span class="step__n">02</span></div>
         <div class="step__media"><img src="images/step-2.jpg" alt="Хромований щит із замком — символ захищеної угоди" loading="lazy" width="600" height="600"></div>
-        <p class="step__text">Оператор передзвонює та закріплює курс за вами на 60 хвилин.</p>
+        <p class="step__text">Оператор передзвонює та закріплює курс за вами на 30 хвилин.</p>
       </article>
       <article class="card step reveal" style="transition-delay:.16s">
         <div class="step__top"><h3 class="h-card">Обміняйте у відділенні</h3><span class="step__n">03</span></div>
@@ -2413,6 +2425,17 @@ body::after{
     SEK: { buy: 3.95,  sell: 4.25  },
     HUF: { buy: 0.12,  sell: 0.142 }
   };
+  // USD has two published tiers: wholesale from 400 у.о., and a slightly
+  // different rate below that. RATES holds the wholesale figures.
+  var RATES_RETAIL = { USD: { buy: 44.55, sell: 44.79 } };
+  var WHOLESALE_MIN = 400;
+
+  function tierFor(cur, foreignAmount) {
+    var retail = RATES_RETAIL[cur];
+    if (retail && foreignAmount < WHOLESALE_MIN) return { r: retail, wholesale: false };
+    return { r: RATES[cur], wholesale: !!retail };
+  }
+
   var dir = 'sell'; // client sells foreign currency
   var amountEl = document.getElementById('amount');
   var curEl = document.getElementById('curFrom');
@@ -2421,6 +2444,8 @@ body::after{
   var usedRateEl = document.getElementById('usedRate');
   var lblFrom = document.getElementById('lblFrom');
   var leftCurEl = document.getElementById('leftCur');
+  var sumFromEl = document.getElementById('sumFrom');
+  var sumToEl = document.getElementById('sumTo');
   var leftRow = amountEl.parentNode;
   var rightRow = resEl.parentNode;
 
@@ -2434,17 +2459,29 @@ body::after{
     var raw = parseFloat(String(amountEl.value).replace(/[^\d.,]/g, '').replace(',', '.'));
     if (!isFinite(raw) || raw < 0) raw = 0;
 
+    var tier, rate;
     if (dir === 'sell') {
-      resEl.textContent = nf(raw * r.buy, 2);
+      tier = tierFor(cur, raw);
+      rate = tier.r.buy;
+      resEl.textContent = nf(raw * rate, 2);
       resCurEl.textContent = 'UAH';
-      usedRateEl.textContent = '1 ' + cur + ' = ' + nf(r.buy, 2) + ' UAH (курс купівлі)';
       lblFrom.textContent = 'Ви віддаєте';
+      sumFromEl.textContent = nf(raw, raw % 1 ? 2 : 0) + ' ' + cur;
+      sumToEl.textContent = nf(raw * rate, 2) + ' UAH';
     } else {
-      resEl.textContent = nf(raw / r.sell, 2);
+      // pick the tier from how much foreign currency the client walks away with
+      tier = tierFor(cur, raw / RATES[cur].sell);
+      rate = tier.r.sell;
+      resEl.textContent = nf(raw / rate, 2);
       resCurEl.textContent = '';
-      usedRateEl.textContent = '1 ' + cur + ' = ' + nf(r.sell, 2) + ' UAH (курс продажу)';
       lblFrom.textContent = 'Ви віддаєте, гривні';
+      sumFromEl.textContent = nf(raw, raw % 1 ? 2 : 0) + ' UAH';
+      sumToEl.textContent = nf(raw / rate, 2) + ' ' + cur;
     }
+    usedRateEl.innerHTML = '1 ' + cur + ' = ' + nf(rate, 2) + ' UAH'
+      + (RATES_RETAIL[cur]
+          ? '<span class="rate-line__tier">' + (tier.wholesale ? 'оптовий, від 400 у.о.' : 'до 400 у.о.') + '</span>'
+          : '');
   }
 
   function setDir(next) {

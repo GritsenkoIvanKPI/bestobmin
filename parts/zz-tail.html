@@ -71,6 +71,17 @@
     SEK: { buy: 3.95,  sell: 4.25  },
     HUF: { buy: 0.12,  sell: 0.142 }
   };
+  // USD has two published tiers: wholesale from 400 у.о., and a slightly
+  // different rate below that. RATES holds the wholesale figures.
+  var RATES_RETAIL = { USD: { buy: 44.55, sell: 44.79 } };
+  var WHOLESALE_MIN = 400;
+
+  function tierFor(cur, foreignAmount) {
+    var retail = RATES_RETAIL[cur];
+    if (retail && foreignAmount < WHOLESALE_MIN) return { r: retail, wholesale: false };
+    return { r: RATES[cur], wholesale: !!retail };
+  }
+
   var dir = 'sell'; // client sells foreign currency
   var amountEl = document.getElementById('amount');
   var curEl = document.getElementById('curFrom');
@@ -79,6 +90,8 @@
   var usedRateEl = document.getElementById('usedRate');
   var lblFrom = document.getElementById('lblFrom');
   var leftCurEl = document.getElementById('leftCur');
+  var sumFromEl = document.getElementById('sumFrom');
+  var sumToEl = document.getElementById('sumTo');
   var leftRow = amountEl.parentNode;
   var rightRow = resEl.parentNode;
 
@@ -92,17 +105,29 @@
     var raw = parseFloat(String(amountEl.value).replace(/[^\d.,]/g, '').replace(',', '.'));
     if (!isFinite(raw) || raw < 0) raw = 0;
 
+    var tier, rate;
     if (dir === 'sell') {
-      resEl.textContent = nf(raw * r.buy, 2);
+      tier = tierFor(cur, raw);
+      rate = tier.r.buy;
+      resEl.textContent = nf(raw * rate, 2);
       resCurEl.textContent = 'UAH';
-      usedRateEl.textContent = '1 ' + cur + ' = ' + nf(r.buy, 2) + ' UAH (курс купівлі)';
       lblFrom.textContent = 'Ви віддаєте';
+      sumFromEl.textContent = nf(raw, raw % 1 ? 2 : 0) + ' ' + cur;
+      sumToEl.textContent = nf(raw * rate, 2) + ' UAH';
     } else {
-      resEl.textContent = nf(raw / r.sell, 2);
+      // pick the tier from how much foreign currency the client walks away with
+      tier = tierFor(cur, raw / RATES[cur].sell);
+      rate = tier.r.sell;
+      resEl.textContent = nf(raw / rate, 2);
       resCurEl.textContent = '';
-      usedRateEl.textContent = '1 ' + cur + ' = ' + nf(r.sell, 2) + ' UAH (курс продажу)';
       lblFrom.textContent = 'Ви віддаєте, гривні';
+      sumFromEl.textContent = nf(raw, raw % 1 ? 2 : 0) + ' UAH';
+      sumToEl.textContent = nf(raw / rate, 2) + ' ' + cur;
     }
+    usedRateEl.innerHTML = '1 ' + cur + ' = ' + nf(rate, 2) + ' UAH'
+      + (RATES_RETAIL[cur]
+          ? '<span class="rate-line__tier">' + (tier.wholesale ? 'оптовий, від 400 у.о.' : 'до 400 у.о.') + '</span>'
+          : '');
   }
 
   function setDir(next) {

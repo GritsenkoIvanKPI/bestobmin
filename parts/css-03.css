@@ -61,11 +61,21 @@
 .form-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.75rem;margin-top:.75rem}
 .field--text input{font-family:var(--ff-body);font-size:1.0625rem;letter-spacing:0}
 .rate-line{
-  display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between;align-items:center;
-  margin-top:1.5rem;padding-top:1.35rem;border-top:1px solid var(--line);
-  font-family:var(--ff-mono);font-size:.875rem;letter-spacing:.06em;color:var(--text-3);
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem 1.5rem;
+  margin:1.5rem 0 0;padding-top:1.35rem;border-top:1px solid var(--line);
 }
-.rate-line b{color:#fff;font-weight:600}
+.rate-line dt{
+  font-family:var(--ff-mono);font-size:var(--fs-micro);letter-spacing:.08em;
+  text-transform:uppercase;color:#fff;opacity:.6;margin-bottom:.35rem;
+}
+.rate-line dd{
+  margin:0;font-family:var(--ff-mono);font-size:1rem;font-weight:500;
+  color:#fff;font-variant-numeric:tabular-nums;
+}
+.rate-line dd.is-lock{color:var(--green-200)}
+.rate-line__tier{display:block;margin-top:.3rem;font-size:var(--fs-micro);
+  letter-spacing:.04em;font-weight:400;color:#fff;opacity:.6}
+@media (max-width:480px){.rate-line{grid-template-columns:minmax(0,1fr);gap:.85rem}}
 .form-card .btn{width:100%;justify-content:center;margin-top:1.35rem}
 .form-note{margin-top:1rem;font-size:.875rem;color:var(--text-4);line-height:1.6;text-align:center}
 .form-note a{color:var(--text-3);text-decoration:underline;text-underline-offset:3px}
