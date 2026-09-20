@@ -47,6 +47,18 @@
     t.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
   }
 
+  /* ---------- hero rate tabs ---------- */
+  var hrTabs = document.querySelectorAll('.hero-rates__tabs button');
+  hrTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      hrTabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        document.getElementById(t.dataset.panel).hidden = !on;
+      });
+    });
+  });
+
   /* ---------- exchange calculator ---------- */
   var RATES = {
     USD: { buy: 44.65, sell: 44.90 },
