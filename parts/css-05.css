@@ -12,14 +12,14 @@
 }
 .security__glow{
   position:absolute;inset:-18%;z-index:-1;pointer-events:none;
-  background:radial-gradient(46% 46% at 50% 50%,rgba(88,162,77,.20),transparent 68%);
+  background:radial-gradient(46% 46% at 50% 50%,rgba(204,163,119,.20),transparent 68%);
 }
 .security__copy .h-section{margin:clamp(1.25rem,2vw,1.75rem) 0 1.35rem}
 .sec-cards{display:grid;gap:clamp(.7rem,1vw,.9rem);margin-top:clamp(2rem,3vw,2.75rem)}
 .sec-card{padding:clamp(1.35rem,2vw,1.75rem);display:flex;flex-direction:column;gap:.7rem}
 .sec-card__ico{
   width:40px;height:40px;border-radius:12px;border:1px solid var(--line-2);
-  display:grid;place-items:center;margin-bottom:.45rem;color:var(--green-300);
+  display:grid;place-items:center;margin-bottom:.45rem;color:var(--accent-300);
 }
 .sec-card__ico svg{width:16px;height:16px}
 .sec-card p{font-size:1rem;color:var(--text-3);line-height:1.62}
@@ -62,8 +62,8 @@
   transition:background-color .4s var(--ease-out),border-color .4s var(--ease-out),transform .5s var(--ease-spring);
 }
 .social-btn svg{width:19px;height:19px}
-.social-btn:hover{background:rgba(88,162,77,.18);border-color:var(--green-600);transform:translateY(-3px)}
-.social-btn:focus-visible{outline:2px solid var(--green-400);outline-offset:3px}
+.social-btn:hover{background:rgba(204,163,119,.18);border-color:var(--accent-600);transform:translateY(-3px)}
+.social-btn:focus-visible{outline:2px solid var(--accent-400);outline-offset:3px}
 
 .callback__form{display:flex;flex-direction:column;gap:.75rem}
 .plain-field{
@@ -73,7 +73,7 @@
   transition:border-color .4s var(--ease-out),background-color .4s var(--ease-out);
 }
 .plain-field::placeholder{color:var(--text-3)}
-.plain-field:focus{border-color:var(--green-600);background:rgba(88,162,77,.07)}
+.plain-field:focus{border-color:var(--accent-600);background:rgba(204,163,119,.07)}
 
 .radio-fieldset{border:0;padding:0;margin:.55rem 0 .35rem}
 .radio-fieldset legend{padding:0;font-size:1.0625rem;color:#fff;margin-bottom:.95rem}
@@ -83,23 +83,23 @@
 .radio:hover{color:#fff}
 .radio input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .radio__dot{
-  width:20px;height:20px;border-radius:50%;flex:none;border:1.5px solid var(--green-600);
+  width:20px;height:20px;border-radius:50%;flex:none;border:1.5px solid var(--accent-600);
   display:grid;place-items:center;transition:border-color .35s var(--ease-out);
 }
 .radio__dot::after{
-  content:"";width:10px;height:10px;border-radius:50%;background:var(--green-400);
+  content:"";width:10px;height:10px;border-radius:50%;background:var(--accent-400);
   transform:scale(0);transition:transform .45s var(--ease-spring);
 }
 .radio input:checked + .radio__dot::after{transform:scale(1)}
 .radio input:checked ~ .radio__label{color:#fff}
-.radio input:focus-visible + .radio__dot{outline:2px solid var(--green-400);outline-offset:3px}
+.radio input:focus-visible + .radio__dot{outline:2px solid var(--accent-400);outline-offset:3px}
 
 .btn--solid{
   width:100%;justify-content:center;margin-top:.35rem;
-  background:var(--green-450);border-color:var(--green-450);color:#04140a;
+  background:var(--accent-grad);border-color:transparent;color:var(--on-accent);
   font-weight:700;letter-spacing:.13em;padding:1.45em 2em;
 }
-.btn--solid:hover{background:var(--green-400);border-color:var(--green-400);color:#03120a}
+.btn--solid:hover{filter:brightness(1.07);color:var(--on-accent)}
 
 .callback__contacts{
   position:relative;z-index:2;display:flex;flex-direction:column;padding:clamp(1.75rem,3vw,3.25rem);
@@ -111,13 +111,13 @@
   font-variant-numeric:tabular-nums;display:block;
   transition:color .35s var(--ease-out);
 }
-.big-phone:hover{color:var(--green-200)}
+.big-phone:hover{color:var(--accent-200)}
 .tg-link{
   display:inline-flex;align-items:center;gap:.6rem;margin-top:1rem;align-self:flex-start;
   font-size:1.0625rem;color:var(--text-2);transition:color .35s var(--ease-out);
 }
 .tg-link svg{width:13px;height:13px;opacity:.6;transition:transform .5s var(--ease-spring)}
-.tg-link:hover{color:var(--green-200)}
+.tg-link:hover{color:var(--accent-200)}
 .tg-link:hover svg{transform:translate(2px,-2px);opacity:1}
 
 @media (max-width:1100px){

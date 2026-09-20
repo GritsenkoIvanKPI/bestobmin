@@ -5,15 +5,15 @@
 .rates{background:var(--bg)}
 .rates::before{
   content:"";position:absolute;inset:-30% 0 auto 0;height:80%;pointer-events:none;
-  background:radial-gradient(60% 55% at 18% 0%,rgba(88,162,77,.10),transparent 70%);
+  background:radial-gradient(60% 55% at 18% 0%,rgba(204,163,119,.10),transparent 70%);
 }
 .stamp{
   display:inline-flex;align-items:center;gap:.6rem;padding:.5rem .95rem;border-radius:999px;
   border:1px solid var(--line-2);background:rgba(255,255,255,.03);
   font-family:var(--ff-mono);font-size:var(--fs-micro-2);letter-spacing:.1em;text-transform:uppercase;color:var(--text-2);
 }
-.stamp__dot{width:6px;height:6px;border-radius:50%;background:var(--green-400);position:relative;flex:none}
-.stamp__dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--green-600);animation:ping 2.6s var(--ease-out) infinite}
+.stamp__dot{width:6px;height:6px;border-radius:50%;background:var(--accent-400);position:relative;flex:none}
+.stamp__dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--accent-600);animation:ping 2.6s var(--ease-out) infinite}
 @keyframes ping{0%{transform:scale(.6);opacity:1}100%{transform:scale(1.5);opacity:0}}
 
 .cur-badge{
@@ -50,7 +50,7 @@
 .rate-row__num.is-buy{color:#fff}
 .rate-row__delta{text-align:right}
 .rate-row__delta .delta{margin:0;justify-content:flex-end}
-.rate-row.is-featured{background:rgba(88,162,77,.07);border-radius:16px;border-bottom-color:transparent;padding-inline:.9rem}
+.rate-row.is-featured{background:rgba(204,163,119,.07);border-radius:16px;border-bottom-color:transparent;padding-inline:.9rem}
 .rate-row.is-featured .rate-row__code{color:#fff}
 
 .rates__note{
