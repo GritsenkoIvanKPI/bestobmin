@@ -16,7 +16,7 @@
   .field{padding-block:1.1rem}
   .plain-field{min-height:52px}
 
-  .icon-btn,.route__foot .icon-btn{width:46px;height:46px}
+  .icon-btn{width:46px;height:46px}
   .swap__btn{width:46px;height:46px}
 
   .svc__link,.post__more{min-height:44px;align-items:center}
