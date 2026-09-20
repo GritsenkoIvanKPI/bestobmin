@@ -80,6 +80,7 @@
   --accent-200:#fbdba2;
   --accent-glow:rgba(204,163,119,.30);
   --accent-grad:linear-gradient(115deg,#fbdba2 0%,#cca377 48%,#fbdba2 100%);
+  --accent-grad-anim:linear-gradient(105deg,#fbdba2 0%,#cca377 25%,#fbdba2 50%,#cca377 75%,#fbdba2 100%);
   --on-accent:#1a1206; /* label colour on any gradient fill */
 
   --up:#e8c28c;
@@ -186,23 +187,47 @@ body::after{
   --btn-bd:var(--line-2);
   position:relative;display:inline-flex;align-items:center;gap:.85em;
   padding:1.05em 1.85em;border-radius:999px;border:1px solid var(--btn-bd);
-  background:rgba(255,255,255,.03);
+  background-color:rgba(255,255,255,.03);
   font-family:var(--ff-mono);font-size:.9375rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
   cursor:pointer;white-space:nowrap;
-  transition:border-color .45s var(--ease-out),background-color .45s var(--ease-out),color .45s var(--ease-out),transform .5s var(--ease-spring);
+  transition:border-color .45s var(--ease-out),background-color .45s var(--ease-out),
+             color .45s var(--ease-out),transform .5s var(--ease-spring),
+             box-shadow .45s var(--ease-out);
 }
 .btn svg{width:11px;height:11px;flex:none;transition:transform .5s var(--ease-spring)}
-.btn:hover{--btn-bd:var(--line-3);background:rgba(255,255,255,.07);transform:translateY(-2px)}
+.btn:hover{--btn-bd:var(--line-3);background-color:rgba(255,255,255,.07);transform:translateY(-2px)}
 .btn:hover svg{transform:translate(2px,-2px)}
 .btn:active{transform:translateY(0)}
 .btn:focus-visible{outline:2px solid var(--accent-400);outline-offset:3px}
-.btn--light{background:var(--accent-grad);color:var(--on-accent);border-color:transparent;
-  box-shadow:0 10px 30px -14px rgba(204,163,119,.75)}
-.btn--light:hover{filter:brightness(1.07);color:var(--on-accent)}
+
+/* ---------- gold buttons: one gradient treatment, sheen on hover ---------- */
+.btn--light,.btn--accent,.btn--solid{
+  color:var(--on-accent);border-color:transparent;
+  background-color:transparent;
+  background-image:var(--accent-grad-anim);
+  background-size:200% 100%;
+  background-position:0% 50%;
+  box-shadow:0 10px 30px -14px rgba(204,163,119,.75);
+}
+.btn--light:hover,.btn--accent:hover,.btn--solid:hover,
+.btn--light:focus-visible,.btn--accent:focus-visible,.btn--solid:focus-visible{
+  color:var(--on-accent);
+  background-color:transparent;
+  box-shadow:0 16px 40px -14px rgba(204,163,119,.95);
+  animation:btn-sheen 2.4s linear infinite;
+}
+.btn--light:active,.btn--accent:active,.btn--solid:active{animation-duration:1.1s}
+@keyframes btn-sheen{
+  from{background-position:0% 50%}
+  to{background-position:100% 50%}
+}
+@media (prefers-reduced-motion:reduce){
+  .btn--light:hover,.btn--accent:hover,.btn--solid:hover,
+  .btn--light:focus-visible,.btn--accent:focus-visible,.btn--solid:focus-visible{animation:none}
+}
+
 .btn--light .dot{width:7px;height:7px;border-radius:50%;background:var(--on-accent);flex:none}
-.btn--accent{background:var(--accent-grad);color:var(--on-accent);border-color:transparent;
-  box-shadow:0 10px 30px -14px rgba(204,163,119,.75)}
-.btn--accent:hover{filter:brightness(1.07);color:var(--on-accent)}
+
 .btn--accent .dot{width:7px;height:7px;border-radius:50%;background:var(--on-accent);flex:none}
 .btn--sm{padding:.85em 1.4em;font-size:var(--fs-micro-2)}
 
@@ -396,11 +421,10 @@ body::after{
 .hero h1 .line{display:block}
 .hero__lede{color:#fff;font-size:1.0625rem;line-height:1.65;max-width:34ch}
 .hero__cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:clamp(1.75rem,3vw,2.5rem)}
-.hero__cta .btn{background:rgba(8,10,8,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.hero__cta .btn:hover{background:rgba(20,24,20,.7)}
-.hero__cta .btn--light,.hero__cta .btn--light:hover{backdrop-filter:none;-webkit-backdrop-filter:none}
-.hero__cta .btn--light{background:var(--accent-grad)}
-.hero__cta .btn--light:hover{filter:brightness(1.07)}
+.hero__cta .btn:not(.btn--light){
+  background-color:rgba(8,10,8,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.hero__cta .btn:not(.btn--light):hover{background-color:rgba(20,24,20,.7)}
 
 .hero__usps{
   display:flex;flex-wrap:wrap;gap:.85rem clamp(1.1rem,2vw,1.9rem);
@@ -909,10 +933,8 @@ body::after{
 
 .btn--solid{
   width:100%;justify-content:center;margin-top:.35rem;
-  background:var(--accent-grad);border-color:transparent;color:var(--on-accent);
   font-weight:700;letter-spacing:.13em;padding:1.45em 2em;
 }
-.btn--solid:hover{filter:brightness(1.07);color:var(--on-accent)}
 
 .callback__contacts{
   position:relative;z-index:2;display:flex;flex-direction:column;padding:clamp(1.75rem,3vw,3.25rem);

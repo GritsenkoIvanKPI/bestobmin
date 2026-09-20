@@ -152,11 +152,10 @@
 .hero h1 .line{display:block}
 .hero__lede{color:#fff;font-size:1.0625rem;line-height:1.65;max-width:34ch}
 .hero__cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:clamp(1.75rem,3vw,2.5rem)}
-.hero__cta .btn{background:rgba(8,10,8,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-.hero__cta .btn:hover{background:rgba(20,24,20,.7)}
-.hero__cta .btn--light,.hero__cta .btn--light:hover{backdrop-filter:none;-webkit-backdrop-filter:none}
-.hero__cta .btn--light{background:var(--accent-grad)}
-.hero__cta .btn--light:hover{filter:brightness(1.07)}
+.hero__cta .btn:not(.btn--light){
+  background-color:rgba(8,10,8,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.hero__cta .btn:not(.btn--light):hover{background-color:rgba(20,24,20,.7)}
 
 .hero__usps{
   display:flex;flex-wrap:wrap;gap:.85rem clamp(1.1rem,2vw,1.9rem);

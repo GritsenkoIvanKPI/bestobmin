@@ -96,10 +96,8 @@
 
 .btn--solid{
   width:100%;justify-content:center;margin-top:.35rem;
-  background:var(--accent-grad);border-color:transparent;color:var(--on-accent);
   font-weight:700;letter-spacing:.13em;padding:1.45em 2em;
 }
-.btn--solid:hover{filter:brightness(1.07);color:var(--on-accent)}
 
 .callback__contacts{
   position:relative;z-index:2;display:flex;flex-direction:column;padding:clamp(1.75rem,3vw,3.25rem);

@@ -128,6 +128,23 @@ USD, EUR, GBP, PLN, CHF, CAD, CZK, SEK, HUF, UAH, USDT і комбіновани
 > Зеленими лишились рівно два кольори — і мають лишитись: смуга на
 > прапорі Угорщини (`#477050`) та фірмовий знак Tether (`#26A17B`).
 
+## Кнопки
+
+Золоті кнопки (`.btn--light`, `.btn--accent`, `.btn--solid`) використовують
+п'ятистопний градієнт `--accent-grad-anim` при `background-size:200% 100%`.
+Один період градієнта дорівнює ширині кнопки, тож анімація
+`background-position: 0% → 100%` зациклюється без стику.
+
+```css
+@keyframes btn-sheen{ from{background-position:0% 50%} to{background-position:100% 50%} }
+```
+
+Базова `.btn` задає **`background-color`**, а не `background` — інакше
+`.btn:hover` (вища специфічність) стирав би `background-image` золотих
+кнопок, і підпис ставав чорним на прозорому тлі.
+
+Анімація вимикається при `prefers-reduced-motion: reduce`.
+
 ## Колір тексту та контраст
 
 Увесь текст білий (`--text`, `--text-2`, `--text-3`, `--text-4` = `#ffffff`).
