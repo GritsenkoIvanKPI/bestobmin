@@ -54,7 +54,8 @@
 .rate-row.is-featured .rate-row__code{color:#fff}
 
 .rates__note{
-  display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:center;justify-content:space-between;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(11rem,15rem);
+  gap:1rem 2rem;align-items:center;
   margin-top:1.5rem;padding:1.15rem clamp(1.25rem,2vw,1.75rem);
   border:1px solid var(--line);border-radius:var(--r-md);background:rgba(255,255,255,.02);
 }

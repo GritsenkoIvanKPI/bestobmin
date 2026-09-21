@@ -216,10 +216,11 @@ body::before{
 .btn{
   --btn-bd:var(--line-2);
   position:relative;display:inline-flex;align-items:center;gap:.85em;
-  padding:1.05em 1.85em;border-radius:999px;border:1px solid var(--btn-bd);
+  padding:1.05em 1.35em;border-radius:999px;border:1px solid var(--btn-bd);
   background-color:rgba(255,255,255,.03);
   font-family:var(--ff-mono);font-size:.9375rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
   cursor:pointer;white-space:nowrap;
+  width:100%;justify-content:center;text-align:center;
   transition:border-color .45s var(--ease-out),background-color .45s var(--ease-out),
              color .45s var(--ease-out),transform .5s var(--ease-spring),
              box-shadow .45s var(--ease-out);
@@ -259,7 +260,7 @@ body::before{
 .btn--light .dot{width:7px;height:7px;border-radius:50%;background:var(--on-accent);flex:none}
 
 .btn--accent .dot{width:7px;height:7px;border-radius:50%;background:var(--on-accent);flex:none}
-.btn--sm{padding:.85em 1.4em;font-size:var(--fs-micro-2)}
+.btn--sm{padding:.85em 1.1em;font-size:var(--fs-micro-2)}
 
 .icon-btn{
   width:44px;height:44px;flex:none;border-radius:50%;border:1px solid var(--line-2);
@@ -450,7 +451,7 @@ body::before{
 }
 .hero h1 .line{display:block}
 .hero__lede{color:#fff;font-size:1.0625rem;line-height:1.65;max-width:34ch}
-.hero__cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:clamp(1.75rem,3vw,2.5rem)}
+.hero__cta{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:clamp(1.75rem,3vw,2.5rem)}
 .hero__cta .btn:not(.btn--light){
   background-color:rgba(8,10,8,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
 }
@@ -527,7 +528,7 @@ body::before{
 }
 
 @media (max-width:560px){
-  .hero__cta .btn{flex:1 1 auto;justify-content:center}
+  .hero__cta{grid-template-columns:1fr}
   .hr-cols{grid-template-columns:minmax(0,1fr) 3.9rem 3.9rem}
   .hr-head span:last-child,.hr-row__delta{display:none}
   .hero-rates__list{max-height:none}
@@ -591,7 +592,8 @@ body::before{
 .rate-row.is-featured .rate-row__code{color:#fff}
 
 .rates__note{
-  display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:center;justify-content:space-between;
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(11rem,15rem);
+  gap:1rem 2rem;align-items:center;
   margin-top:1.5rem;padding:1.15rem clamp(1.25rem,2vw,1.75rem);
   border:1px solid var(--line);border-radius:var(--r-md);background:rgba(255,255,255,.02);
 }
@@ -1109,6 +1111,7 @@ body::before{
 .map-tab[aria-selected="true"]{border-color:var(--accent-600);background:rgba(204,163,119,.16);color:#fff}
 .map-tab:focus-visible{outline:2px solid var(--accent-400);outline-offset:3px}
 .contact-block{display:grid;gap:1.1rem;padding-top:1.35rem;border-top:1px solid var(--line)}
+.contacts__actions{display:grid;gap:.6rem;margin-top:auto;padding-top:1.35rem}
 .contact-row{display:flex;gap:1rem;align-items:flex-start}
 .contact-row svg{width:15px;height:15px;flex:none;margin-top:.22rem;color:var(--text-4)}
 .contact-row__k{font-family:var(--ff-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--text-4);margin-bottom:.35rem}
@@ -1224,7 +1227,8 @@ body::before{
   .branch__foot .btn{width:100%;justify-content:center}
   .contacts__panel .btn,.rates__note .btn,.hero-rates__foot .btn{white-space:normal;text-align:center}
   .hero-rates__foot .btn{padding-inline:1rem}
-  .contacts__panel .btn{flex:1 1 100%;justify-content:center}
+  .contacts__actions{grid-template-columns:1fr}
+  .rates__note{grid-template-columns:1fr}
 
   .reviews__head .h-section{font-size:1.65rem}
   .extra__list{gap:.6rem}
@@ -2313,7 +2317,7 @@ body::before{
           </div>
         </div>
 
-        <div style="margin-top:auto;display:flex;gap:.6rem;flex-wrap:wrap;padding-top:1.35rem">
+        <div class="contacts__actions">
           <a class="btn btn--sm" id="cRoute" href="https://maps.google.com/?q=Івано-Франківськ, вулиця Чорновола, 4" target="_blank" rel="noopener">Прокласти маршрут
             <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>

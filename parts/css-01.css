@@ -151,7 +151,7 @@
 }
 .hero h1 .line{display:block}
 .hero__lede{color:#fff;font-size:1.0625rem;line-height:1.65;max-width:34ch}
-.hero__cta{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:clamp(1.75rem,3vw,2.5rem)}
+.hero__cta{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:clamp(1.75rem,3vw,2.5rem)}
 .hero__cta .btn:not(.btn--light){
   background-color:rgba(8,10,8,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
 }
@@ -228,7 +228,7 @@
 }
 
 @media (max-width:560px){
-  .hero__cta .btn{flex:1 1 auto;justify-content:center}
+  .hero__cta{grid-template-columns:1fr}
   .hr-cols{grid-template-columns:minmax(0,1fr) 3.9rem 3.9rem}
   .hr-head span:last-child,.hr-row__delta{display:none}
   .hero-rates__list{max-height:none}

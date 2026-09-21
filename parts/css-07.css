@@ -78,7 +78,8 @@
   .branch__foot .btn{width:100%;justify-content:center}
   .contacts__panel .btn,.rates__note .btn,.hero-rates__foot .btn{white-space:normal;text-align:center}
   .hero-rates__foot .btn{padding-inline:1rem}
-  .contacts__panel .btn{flex:1 1 100%;justify-content:center}
+  .contacts__actions{grid-template-columns:1fr}
+  .rates__note{grid-template-columns:1fr}
 
   .reviews__head .h-section{font-size:1.65rem}
   .extra__list{gap:.6rem}

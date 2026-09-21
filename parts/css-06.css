@@ -107,6 +107,7 @@
 .map-tab[aria-selected="true"]{border-color:var(--accent-600);background:rgba(204,163,119,.16);color:#fff}
 .map-tab:focus-visible{outline:2px solid var(--accent-400);outline-offset:3px}
 .contact-block{display:grid;gap:1.1rem;padding-top:1.35rem;border-top:1px solid var(--line)}
+.contacts__actions{display:grid;gap:.6rem;margin-top:auto;padding-top:1.35rem}
 .contact-row{display:flex;gap:1rem;align-items:flex-start}
 .contact-row svg{width:15px;height:15px;flex:none;margin-top:.22rem;color:var(--text-4)}
 .contact-row__k{font-family:var(--ff-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:var(--text-4);margin-bottom:.35rem}
