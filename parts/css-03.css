@@ -2,7 +2,7 @@
 /* ============================================================
    EXCHANGE REQUEST
    ============================================================ */
-.exchange{background:var(--bg-deep)}
+.exchange{background:transparent}
 .exchange::before{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(52% 46% at 84% 22%,rgba(204,163,119,.13),transparent 68%);
@@ -125,7 +125,8 @@
 /* ============================================================
    STEPS
    ============================================================ */
-.steps{background:var(--bg)}
+.steps{background:transparent}
+.steps::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(44% 40% at 92% 70%,rgba(232,194,140,0.16),transparent 70%)}
 .steps__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.75rem,1.2vw,1.15rem);margin-top:clamp(2.5rem,4vw,3.5rem)}
 .step{padding:clamp(1.4rem,2vw,1.9rem);display:flex;flex-direction:column;gap:1.25rem}
 .step__top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}

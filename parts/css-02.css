@@ -2,7 +2,7 @@
 /* ============================================================
    RATES
    ============================================================ */
-.rates{background:var(--bg)}
+.rates{background:transparent}
 .rates::before{
   content:"";position:absolute;inset:-30% 0 auto 0;height:80%;pointer-events:none;
   background:radial-gradient(60% 55% at 18% 0%,rgba(204,163,119,.10),transparent 70%);

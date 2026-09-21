@@ -2,7 +2,7 @@
 /* ============================================================
    REVIEWS
    ============================================================ */
-.reviews-section{position:relative;padding-block:clamp(5rem,8vw,8.5rem);overflow:hidden;background:#080808}
+.reviews-section{position:relative;padding-block:clamp(5rem,8vw,8.5rem);overflow:hidden;background:rgba(255,255,255,.014)}
 .reviews__head{display:flex;align-items:center;justify-content:space-between;gap:2rem;margin-bottom:clamp(2rem,3vw,3rem)}
 .reviews__nav{display:flex;gap:.6rem}
 .reviews__viewport{overflow:hidden;margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter)}
@@ -27,7 +27,8 @@
 /* ============================================================
    FAQ
    ============================================================ */
-.faq{background:var(--bg-deep)}
+.faq{background:transparent}
+.faq::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(40% 42% at 10% 20%,rgba(204,163,119,0.18),transparent 70%)}
 .faq__grid{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(2rem,4vw,4rem);align-items:start}
 .faq__intro{position:sticky;top:calc(var(--header-h) + 2rem)}
 .faq__intro .h-section{margin:clamp(1.25rem,2vw,1.75rem) 0 1.25rem}
@@ -59,7 +60,8 @@
 /* ============================================================
    NEWS
    ============================================================ */
-.news{background:var(--bg)}
+.news{background:transparent}
+.news::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(44% 40% at 88% 30%,rgba(251,219,162,0.16),transparent 70%)}
 .news__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.75rem,1.2vw,1.15rem)}
 .post{display:flex;flex-direction:column;overflow:hidden}
 .post__media{position:relative;aspect-ratio:16/10;overflow:hidden;background:#050505}
@@ -85,7 +87,8 @@
 /* ============================================================
    CONTACTS + MAP
    ============================================================ */
-.contacts{background:var(--bg-deep)}
+.contacts{background:transparent}
+.contacts::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(48% 44% at 16% 84%,rgba(204,163,119,0.20),transparent 70%)}
 .contacts__grid{display:grid;grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);gap:clamp(1rem,1.6vw,1.5rem);align-items:stretch}
 .contacts__panel{padding:clamp(1.6rem,2.4vw,2.4rem);display:flex;flex-direction:column;gap:1.5rem}
 .map-tabs{display:flex;gap:.5rem;flex-wrap:wrap}
@@ -118,7 +121,7 @@
 /* ============================================================
    FOOTER
    ============================================================ */
-.site-footer{background:#030303;border-top:1px solid var(--line);padding-block:clamp(3rem,5vw,4.5rem) 2rem}
+.site-footer{background:rgba(0,0,0,.5);border-top:1px solid var(--line);padding-block:clamp(3rem,5vw,4.5rem) 2rem}
 .footer__grid{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,1fr));gap:clamp(1.75rem,3vw,3rem);padding-bottom:clamp(2.5rem,4vw,3.5rem)}
 .footer__brand p{font-size:1rem;color:var(--text-3);line-height:1.65;max-width:32ch;margin-top:1.35rem}
 .footer__col h4{font-family:var(--ff-mono);font-size:var(--fs-micro);font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:var(--text-4);margin-bottom:1.35rem}

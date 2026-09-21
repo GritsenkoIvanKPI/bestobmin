@@ -89,6 +89,36 @@ body::after{
   mix-blend-mode:overlay;
 }
 
+/* ============================================================
+   AMBIENT LIGHT
+   Fixed pools of warm light behind everything, so the page reads as a
+   lit room rather than flat black. Fixed + transform-only drift keeps
+   it off the paint path while scrolling.
+   ============================================================ */
+body::before{
+  content:"";position:fixed;inset:-12%;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(38rem 30rem at 8% 4%,   rgba(204,163,119,0.30), transparent 60%),
+    radial-gradient(34rem 28rem at 94% 24%, rgba(251,219,162,0.20), transparent 62%),
+    radial-gradient(42rem 32rem at 14% 60%, rgba(204,163,119,0.22), transparent 62%),
+    radial-gradient(36rem 30rem at 88% 86%, rgba(232,194,140,0.18), transparent 62%);
+  animation:ambient-drift 52s ease-in-out infinite alternate;
+  will-change:transform;
+}
+@keyframes ambient-drift{
+  from{transform:translate3d(-1.5%,-1%,0) scale(1)}
+  to  {transform:translate3d(1.5%,1.5%,0) scale(1.07)}
+}
+@media (prefers-reduced-motion:reduce){ body::before{animation:none} }
+
+/* a hairline of light where one section meets the next */
+.section-edge{position:relative}
+.section-edge::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(204,163,119,.40) 16%,rgba(251,219,162,.62) 50%,rgba(204,163,119,.40) 84%,transparent);
+  opacity:.7;
+}
+
 .shell{width:min(100% - (var(--gutter) * 2),1400px);margin-inline:auto}
 [id]{scroll-margin-top:calc(var(--header-h) + 1.25rem)}
 
