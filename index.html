@@ -613,6 +613,12 @@ body::before{
 }
 .rates__note p{font-size:1rem;color:var(--text-2);max-width:62ch}
 .rates__note b{color:#fff;font-weight:600}
+/* the button column would squeeze the text to a sliver on phones:
+   stack them — text on top, full-width button underneath */
+@media (max-width:760px){
+  .rates__note{grid-template-columns:minmax(0,1fr);gap:1.1rem;padding:1.25rem}
+  .rates__note p{max-width:none}
+}
 
 @media (max-width:1080px){
   .rate-table{grid-template-columns:1fr}
@@ -1048,6 +1054,10 @@ body::before{
   .review__body{flex-direction:column;gap:1rem}
   .review__foot{padding-left:0}
 }
+@media (max-width:360px){
+  .review{padding:1.15rem}
+  .review__quote{font-size:1rem}
+}
 
 /* ============================================================
    FAQ
@@ -1235,14 +1245,11 @@ body::before{
   .rate-row__cur > span:last-child{gap:.15rem}
   .rate-table__col{padding-inline:clamp(.75rem,3vw,1rem)}
 
-  .rates__note{flex-direction:column;align-items:stretch}
-  .rates__note .btn{justify-content:center}
 
   .form-card .btn,.callback__form .btn{justify-content:center}
   .branch__foot .btn{width:100%;justify-content:center}
-  .contacts__panel .btn,.rates__note .btn{white-space:normal;text-align:center}
+  .contacts__panel .btn{white-space:normal;text-align:center}
   .contacts__actions{grid-template-columns:1fr}
-  .rates__note{grid-template-columns:1fr}
 
   .reviews__head .h-section{font-size:1.65rem}
   .extra__list{gap:.6rem}

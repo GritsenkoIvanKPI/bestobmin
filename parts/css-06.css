@@ -29,6 +29,10 @@
   .review__body{flex-direction:column;gap:1rem}
   .review__foot{padding-left:0}
 }
+@media (max-width:360px){
+  .review{padding:1.15rem}
+  .review__quote{font-size:1rem}
+}
 
 /* ============================================================
    FAQ

@@ -61,6 +61,12 @@
 }
 .rates__note p{font-size:1rem;color:var(--text-2);max-width:62ch}
 .rates__note b{color:#fff;font-weight:600}
+/* the button column would squeeze the text to a sliver on phones:
+   stack them — text on top, full-width button underneath */
+@media (max-width:760px){
+  .rates__note{grid-template-columns:minmax(0,1fr);gap:1.1rem;padding:1.25rem}
+  .rates__note p{max-width:none}
+}
 
 @media (max-width:1080px){
   .rate-table{grid-template-columns:1fr}
