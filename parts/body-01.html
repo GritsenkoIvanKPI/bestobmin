@@ -83,170 +83,59 @@
       </ul>
     </div>
 
-    <aside class="hero-rates reveal" style="transition-delay:.2s" aria-label="Актуальні курси валют">
-      <div class="hero-rates__tabs" role="tablist" aria-label="Набір курсів">
-        <button type="button" role="tab" aria-selected="true" aria-controls="hr-top" data-panel="hr-top">Популярні</button>
-        <button type="button" role="tab" aria-selected="false" aria-controls="hr-all" data-panel="hr-all">Всі валюти</button>
+    <aside class="hero-calc reveal" style="transition-delay:.2s" aria-label="Калькулятор обміну">
+      <div class="hc-group">
+        <label class="hc-box hc-box--cur">
+          <span class="cur-badge"><svg class="flag" data-flag="from" aria-hidden="true"><use href="#fl-usd"/></svg></span>
+          <select class="hc-select" data-cur="from" aria-label="Ви віддаєте — валюта">
+            <option value="UAH">UAH</option>
+            <option value="USD100" selected>USD</option>
+            <option value="USD">USD дрібні</option>
+            <option value="EUR">EUR</option>
+            <option value="USDT">USDT</option>
+            <option value="GBP">GBP</option>
+            <option value="PLN">PLN</option>
+            <option value="CHF">CHF</option>
+            <option value="CAD">CAD</option>
+            <option value="CZK">CZK</option>
+            <option value="SEK">SEK</option>
+            <option value="HUF">HUF</option>
+          </select>
+        </label>
+        <label class="hc-box hc-box--amt">
+          <input class="hc-amt" data-amt="from" type="text" inputmode="decimal" value="100" aria-label="Ви віддаєте — сума">
+        </label>
       </div>
-
-      <div class="hr-head hr-cols" aria-hidden="true">
-        <span>Валюта</span><span>Купівля</span><span>Продаж</span><span>Зміна</span>
+      <button type="button" class="hc-swap" data-swap aria-label="Поміняти валюти місцями">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 20V4M7 4 3.5 7.5M7 4l3.5 3.5M17 4v16m0 0-3.5-3.5M17 20l3.5-3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="hc-group">
+        <label class="hc-box hc-box--cur">
+          <span class="cur-badge"><svg class="flag" data-flag="to" aria-hidden="true"><use href="#fl-uah"/></svg></span>
+          <select class="hc-select" data-cur="to" aria-label="Ви отримуєте — валюта">
+            <option value="UAH" selected>UAH</option>
+            <option value="USD100">USD</option>
+            <option value="USD">USD дрібні</option>
+            <option value="EUR">EUR</option>
+            <option value="USDT">USDT</option>
+            <option value="GBP">GBP</option>
+            <option value="PLN">PLN</option>
+            <option value="CHF">CHF</option>
+            <option value="CAD">CAD</option>
+            <option value="CZK">CZK</option>
+            <option value="SEK">SEK</option>
+            <option value="HUF">HUF</option>
+          </select>
+        </label>
+        <label class="hc-box hc-box--amt">
+          <input class="hc-amt" data-amt="to" type="text" inputmode="decimal" value="4 465,00" aria-label="Ви отримуєте — сума">
+        </label>
       </div>
-
-        <ul class="hero-rates__list" id="hr-top" role="tabpanel">
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Долар США"><use href="#fl-usd"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">USD</span><span class="hr-row__name">Долар США</span></span>
-            </span>
-            <span class="hr-row__num">44.65</span>
-            <span class="hr-row__num">44.90</span>
-            <span class="hr-row__delta"><span class="delta up"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6.5v-5M1.5 4 4 1.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>+0.10</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Євро"><use href="#fl-eur"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">EUR</span><span class="hr-row__name">Євро</span></span>
-            </span>
-            <span class="hr-row__num">51.70</span>
-            <span class="hr-row__num">51.93</span>
-            <span class="hr-row__delta"><span class="delta up"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6.5v-5M1.5 4 4 1.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>+0.18</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Польський злотий"><use href="#fl-pln"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">PLN</span><span class="hr-row__name">Польський злотий</span></span>
-            </span>
-            <span class="hr-row__num">11.87</span>
-            <span class="hr-row__num">12.00</span>
-            <span class="hr-row__delta"><span class="delta down"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 1.5v5M1.5 4 4 6.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>−0.02</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Фунт стерлінгів"><use href="#fl-gbp"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">GBP</span><span class="hr-row__name">Фунт стерлінгів</span></span>
-            </span>
-            <span class="hr-row__num">59.80</span>
-            <span class="hr-row__num">60.35</span>
-            <span class="hr-row__delta"><span class="delta down"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 1.5v5M1.5 4 4 6.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>−0.21</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Швейцарський франк"><use href="#fl-chf"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">CHF</span><span class="hr-row__name">Швейцарський франк</span></span>
-            </span>
-            <span class="hr-row__num">54.90</span>
-            <span class="hr-row__num">55.59</span>
-            <span class="hr-row__delta"><span class="delta up"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6.5v-5M1.5 4 4 1.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>+0.24</span></span>
-          </li>
-        </ul>
-        <ul class="hero-rates__list" id="hr-all" role="tabpanel" hidden>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Долар США"><use href="#fl-usd"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">USD</span><span class="hr-row__name">Долар США</span></span>
-            </span>
-            <span class="hr-row__num">44.65</span>
-            <span class="hr-row__num">44.90</span>
-            <span class="hr-row__delta"><span class="delta up"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6.5v-5M1.5 4 4 1.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>+0.10</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Євро"><use href="#fl-eur"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">EUR</span><span class="hr-row__name">Євро</span></span>
-            </span>
-            <span class="hr-row__num">51.70</span>
-            <span class="hr-row__num">51.93</span>
-            <span class="hr-row__delta"><span class="delta up"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6.5v-5M1.5 4 4 1.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>+0.18</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Польський злотий"><use href="#fl-pln"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">PLN</span><span class="hr-row__name">Польський злотий</span></span>
-            </span>
-            <span class="hr-row__num">11.87</span>
-            <span class="hr-row__num">12.00</span>
-            <span class="hr-row__delta"><span class="delta down"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 1.5v5M1.5 4 4 6.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>−0.02</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Фунт стерлінгів"><use href="#fl-gbp"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">GBP</span><span class="hr-row__name">Фунт стерлінгів</span></span>
-            </span>
-            <span class="hr-row__num">59.80</span>
-            <span class="hr-row__num">60.35</span>
-            <span class="hr-row__delta"><span class="delta down"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 1.5v5M1.5 4 4 6.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>−0.21</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Швейцарський франк"><use href="#fl-chf"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">CHF</span><span class="hr-row__name">Швейцарський франк</span></span>
-            </span>
-            <span class="hr-row__num">54.90</span>
-            <span class="hr-row__num">55.59</span>
-            <span class="hr-row__delta"><span class="delta up"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6.5v-5M1.5 4 4 1.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>+0.24</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Канадський долар"><use href="#fl-cad"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">CAD</span><span class="hr-row__name">Канадський долар</span></span>
-            </span>
-            <span class="hr-row__num">31.30</span>
-            <span class="hr-row__num">31.99</span>
-            <span class="hr-row__delta"><span class="delta up"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6.5v-5M1.5 4 4 1.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>+0.07</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Чеська крона"><use href="#fl-czk"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">CZK</span><span class="hr-row__name">Чеська крона</span></span>
-            </span>
-            <span class="hr-row__num">2.02</span>
-            <span class="hr-row__num">2.12</span>
-            <span class="hr-row__delta"><span class="delta flat">0.00</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Шведська крона"><use href="#fl-sek"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">SEK</span><span class="hr-row__name">Шведська крона</span></span>
-            </span>
-            <span class="hr-row__num">3.95</span>
-            <span class="hr-row__num">4.25</span>
-            <span class="hr-row__delta"><span class="delta up"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6.5v-5M1.5 4 4 1.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>+0.03</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Угорський форинт"><use href="#fl-huf"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">HUF</span><span class="hr-row__name">Угорський форинт</span></span>
-            </span>
-            <span class="hr-row__num">0.12</span>
-            <span class="hr-row__num">0.142</span>
-            <span class="hr-row__delta"><span class="delta flat">0.00</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Спред до долара"><use href="#fl-usdt"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">USDT</span><span class="hr-row__name">Спред до долара</span></span>
-            </span>
-            <span class="hr-row__num">+1.6%</span>
-            <span class="hr-row__num">+2.9%</span>
-            <span class="hr-row__delta"><span class="delta up"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6.5v-5M1.5 4 4 1.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>+0.2%</span></span>
-          </li>
-          <li class="hr-row hr-cols">
-            <span class="hr-row__cur">
-              <span class="cur-badge"><svg class="flag" role="img" aria-label="Крос-курс"><use href="#fl-cross"/></svg></span>
-              <span class="hr-row__id"><span class="hr-row__code">EUR / USD</span><span class="hr-row__name">Крос-курс</span></span>
-            </span>
-            <span class="hr-row__num">1.156</span>
-            <span class="hr-row__num">1.165</span>
-            <span class="hr-row__delta"><span class="delta up"><svg viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6.5v-5M1.5 4 4 1.5 6.5 4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>+0.004</span></span>
-          </li>
-        </ul>
-
-      <div class="hero-rates__foot">
-        <a class="btn btn--sm" href="#rates">Переглянути всі курси
-          <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-      </div>
+      <p class="hc-rate">Курс <span data-rate>1 USD = 44,65 UAH</span></p>
+      <a class="btn btn--light hc-submit" href="#exchange" data-submit>Оформити заявку
+        <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <p class="hc-note">*Актуальний курс змінюється щогодини — уточнюйте курс обміну у нашого менеджера</p>
     </aside>
 
   </div>

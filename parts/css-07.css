@@ -76,8 +76,7 @@
 
   .form-card .btn,.callback__form .btn{justify-content:center}
   .branch__foot .btn{width:100%;justify-content:center}
-  .contacts__panel .btn,.rates__note .btn,.hero-rates__foot .btn{white-space:normal;text-align:center}
-  .hero-rates__foot .btn{padding-inline:1rem}
+  .contacts__panel .btn,.rates__note .btn{white-space:normal;text-align:center}
   .contacts__actions{grid-template-columns:1fr}
   .rates__note{grid-template-columns:1fr}
 

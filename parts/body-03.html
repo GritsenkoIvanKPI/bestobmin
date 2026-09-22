@@ -24,8 +24,8 @@
           <span class="calc__k">Ви віддаєте</span>
           <div class="calc__row">
             <label class="calc__box calc__box--cur">
-              <span class="cur-badge"><svg class="flag" id="flagFrom" role="img" aria-hidden="true"><use href="#fl-usd"/></svg></span>
-              <select class="calc__select" id="curFrom" aria-label="Ви віддаєте — валюта">
+              <span class="cur-badge"><svg class="flag" id="flagFrom" data-flag="from" role="img" aria-hidden="true"><use href="#fl-usd"/></svg></span>
+              <select class="calc__select" id="curFrom" data-cur="from" aria-label="Ви віддаєте — валюта">
               <option value="UAH">Гривня</option>
               <option value="USD100" selected>USD · купюри 100 $</option>
               <option value="USD">USD · дрібні номінали</option>
@@ -41,20 +41,20 @@
               </select>
             </label>
             <label class="calc__box calc__box--amt">
-              <input class="calc__amt" id="amtFrom" type="text" inputmode="decimal"
+              <input class="calc__amt" id="amtFrom" data-amt="from" type="text" inputmode="decimal"
                      value="100" aria-label="Ви віддаєте — сума">
             </label>
           </div>
         </div>
-        <button type="button" class="calc__swap" id="swapBtn" aria-label="Поміняти валюти місцями">
+        <button type="button" class="calc__swap" id="swapBtn" data-swap aria-label="Поміняти валюти місцями">
           <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5 14V3.5M5 3.5 2.5 6M5 3.5 7.5 6M11 2v10.5M11 12.5 8.5 10M11 12.5 13.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="calc__group">
           <span class="calc__k">Ви отримуєте</span>
           <div class="calc__row">
             <label class="calc__box calc__box--cur">
-              <span class="cur-badge"><svg class="flag" id="flagTo" role="img" aria-hidden="true"><use href="#fl-uah"/></svg></span>
-              <select class="calc__select" id="curTo" aria-label="Ви отримуєте — валюта">
+              <span class="cur-badge"><svg class="flag" id="flagTo" data-flag="to" role="img" aria-hidden="true"><use href="#fl-uah"/></svg></span>
+              <select class="calc__select" id="curTo" data-cur="to" aria-label="Ви отримуєте — валюта">
               <option value="UAH" selected>Гривня</option>
               <option value="USD100">USD · купюри 100 $</option>
               <option value="USD">USD · дрібні номінали</option>
@@ -70,7 +70,7 @@
               </select>
             </label>
             <label class="calc__box calc__box--amt">
-              <input class="calc__amt" id="amtTo" type="text" inputmode="decimal"
+              <input class="calc__amt" id="amtTo" data-amt="to" type="text" inputmode="decimal"
                      value="4 465,00" aria-label="Ви отримуєте — сума">
             </label>
           </div>

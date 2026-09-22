@@ -47,18 +47,6 @@
     t.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
   }
 
-  /* ---------- hero rate tabs ---------- */
-  var hrTabs = document.querySelectorAll('.hero-rates__tabs button');
-  hrTabs.forEach(function (tab) {
-    tab.addEventListener('click', function () {
-      hrTabs.forEach(function (t) {
-        var on = t === tab;
-        t.setAttribute('aria-selected', String(on));
-        document.getElementById(t.dataset.panel).hidden = !on;
-      });
-    });
-  });
-
   /* ---------- exchange calculator ---------- */
   /* Rates are quoted against UAH: `buy` is what the office pays the client
      for 1 unit, `sell` is what the client pays to get 1 unit. */
@@ -84,19 +72,9 @@
     'USD100>EUR': 1 / 1.165, 'USD>EUR': 1 / 1.165
   };
 
-  var curFrom  = document.getElementById('curFrom');
-  var curTo    = document.getElementById('curTo');
-  var amtFrom  = document.getElementById('amtFrom');
-  var amtTo    = document.getElementById('amtTo');
-  var flagFrom = document.getElementById('flagFrom');
-  var flagTo   = document.getElementById('flagTo');
-  var usedRateEl = document.getElementById('usedRate');
-  var sumFromEl  = document.getElementById('sumFrom');
-  var sumToEl    = document.getElementById('sumTo');
-
   function nf(n, dec) {
     return n.toLocaleString('uk-UA', { minimumFractionDigits: dec, maximumFractionDigits: dec })
-            .replace(/\u00a0/g, ' ');
+            .replace(/ /g, ' ');
   }
   function parseAmt(v) {
     var n = parseFloat(String(v).replace(/[^\d.,-]/g, '').replace(/\s/g, '').replace(',', '.'));
@@ -109,50 +87,81 @@
     if (CROSS[key]) return CROSS[key];
     return CUR[from].buy / CUR[to].sell;
   }
-  function decimalsFor(code) { return code === 'UAH' ? 2 : 2; }
-
-  function setFlag(el, cur) {
-    el.firstElementChild.setAttribute('href', '#fl-' + CUR[cur].flag);
+  function rateLabel(from, to) {
+    var r = rateBetween(from, to);
+    return '1 ' + CUR[from].code + ' = ' + nf(r, r >= 10 ? 2 : 4) + ' ' + CUR[to].code;
   }
 
-  /* recompute the side the user is NOT typing into */
-  function recalc(source) {
-    var f = curFrom.value, t = curTo.value;
-    setFlag(flagFrom, f); setFlag(flagTo, t);
-    var rate = rateBetween(f, t);
+  /* One converter = two currency pickers + two amounts + a swap button,
+     found by data attributes inside `root`. Either amount drives the other. */
+  function Converter(root, onChange) {
+    var q  = function (sel) { return root.querySelector(sel); };
+    var cf = q('[data-cur="from"]'), ct = q('[data-cur="to"]');
+    var af = q('[data-amt="from"]'), at = q('[data-amt="to"]');
+    var ff = q('[data-flag="from"]'), ft = q('[data-flag="to"]');
 
-    if (source === 'to') {
-      var got = parseAmt(amtTo.value);
-      amtFrom.value = nf(rate ? got / rate : 0, decimalsFor(CUR[f].code));
-    } else {
-      var give = parseAmt(amtFrom.value);
-      amtTo.value = nf(give * rate, decimalsFor(CUR[t].code));
+    function setFlag(el, c) { if (el) el.querySelector('use').setAttribute('href', '#fl-' + CUR[c].flag); }
+    function state() {
+      return { from: cf.value, to: ct.value, give: parseAmt(af.value), get: parseAmt(at.value),
+               rate: rateBetween(cf.value, ct.value) };
+    }
+    function recalc(source) {
+      var f = cf.value, t = ct.value, rate = rateBetween(f, t);
+      setFlag(ff, f); setFlag(ft, t);
+      if (source === 'to') af.value = nf(rate ? parseAmt(at.value) / rate : 0, 2);
+      else                 at.value = nf(parseAmt(af.value) * rate, 2);
+      if (onChange) onChange(state());
+    }
+    function avoidSame(changed) {
+      if (cf.value !== ct.value) return;
+      (changed === cf ? ct : cf).value = (changed.value === 'UAH') ? 'USD100' : 'UAH';
     }
 
-    var give2 = parseAmt(amtFrom.value), got2 = parseAmt(amtTo.value);
-    usedRateEl.textContent = '1 ' + CUR[f].code + ' = ' + nf(rate, rate >= 10 ? 2 : 4) + ' ' + CUR[t].code;
-    sumFromEl.textContent = nf(give2, decimalsFor(CUR[f].code)) + ' ' + CUR[f].code;
-    sumToEl.textContent   = nf(got2,  decimalsFor(CUR[t].code)) + ' ' + CUR[t].code;
-  }
-
-  /* keep the two sides from selecting the same currency */
-  function avoidSame(changed) {
-    if (curFrom.value !== curTo.value) return;
-    var other = changed === curFrom ? curTo : curFrom;
-    other.value = (changed.value === 'UAH') ? 'USD100' : 'UAH';
-  }
-
-  amtFrom.addEventListener('input', function () { recalc('from'); });
-  amtTo.addEventListener('input',   function () { recalc('to'); });
-  curFrom.addEventListener('change', function () { avoidSame(curFrom); recalc('from'); });
-  curTo.addEventListener('change',   function () { avoidSame(curTo);   recalc('from'); });
-  document.getElementById('swapBtn').addEventListener('click', function () {
-    var f = curFrom.value, a = amtFrom.value;
-    curFrom.value = curTo.value; amtFrom.value = amtTo.value;
-    curTo.value = f; amtTo.value = a;
+    af.addEventListener('input', function () { recalc('from'); });
+    at.addEventListener('input', function () { recalc('to'); });
+    cf.addEventListener('change', function () { avoidSame(cf); recalc('from'); });
+    ct.addEventListener('change', function () { avoidSame(ct); recalc('from'); });
+    q('[data-swap]').addEventListener('click', function () {
+      var c = cf.value, v = af.value;
+      cf.value = ct.value; af.value = at.value;
+      ct.value = c;        at.value = v;
+      recalc('from');
+    });
     recalc('from');
+
+    return {
+      state: state,
+      set: function (from, to, give) {
+        cf.value = from; ct.value = to; af.value = nf(give, give % 1 ? 2 : 0); recalc('from');
+      }
+    };
+  }
+
+  /* full request form */
+  var usedRateEl = document.getElementById('usedRate');
+  var sumFromEl  = document.getElementById('sumFrom');
+  var sumToEl    = document.getElementById('sumTo');
+  var mainCalc = Converter(document.getElementById('exchangeForm'), function (st) {
+    usedRateEl.textContent = rateLabel(st.from, st.to);
+    sumFromEl.textContent  = nf(st.give, 2) + ' ' + CUR[st.from].code;
+    sumToEl.textContent    = nf(st.get, 2)  + ' ' + CUR[st.to].code;
   });
-  recalc('from');
+
+  /* compact converter on the first screen */
+  var heroCalcEl = document.querySelector('.hero-calc');
+  if (heroCalcEl) {
+    var heroRate = heroCalcEl.querySelector('[data-rate]');
+    var heroCalc = Converter(heroCalcEl, function (st) { heroRate.textContent = rateLabel(st.from, st.to); });
+    /* "Оформити заявку" carries the pair and amount into the full form */
+    heroCalcEl.querySelector('[data-submit]').addEventListener('click', function () {
+      var st = heroCalc.state();
+      mainCalc.set(st.from, st.to, st.give);
+      setTimeout(function () {
+        var nameInput = document.querySelector('#exchangeForm input[name="name"]');
+        if (nameInput) nameInput.focus({ preventScroll: true });
+      }, 700);
+    });
+  }
 
   /* ---------- forms ---------- */
   function handleForm(formId, okId) {
