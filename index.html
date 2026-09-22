@@ -889,8 +889,9 @@ body::before{
    SECURITY
    ============================================================ */
 .security{background:transparent;isolation:isolate}
-.security__grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(2rem,4vw,4rem);align-items:center}
-.security__art{position:relative;order:2}
+.security__grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(2rem,4vw,4rem);align-items:start}
+/* pinned to the top of the block, then follows the reader down the cards */
+.security__art{position:sticky;top:calc(var(--header-h) + 1.5rem);order:2}
 .security__art img{width:100%;height:auto;border-radius:var(--r-lg)}
 .security__art::after{
   content:"";position:absolute;inset:0;border-radius:var(--r-lg);pointer-events:none;
@@ -911,7 +912,7 @@ body::before{
 .sec-card p{font-size:1rem;color:var(--text-3);line-height:1.62}
 @media (max-width:960px){
   .security__grid{grid-template-columns:1fr}
-  .security__art{order:-1}
+  .security__art{order:-1;position:relative;top:auto}
 }
 
 /* ============================================================
