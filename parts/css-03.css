@@ -47,6 +47,11 @@
   font-family:var(--ff-display);font-size:1.5rem;font-weight:500;letter-spacing:-.02em;
   font-variant-numeric:tabular-nums;color:#fff;
 }
+.usd-key{
+  display:grid;gap:.3rem;margin:.1rem 0 .9rem;
+  font-size:.875rem;line-height:1.45;color:#fff;
+}
+.usd-key b{font-weight:600;font-family:var(--ff-mono);letter-spacing:.02em}
 .calc__swap{
   justify-self:center;width:46px;height:46px;border-radius:50%;
   border:1px solid var(--line-2);background:var(--surface-2);color:var(--accent-300);

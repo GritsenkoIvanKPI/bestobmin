@@ -10,7 +10,7 @@
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Курс фіксується на 30 хвилин після підтвердження</li>
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Жодних комісій понад вказану суму</li>
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Готуємо потрібну суму та номінали заздалегідь</li>
-        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Від 400 у.о. — оптовий курс без черги</li>
+        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Від 500 у.о. — оптовий курс без черги</li>
       </ul>
     </div>
 
@@ -27,8 +27,8 @@
               <span class="cur-badge"><svg class="flag" id="flagFrom" data-flag="from" role="img" aria-hidden="true"><use href="#fl-usd"/></svg></span>
               <select class="calc__select" id="curFrom" data-cur="from" aria-label="Ви віддаєте — валюта">
               <option value="UAH">Гривня</option>
-              <option value="USD100" selected>USD · купюри 100 $</option>
-              <option value="USD">USD · дрібні номінали</option>
+              <option value="USD100" selected>USD (🔵)</option>
+              <option value="USD">USD (⚪️)</option>
               <option value="EUR">EUR · євро</option>
               <option value="USDT">USDT · Tether</option>
               <option value="GBP">GBP · фунт стерлінгів</option>
@@ -56,8 +56,8 @@
               <span class="cur-badge"><svg class="flag" id="flagTo" data-flag="to" role="img" aria-hidden="true"><use href="#fl-uah"/></svg></span>
               <select class="calc__select" id="curTo" data-cur="to" aria-label="Ви отримуєте — валюта">
               <option value="UAH" selected>Гривня</option>
-              <option value="USD100">USD · купюри 100 $</option>
-              <option value="USD">USD · дрібні номінали</option>
+              <option value="USD100">USD (🔵)</option>
+              <option value="USD">USD (⚪️)</option>
               <option value="EUR">EUR · євро</option>
               <option value="USDT">USDT · Tether</option>
               <option value="GBP">GBP · фунт стерлінгів</option>
@@ -76,6 +76,11 @@
           </div>
         </div>
       </div>
+
+      <p class="usd-key">
+        <span><b>🔵 USD</b> — нові купюри номіналом 100 $</span>
+        <span><b>⚪️ USD</b> — старіші купюри (2000-х років)</span>
+      </p>
 
       <div class="form-row">
         <label class="field field--text">

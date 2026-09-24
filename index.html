@@ -684,6 +684,11 @@ body::before{
   font-family:var(--ff-display);font-size:1.5rem;font-weight:500;letter-spacing:-.02em;
   font-variant-numeric:tabular-nums;color:#fff;
 }
+.usd-key{
+  display:grid;gap:.3rem;margin:.1rem 0 .9rem;
+  font-size:.875rem;line-height:1.45;color:#fff;
+}
+.usd-key b{font-weight:600;font-family:var(--ff-mono);letter-spacing:.02em}
 .calc__swap{
   justify-self:center;width:46px;height:46px;border-radius:50%;
   border:1px solid var(--line-2);background:var(--surface-2);color:var(--accent-300);
@@ -1366,8 +1371,8 @@ body::before{
           <span class="cur-badge"><svg class="flag" data-flag="from" aria-hidden="true"><use href="#fl-usd"/></svg></span>
           <select class="hc-select" data-cur="from" aria-label="Ви віддаєте — валюта">
             <option value="UAH">UAH</option>
-            <option value="USD100" selected>USD</option>
-            <option value="USD">USD дрібні</option>
+            <option value="USD100" selected>USD (🔵)</option>
+            <option value="USD">USD (⚪️)</option>
             <option value="EUR">EUR</option>
             <option value="USDT">USDT</option>
             <option value="GBP">GBP</option>
@@ -1391,8 +1396,8 @@ body::before{
           <span class="cur-badge"><svg class="flag" data-flag="to" aria-hidden="true"><use href="#fl-uah"/></svg></span>
           <select class="hc-select" data-cur="to" aria-label="Ви отримуєте — валюта">
             <option value="UAH" selected>UAH</option>
-            <option value="USD100">USD</option>
-            <option value="USD">USD дрібні</option>
+            <option value="USD100">USD (🔵)</option>
+            <option value="USD">USD (⚪️)</option>
             <option value="EUR">EUR</option>
             <option value="USDT">USDT</option>
             <option value="GBP">GBP</option>
@@ -1412,6 +1417,10 @@ body::before{
       <a class="btn btn--light hc-submit" href="#exchange" data-submit>Оформити заявку
         <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
+      <p class="usd-key">
+        <span><b>🔵 USD</b> — нові купюри номіналом 100 $</span>
+        <span><b>⚪️ USD</b> — старіші купюри (2000-х років)</span>
+      </p>
       <p class="hc-note">*Актуальний курс змінюється щогодини — уточнюйте курс обміну у нашого менеджера</p>
     </aside>
 
@@ -1520,7 +1529,7 @@ body::before{
     </div>
 
     <div class="rates__note reveal">
-      <p><b>Оптовий курс діє від 400 у.о.</b> — для сум до 400 у.о. курс може незначно відрізнятися. Уточнюйте актуальні цифри в касі або за телефоном перед візитом.</p>
+      <p><b>Оптовий курс діє від 500 у.о.</b> — для сум до 500 у.о. курс може незначно відрізнятися. Уточнюйте актуальні цифри в касі або за телефоном перед візитом.</p>
       <a class="btn btn--sm" href="#exchange">Зафіксувати курс
         <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -1539,7 +1548,7 @@ body::before{
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Курс фіксується на 30 хвилин після підтвердження</li>
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Жодних комісій понад вказану суму</li>
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Готуємо потрібну суму та номінали заздалегідь</li>
-        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Від 400 у.о. — оптовий курс без черги</li>
+        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Від 500 у.о. — оптовий курс без черги</li>
       </ul>
     </div>
 
@@ -1556,8 +1565,8 @@ body::before{
               <span class="cur-badge"><svg class="flag" id="flagFrom" data-flag="from" role="img" aria-hidden="true"><use href="#fl-usd"/></svg></span>
               <select class="calc__select" id="curFrom" data-cur="from" aria-label="Ви віддаєте — валюта">
               <option value="UAH">Гривня</option>
-              <option value="USD100" selected>USD · купюри 100 $</option>
-              <option value="USD">USD · дрібні номінали</option>
+              <option value="USD100" selected>USD (🔵)</option>
+              <option value="USD">USD (⚪️)</option>
               <option value="EUR">EUR · євро</option>
               <option value="USDT">USDT · Tether</option>
               <option value="GBP">GBP · фунт стерлінгів</option>
@@ -1585,8 +1594,8 @@ body::before{
               <span class="cur-badge"><svg class="flag" id="flagTo" data-flag="to" role="img" aria-hidden="true"><use href="#fl-uah"/></svg></span>
               <select class="calc__select" id="curTo" data-cur="to" aria-label="Ви отримуєте — валюта">
               <option value="UAH" selected>Гривня</option>
-              <option value="USD100">USD · купюри 100 $</option>
-              <option value="USD">USD · дрібні номінали</option>
+              <option value="USD100">USD (🔵)</option>
+              <option value="USD">USD (⚪️)</option>
               <option value="EUR">EUR · євро</option>
               <option value="USDT">USDT · Tether</option>
               <option value="GBP">GBP · фунт стерлінгів</option>
@@ -1605,6 +1614,11 @@ body::before{
           </div>
         </div>
       </div>
+
+      <p class="usd-key">
+        <span><b>🔵 USD</b> — нові купюри номіналом 100 $</span>
+        <span><b>⚪️ USD</b> — старіші купюри (2000-х років)</span>
+      </p>
 
       <div class="form-row">
         <label class="field field--text">
@@ -2087,7 +2101,7 @@ body::before{
           <h3>Чи є додаткова комісія за послуги?</h3>
           <span class="acc__chev" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 4.5 6 9l4.5-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc__panel"><div><p>Ні. Курс, який ви бачите на сайті та чуєте від оператора, — фінальний. Ми не додаємо комісій, відсотків за перерахунок чи плати за великі суми. Єдиний нюанс: оптовий курс діє від 400 у.о., для менших сум курс може незначно відрізнятися.</p></div></div>
+        <div class="acc__panel"><div><p>Ні. Курс, який ви бачите на сайті та чуєте від оператора, — фінальний. Ми не додаємо комісій, відсотків за перерахунок чи плати за великі суми. Єдиний нюанс: оптовий курс діє від 500 у.о., для менших сум курс може незначно відрізнятися.</p></div></div>
       </article>
 
       <article class="card acc">
@@ -2284,7 +2298,7 @@ body::before{
 
     <div class="footer__bottom">
       <span>© 2026 BEST — обмін валют в Івано-Франківську</span>
-      <span>Оптовий курс від 400 у.о. · Курси оновлено 13.09</span>
+      <span>Оптовий курс від 500 у.о. · Курси оновлено 13.09</span>
     </div>
   </div>
 </footer>
