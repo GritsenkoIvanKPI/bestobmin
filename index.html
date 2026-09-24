@@ -621,7 +621,9 @@ body::before{
   margin-top:1.5rem;padding:1.15rem clamp(1.25rem,2vw,1.75rem);
   border:1px solid var(--line);border-radius:var(--r-md);background:rgba(255,255,255,.02);
 }
-.rates__note p{font-size:1rem;color:var(--text-2);max-width:62ch}
+.rates__note-text{display:grid;gap:.6rem;min-width:0}
+.rates__note p{font-size:1rem;color:var(--text-2);max-width:62ch;margin:0}
+.rates__note-text p + p{opacity:.8}
 .rates__note b{color:#fff;font-weight:600}
 /* the button column would squeeze the text to a sliver on phones:
    stack them — text on top, full-width button underneath */
@@ -1588,7 +1590,10 @@ body::before{
     </div>
 
     <div class="rates__note reveal">
-      <p><b>Оптовий курс діє від 500 у.о.</b> — для сум до 500 у.о. курс може незначно відрізнятися. Уточнюйте актуальні цифри в касі або за телефоном перед візитом.</p>
+      <div class="rates__note-text">
+        <p><b>Зазначені курси діють при обміні від 500 у.о. на купюри в хорошому стані</b> — без випуску 1990-х років, без дрібних номіналів, без плям, надривів, потертостей і печаток.</p>
+        <p>Для сум до 500 у.о. діє роздрібний курс. Пошкоджені банкноти обмінюємо за окремим курсом — оцінюємо на місці. Уточнюйте актуальні цифри в касі або за телефоном перед візитом.</p>
+      </div>
       <a class="btn btn--sm" href="#exchange">Зафіксувати курс
         <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>

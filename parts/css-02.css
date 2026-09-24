@@ -69,7 +69,9 @@
   margin-top:1.5rem;padding:1.15rem clamp(1.25rem,2vw,1.75rem);
   border:1px solid var(--line);border-radius:var(--r-md);background:rgba(255,255,255,.02);
 }
-.rates__note p{font-size:1rem;color:var(--text-2);max-width:62ch}
+.rates__note-text{display:grid;gap:.6rem;min-width:0}
+.rates__note p{font-size:1rem;color:var(--text-2);max-width:62ch;margin:0}
+.rates__note-text p + p{opacity:.8}
 .rates__note b{color:#fff;font-weight:600}
 /* the button column would squeeze the text to a sliver on phones:
    stack them — text on top, full-width button underneath */
