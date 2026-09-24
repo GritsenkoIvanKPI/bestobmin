@@ -50,26 +50,30 @@
   /* ---------- exchange calculator ---------- */
   /* Rates are quoted against UAH: `buy` is what the office pays the client
      for 1 unit, `sell` is what the client pays to get 1 unit. */
+  /* Published on bestobmin.com.ua, 24.09. Two tiers: `w` wholesale, from
+     500 у.о.; `r` retail below that. Quoted against UAH — buy is what the
+     office pays for 1 unit, sell is what the client pays to get 1 unit. */
+  var WHOLESALE_MIN = 500;
   var CUR = {
-    UAH:    { flag: 'uah',  code: 'UAH',  buy: 1,     sell: 1     },
-    USD100: { flag: 'usd',  code: 'USD',  buy: 44.65, sell: 44.90 },
-    USD:    { flag: 'usd',  code: 'USD',  buy: 44.55, sell: 44.79 },
-    EUR:    { flag: 'eur',  code: 'EUR',  buy: 51.70, sell: 51.93 },
-    GBP:    { flag: 'gbp',  code: 'GBP',  buy: 59.80, sell: 60.35 },
-    PLN:    { flag: 'pln',  code: 'PLN',  buy: 11.87, sell: 12.00 },
-    CHF:    { flag: 'chf',  code: 'CHF',  buy: 54.90, sell: 55.59 },
-    CAD:    { flag: 'cad',  code: 'CAD',  buy: 31.30, sell: 31.99 },
-    CZK:    { flag: 'czk',  code: 'CZK',  buy: 2.02,  sell: 2.12  },
-    SEK:    { flag: 'sek',  code: 'SEK',  buy: 3.95,  sell: 4.25  },
-    HUF:    { flag: 'huf',  code: 'HUF',  buy: 0.12,  sell: 0.142 },
-    /* USDT is quoted as a spread on the cash dollar: +1.6% / +2.9% */
-    USDT:   { flag: 'usdt', code: 'USDT', buy: 44.65 * 1.016, sell: 44.90 * 1.029 }
+    UAH:    { flag:'uah',  code:'UAH',  w:{buy:1,     sell:1    }, r:{buy:1,     sell:1    } },
+    USD100: { flag:'usd',  code:'USD',  w:{buy:44.80, sell:45.17}, r:{buy:44.75, sell:45.20} },
+    USD:    { flag:'usd',  code:'USD',  w:{buy:44.70, sell:45.07}, r:{buy:44.65, sell:45.10} },
+    EUR:    { flag:'eur',  code:'EUR',  w:{buy:51.25, sell:51.63}, r:{buy:51.20, sell:51.70} },
+    GBP:    { flag:'gbp',  code:'GBP',  w:{buy:59.15, sell:59.77}, r:{buy:59.10, sell:59.90} },
+    PLN:    { flag:'pln',  code:'PLN',  w:{buy:11.67, sell:11.85}, r:{buy:11.65, sell:11.90} },
+    CHF:    { flag:'chf',  code:'CHF',  w:{buy:54.30, sell:55.49}, r:{buy:54.20, sell:55.60} },
+    CAD:    { flag:'cad',  code:'CAD',  w:{buy:31.20, sell:31.87}, r:{buy:31.10, sell:32.00} },
+    CZK:    { flag:'czk',  code:'CZK',  w:{buy:2.00,  sell:2.11 }, r:{buy:1.97,  sell:2.16 } },
+    SEK:    { flag:'sek',  code:'SEK',  w:{buy:3.97,  sell:4.20 }, r:{buy:3.95,  sell:4.30 } },
+    HUF:    { flag:'huf',  code:'HUF',  w:{buy:0.12,  sell:0.142}, r:{buy:0.11,  sell:0.145} },
+    /* wholesale USDT is a spread on the dollar (+1.8% / +2.9%); retail is quoted outright */
+    USDT:   { flag:'usdt', code:'USDT', w:{buy:44.80*1.018, sell:45.17*1.029}, r:{buy:45.52, sell:46.40} }
   };
 
-  /* Published cross rates win over the one derived through UAH. */
+  /* Published EUR/USD cross wins over the one derived through UAH. */
   var CROSS = {
-    'EUR>USD100': 1.156, 'EUR>USD': 1.156,
-    'USD100>EUR': 1 / 1.165, 'USD>EUR': 1 / 1.165
+    'EUR>USD100': 1.139, 'EUR>USD': 1.139,
+    'USD100>EUR': 1 / 1.149, 'USD>EUR': 1 / 1.149
   };
 
   function nf(n, dec) {
@@ -80,16 +84,28 @@
     var n = parseFloat(String(v).replace(/[^\d.,-]/g, '').replace(/\s/g, '').replace(',', '.'));
     return isFinite(n) && n > 0 ? n : 0;
   }
-  /* how many units of `to` one unit of `from` buys */
-  function rateBetween(from, to) {
+  /* how many units of `to` one unit of `from` buys, at tier 'w' or 'r' */
+  function rateAt(from, to, tier) {
     if (from === to) return 1;
     var key = from + '>' + to;
     if (CROSS[key]) return CROSS[key];
-    return CUR[from].buy / CUR[to].sell;
+    return CUR[from][tier].buy / CUR[to][tier].sell;
   }
-  function rateLabel(from, to) {
-    var r = rateBetween(from, to);
-    return '1 ' + CUR[from].code + ' = ' + nf(r, r >= 10 ? 2 : 4) + ' ' + CUR[to].code;
+  /* The tier follows the size of the deal, measured on the foreign side.
+     Retail first, then upgrade: wholesale only ever pays more, so a deal
+     that clears 500 у.о. at retail still clears it at wholesale. */
+  function priceIt(from, to, amount, typedInto) {
+    var tier = 'r';
+    var rate = rateAt(from, to, tier);
+    var uo = (typedInto === 'to')
+      ? (to === 'UAH' ? amount / rate : amount)   /* typed hryvnia out: foreign side is what you hand over */
+      : (from === 'UAH' ? amount * rate : amount); /* typed hryvnia in: foreign side is what you receive */
+    if (uo >= WHOLESALE_MIN) { tier = 'w'; rate = rateAt(from, to, tier); }
+    return { tier: tier, rate: rate };
+  }
+  function rateLabel(from, to, tier, rate) {
+    return '1 ' + CUR[from].code + ' = ' + nf(rate, rate >= 10 ? 2 : 4) + ' ' + CUR[to].code
+         + (tier === 'w' ? ' · опт' : '');
   }
 
   /* One converter = two currency pickers + two amounts + a swap button,
@@ -101,15 +117,18 @@
     var ff = q('[data-flag="from"]'), ft = q('[data-flag="to"]');
 
     function setFlag(el, c) { if (el) el.querySelector('use').setAttribute('href', '#fl-' + CUR[c].flag); }
+    var priced = { tier: 'r', rate: 1 };
     function state() {
       return { from: cf.value, to: ct.value, give: parseAmt(af.value), get: parseAmt(at.value),
-               rate: rateBetween(cf.value, ct.value) };
+               tier: priced.tier, rate: priced.rate };
     }
     function recalc(source) {
-      var f = cf.value, t = ct.value, rate = rateBetween(f, t);
+      var f = cf.value, t = ct.value;
       setFlag(ff, f); setFlag(ft, t);
-      if (source === 'to') af.value = nf(rate ? parseAmt(at.value) / rate : 0, 2);
-      else                 at.value = nf(parseAmt(af.value) * rate, 2);
+      var typed = (source === 'to') ? 'to' : 'from';
+      priced = priceIt(f, t, parseAmt(typed === 'to' ? at.value : af.value), typed);
+      if (typed === 'to') af.value = nf(priced.rate ? parseAmt(at.value) / priced.rate : 0, 2);
+      else                at.value = nf(parseAmt(af.value) * priced.rate, 2);
       if (onChange) onChange(state());
     }
     function avoidSame(changed) {
@@ -142,7 +161,7 @@
   var sumFromEl  = document.getElementById('sumFrom');
   var sumToEl    = document.getElementById('sumTo');
   var mainCalc = Converter(document.getElementById('exchangeForm'), function (st) {
-    usedRateEl.textContent = rateLabel(st.from, st.to);
+    usedRateEl.textContent = rateLabel(st.from, st.to, st.tier, st.rate);
     sumFromEl.textContent  = nf(st.give, 2) + ' ' + CUR[st.from].code;
     sumToEl.textContent    = nf(st.get, 2)  + ' ' + CUR[st.to].code;
   });
@@ -151,7 +170,7 @@
   var heroCalcEl = document.querySelector('.hero-calc');
   if (heroCalcEl) {
     var heroRate = heroCalcEl.querySelector('[data-rate]');
-    var heroCalc = Converter(heroCalcEl, function (st) { heroRate.textContent = rateLabel(st.from, st.to); });
+    var heroCalc = Converter(heroCalcEl, function (st) { heroRate.textContent = rateLabel(st.from, st.to, st.tier, st.rate); });
     /* "Оформити заявку" carries the pair and amount into the full form */
     heroCalcEl.querySelector('[data-submit]').addEventListener('click', function () {
       var st = heroCalc.state();
@@ -162,6 +181,18 @@
       }, 700);
     });
   }
+
+  /* ---------- wholesale / retail switch ---------- */
+  var rateTabs = document.querySelectorAll('.rate-tabs button');
+  rateTabs.forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      rateTabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        document.getElementById(t.dataset.panel).hidden = !on;
+      });
+    });
+  });
 
   /* ---------- forms ---------- */
   function handleForm(formId, okId) {

@@ -5,7 +5,7 @@
     <div class="section-head reveal">
       <div>
         <span class="eyebrow">Курси валют</span>
-        <h2 class="h-section">Актуальні курси<br>на <span class="accent">13 вересня</span></h2>
+        <h2 class="h-section">Актуальні курси<br>на <span class="accent">24 вересня</span></h2>
       </div>
       <div class="section-head__aside">
         <p class="lede" style="margin-bottom:1.25rem">Курси оновлюються протягом дня у всіх трьох відділеннях мережі. Показуємо реальні цифри — саме за ними ви обміняєте валюту в касі.</p>
@@ -13,89 +13,140 @@
       </div>
     </div>
 
-    <div class="card rate-table reveal">
+    <div class="rate-tabs" role="tablist" aria-label="Тип курсу">
+      <button type="button" role="tab" aria-selected="true" aria-controls="rt-w" data-panel="rt-w">
+        Оптовий курс <span>(від 500 у.о.)</span>
+      </button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="rt-r" data-panel="rt-r">
+        Роздрібний курс
+      </button>
+    </div>
+
+    <div class="card rate-table" id="rt-w" role="tabpanel">
       <div class="rate-table__col">
-        <div class="rate-row rate-row--head"><span>Валюта</span><span class="ta-right">Купівля</span><span class="ta-right">Продаж</span><span class="ta-right">Зміна</span></div>
+        <div class="rate-row rate-row--head"><span>Валюта</span><span class="ta-right">Купівля</span><span class="ta-right">Продаж</span></div>
 
         <div class="rate-row is-featured">
           <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Долар США"><use href="#fl-usd"/></svg></span><span><span class="rate-row__code">USD</span><span class="rate-row__label">Долар США</span></span></div>
-          <div class="rate-row__num is-buy">44.65</div>
-          <div class="rate-row__num">44.90</div>
-          <div class="rate-row__delta"><span class="delta up">+0.10</span></div>
+          <div class="rate-row__num is-buy">44.80</div>
+          <div class="rate-row__num">45.17</div>
         </div>
-
         <div class="rate-row">
           <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Євро"><use href="#fl-eur"/></svg></span><span><span class="rate-row__code">EUR</span><span class="rate-row__label">Євро</span></span></div>
-          <div class="rate-row__num is-buy">51.70</div>
-          <div class="rate-row__num">51.93</div>
-          <div class="rate-row__delta"><span class="delta up">+0.18</span></div>
+          <div class="rate-row__num is-buy">51.25</div>
+          <div class="rate-row__num">51.63</div>
         </div>
-
         <div class="rate-row">
           <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Фунт стерлінгів"><use href="#fl-gbp"/></svg></span><span><span class="rate-row__code">GBP</span><span class="rate-row__label">Фунт стерлінгів</span></span></div>
-          <div class="rate-row__num is-buy">59.80</div>
-          <div class="rate-row__num">60.35</div>
-          <div class="rate-row__delta"><span class="delta down">−0.21</span></div>
+          <div class="rate-row__num is-buy">59.15</div>
+          <div class="rate-row__num">59.77</div>
         </div>
-
         <div class="rate-row">
           <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Польський злотий"><use href="#fl-pln"/></svg></span><span><span class="rate-row__code">PLN</span><span class="rate-row__label">Польський злотий</span></span></div>
-          <div class="rate-row__num is-buy">11.87</div>
-          <div class="rate-row__num">12.00</div>
-          <div class="rate-row__delta"><span class="delta down">−0.02</span></div>
+          <div class="rate-row__num is-buy">11.67</div>
+          <div class="rate-row__num">11.85</div>
         </div>
-
-        <div class="rate-row">
-          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Швейцарський франк"><use href="#fl-chf"/></svg></span><span><span class="rate-row__code">CHF</span><span class="rate-row__label">Швейцарський франк</span></span></div>
-          <div class="rate-row__num is-buy">54.90</div>
-          <div class="rate-row__num">55.59</div>
-          <div class="rate-row__delta"><span class="delta up">+0.24</span></div>
-        </div>
-
         <div class="rate-row">
           <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Канадський долар"><use href="#fl-cad"/></svg></span><span><span class="rate-row__code">CAD</span><span class="rate-row__label">Канадський долар</span></span></div>
-          <div class="rate-row__num is-buy">31.30</div>
-          <div class="rate-row__num">31.99</div>
-          <div class="rate-row__delta"><span class="delta up">+0.07</span></div>
+          <div class="rate-row__num is-buy">31.20</div>
+          <div class="rate-row__num">31.87</div>
+        </div>
+        <div class="rate-row">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Чеська крона"><use href="#fl-czk"/></svg></span><span><span class="rate-row__code">CZK</span><span class="rate-row__label">Чеська крона</span></span></div>
+          <div class="rate-row__num is-buy">2.00</div>
+          <div class="rate-row__num">2.11</div>
         </div>
       </div>
 
       <div class="rate-table__col">
-        <div class="rate-row rate-row--head"><span>Валюта</span><span class="ta-right">Купівля</span><span class="ta-right">Продаж</span><span class="ta-right">Зміна</span></div>
+        <div class="rate-row rate-row--head"><span>Валюта</span><span class="ta-right">Купівля</span><span class="ta-right">Продаж</span></div>
 
         <div class="rate-row">
-          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Чеська крона"><use href="#fl-czk"/></svg></span><span><span class="rate-row__code">CZK</span><span class="rate-row__label">Чеська крона</span></span></div>
-          <div class="rate-row__num is-buy">2.02</div>
-          <div class="rate-row__num">2.12</div>
-          <div class="rate-row__delta"><span class="delta flat">0.00</span></div>
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Швейцарський франк"><use href="#fl-chf"/></svg></span><span><span class="rate-row__code">CHF</span><span class="rate-row__label">Швейцарський франк</span></span></div>
+          <div class="rate-row__num is-buy">54.30</div>
+          <div class="rate-row__num">55.49</div>
         </div>
-
         <div class="rate-row">
           <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Шведська крона"><use href="#fl-sek"/></svg></span><span><span class="rate-row__code">SEK</span><span class="rate-row__label">Шведська крона</span></span></div>
-          <div class="rate-row__num is-buy">3.95</div>
-          <div class="rate-row__num">4.25</div>
-          <div class="rate-row__delta"><span class="delta up">+0.03</span></div>
+          <div class="rate-row__num is-buy">3.97</div>
+          <div class="rate-row__num">4.20</div>
         </div>
-
         <div class="rate-row">
           <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Угорський форинт"><use href="#fl-huf"/></svg></span><span><span class="rate-row__code">HUF</span><span class="rate-row__label">Угорський форинт</span></span></div>
           <div class="rate-row__num is-buy">0.12</div>
           <div class="rate-row__num">0.142</div>
-          <div class="rate-row__delta"><span class="delta flat">0.00</span></div>
         </div>
-
         <div class="rate-row">
-          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Tether USDT"><use href="#fl-usdt"/></svg></span><span><span class="rate-row__code">USDT</span><span class="rate-row__label">Спред до курсу долара</span></span></div>
-          <div class="rate-row__num is-buy">+1.6%</div>
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Спред до курсу долара"><use href="#fl-usdt"/></svg></span><span><span class="rate-row__code">USDT</span><span class="rate-row__label">Спред до курсу долара</span></span></div>
+          <div class="rate-row__num is-buy">+1.8%</div>
           <div class="rate-row__num">+2.9%</div>
-          <div class="rate-row__delta"><span class="delta up">+0.2%</span></div>
         </div>
+        <div class="rate-row">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Крос-курс на міжбанку"><use href="#fl-cross"/></svg></span><span><span class="rate-row__code">EUR / USD</span><span class="rate-row__label">Крос-курс на міжбанку</span></span></div>
+          <div class="rate-row__num is-buy">1.139</div>
+          <div class="rate-row__num">1.149</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card rate-table" id="rt-r" role="tabpanel" hidden>
+      <div class="rate-table__col">
+        <div class="rate-row rate-row--head"><span>Валюта</span><span class="ta-right">Купівля</span><span class="ta-right">Продаж</span></div>
+
+        <div class="rate-row is-featured">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Долар США"><use href="#fl-usd"/></svg></span><span><span class="rate-row__code">USD</span><span class="rate-row__label">Долар США</span></span></div>
+          <div class="rate-row__num is-buy">44.75</div>
+          <div class="rate-row__num">45.20</div>
+        </div>
+        <div class="rate-row">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Євро"><use href="#fl-eur"/></svg></span><span><span class="rate-row__code">EUR</span><span class="rate-row__label">Євро</span></span></div>
+          <div class="rate-row__num is-buy">51.20</div>
+          <div class="rate-row__num">51.70</div>
+        </div>
+        <div class="rate-row">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Фунт стерлінгів"><use href="#fl-gbp"/></svg></span><span><span class="rate-row__code">GBP</span><span class="rate-row__label">Фунт стерлінгів</span></span></div>
+          <div class="rate-row__num is-buy">59.10</div>
+          <div class="rate-row__num">59.90</div>
+        </div>
+        <div class="rate-row">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Польський злотий"><use href="#fl-pln"/></svg></span><span><span class="rate-row__code">PLN</span><span class="rate-row__label">Польський злотий</span></span></div>
+          <div class="rate-row__num is-buy">11.65</div>
+          <div class="rate-row__num">11.90</div>
+        </div>
+        <div class="rate-row">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Канадський долар"><use href="#fl-cad"/></svg></span><span><span class="rate-row__code">CAD</span><span class="rate-row__label">Канадський долар</span></span></div>
+          <div class="rate-row__num is-buy">31.10</div>
+          <div class="rate-row__num">32.00</div>
+        </div>
+      </div>
+
+      <div class="rate-table__col">
+        <div class="rate-row rate-row--head"><span>Валюта</span><span class="ta-right">Купівля</span><span class="ta-right">Продаж</span></div>
 
         <div class="rate-row">
-          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Євро до долара"><use href="#fl-cross"/></svg></span><span><span class="rate-row__code">EUR / USD</span><span class="rate-row__label">Крос-курс на міжбанку</span></span></div>
-          <div class="rate-row__num is-buy">1.156</div>
-          <div class="rate-row__num">1.165</div>
-          <div class="rate-row__delta"><span class="delta up">+0.004</span></div>
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Чеська крона"><use href="#fl-czk"/></svg></span><span><span class="rate-row__code">CZK</span><span class="rate-row__label">Чеська крона</span></span></div>
+          <div class="rate-row__num is-buy">1.97</div>
+          <div class="rate-row__num">2.16</div>
+        </div>
+        <div class="rate-row">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Швейцарський франк"><use href="#fl-chf"/></svg></span><span><span class="rate-row__code">CHF</span><span class="rate-row__label">Швейцарський франк</span></span></div>
+          <div class="rate-row__num is-buy">54.20</div>
+          <div class="rate-row__num">55.60</div>
+        </div>
+        <div class="rate-row">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Шведська крона"><use href="#fl-sek"/></svg></span><span><span class="rate-row__code">SEK</span><span class="rate-row__label">Шведська крона</span></span></div>
+          <div class="rate-row__num is-buy">3.95</div>
+          <div class="rate-row__num">4.30</div>
+        </div>
+        <div class="rate-row">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Угорський форинт"><use href="#fl-huf"/></svg></span><span><span class="rate-row__code">HUF</span><span class="rate-row__label">Угорський форинт</span></span></div>
+          <div class="rate-row__num is-buy">0.11</div>
+          <div class="rate-row__num">0.145</div>
+        </div>
+        <div class="rate-row">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="Tether"><use href="#fl-usdt"/></svg></span><span><span class="rate-row__code">USDT</span><span class="rate-row__label">Tether</span></span></div>
+          <div class="rate-row__num is-buy">45.52</div>
+          <div class="rate-row__num">46.40</div>
         </div>
       </div>
     </div>
