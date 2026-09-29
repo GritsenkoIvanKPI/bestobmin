@@ -15,6 +15,12 @@
 .svc__tag{
   font-family:var(--ff-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:#fff;
 }
+.coin-rates{
+  display:grid;gap:.4rem;margin:.25rem 0 0;padding-top:.85rem;border-top:1px solid var(--line);
+}
+.coin-rates div{display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
+.coin-rates dt{font-size:.9375rem;color:#fff;opacity:.75}
+.coin-rates dd{margin:0;font-family:var(--ff-mono);font-size:.9375rem;font-weight:700;color:#fff}
 .svc__link{
   margin-top:auto;padding-top:1rem;display:inline-flex;align-items:center;gap:.6rem;
   font-family:var(--ff-mono);font-size:var(--fs-micro-2);letter-spacing:.14em;text-transform:uppercase;color:var(--text-2);
@@ -71,7 +77,7 @@
   box-shadow:0 0 42px rgba(204,163,119,.55);
 }
 .bolt svg{width:21px;height:21px;fill:#031008;display:block}
-@media (max-width:1060px){.benefits__grid{grid-template-columns:1fr 1fr}.ben--wide{grid-column:span 2;grid-row:auto;min-height:22rem}}
+@media (max-width:1220px){.benefits__grid{grid-template-columns:1fr 1fr}.ben--wide{grid-column:span 2;grid-row:auto;min-height:22rem}}
 @media (max-width:560px){.benefits__grid{grid-template-columns:1fr}.ben--wide{grid-column:span 1}}
 
 /* ============================================================

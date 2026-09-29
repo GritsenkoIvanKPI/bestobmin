@@ -812,6 +812,12 @@ body::before{
 .svc__tag{
   font-family:var(--ff-mono);font-size:var(--fs-micro);letter-spacing:.12em;text-transform:uppercase;color:#fff;
 }
+.coin-rates{
+  display:grid;gap:.4rem;margin:.25rem 0 0;padding-top:.85rem;border-top:1px solid var(--line);
+}
+.coin-rates div{display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
+.coin-rates dt{font-size:.9375rem;color:#fff;opacity:.75}
+.coin-rates dd{margin:0;font-family:var(--ff-mono);font-size:.9375rem;font-weight:700;color:#fff}
 .svc__link{
   margin-top:auto;padding-top:1rem;display:inline-flex;align-items:center;gap:.6rem;
   font-family:var(--ff-mono);font-size:var(--fs-micro-2);letter-spacing:.14em;text-transform:uppercase;color:var(--text-2);
@@ -868,7 +874,7 @@ body::before{
   box-shadow:0 0 42px rgba(204,163,119,.55);
 }
 .bolt svg{width:21px;height:21px;fill:#031008;display:block}
-@media (max-width:1060px){.benefits__grid{grid-template-columns:1fr 1fr}.ben--wide{grid-column:span 2;grid-row:auto;min-height:22rem}}
+@media (max-width:1220px){.benefits__grid{grid-template-columns:1fr 1fr}.ben--wide{grid-column:span 2;grid-row:auto;min-height:22rem}}
 @media (max-width:560px){.benefits__grid{grid-template-columns:1fr}.ben--wide{grid-column:span 1}}
 
 /* ============================================================
@@ -1610,9 +1616,9 @@ body::before{
       <p class="lede">Вкажіть валюту й суму — ми одразу покажемо, скільки ви отримаєте в касі. Після заявки курс закріплюється за вами, поки ви їдете до відділення.</p>
       <ul class="checklist">
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Курс фіксується на 30 хвилин після підтвердження</li>
-        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Жодних комісій понад вказану суму</li>
+        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Жодних комісій за купюри в доброму стані</li>
         <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Готуємо потрібну суму та номінали заздалегідь</li>
-        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Від 500 у.о. — оптовий курс без черги</li>
+        <li><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5 6.3 12 13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Від 500 у.о. — оптовий курс</li>
       </ul>
     </div>
 
@@ -1752,7 +1758,7 @@ body::before{
       <article class="card step reveal" style="transition-delay:.16s">
         <div class="step__top"><h3 class="h-card">Обміняйте у відділенні</h3><span class="step__n">03</span></div>
         <div class="step__media"><img src="images/step-3.jpg" alt="Металеві долоні з монетами" loading="lazy" width="600" height="600"></div>
-        <p class="step__text">Приходьте у зручний пункт — сума й номінали вже підготовлені, без черги.</p>
+        <p class="step__text">Приходьте у зручний пункт — сума й номінали вже підготовлені заздалегідь.</p>
       </article>
     </div>
   </div>
@@ -1788,7 +1794,7 @@ body::before{
         <div class="svc__media"><img src="images/service-damaged.jpg" alt="Металева банкнота з надривом" loading="lazy" width="700" height="700"></div>
         <div class="svc__body">
           <span class="svc__tag">Пошкоджені банкноти</span>
-          <h3 class="h-card">Приймаємо те, що не беруть банки</h3>
+          <h3 class="h-card">Приймаємо за мінімальною комісією те, що не беруть банки</h3>
           <p>Надриви, плями, написи, старі серії, зношені купюри — оцінюємо на місці й обмінюємо за чесним курсом. Без довгих експертиз і відмов у касі.</p>
           <a class="svc__link" href="#branches">Де перевірити
             <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1800,8 +1806,15 @@ body::before{
         <div class="svc__media"><img src="images/service-coins.jpg" alt="Стопка металевих монет" loading="lazy" width="700" height="700"></div>
         <div class="svc__body">
           <span class="svc__tag">Обмін монет</span>
-          <h3 class="h-card">Беремо монети євро та центи</h3>
-          <p>Привезли дрібні монети з-за кордону? Обмінюємо євроценти, гроші, злоті та інші монети — те, від чого відмовляються більшість обмінних пунктів міста.</p>
+          <h3 class="h-card">Беремо монети, які не беруть інші</h3>
+          <p>Привезли монети з-за кордону? Обмінюємо євро та євроценти, фунти, долари, злоті, швейцарські франки, чеські крони й інші монети — те, від чого відмовляється більшість обмінних пунктів міста.</p>
+          <dl class="coin-rates">
+            <div><dt>$ долар</dt><dd>30 грн / 1 USD</dd></div>
+            <div><dt>€ євро</dt><dd>40 грн / 1 EUR</dd></div>
+            <div><dt>£ фунт</dt><dd>43 грн / 1 GBP</dd></div>
+            <div><dt>zł злотий</dt><dd>9 грн / 1 PLN</dd></div>
+            <div><dt>Kč чеська крона</dt><dd>1,3 грн / 1 CZK</dd></div>
+          </dl>
           <a class="svc__link" href="#contacts">Уточнити умови
             <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -1812,13 +1825,13 @@ body::before{
     <div class="card extra reveal">
       <div>
         <span class="eyebrow">Додатково</span>
-        <h3 class="h-card" style="margin:1.1rem 0 .75rem">Лазерне гравіювання</h3>
-        <p class="extra__lead">Окремий напрямок нашої майстерні: наносимо українську розкладку та індивідуальні написи на клавіатури й ноутбуки.</p>
+        <h3 class="h-card" style="margin:1.1rem 0 .75rem">Не тільки валюта</h3>
+        <p class="extra__lead">У наших відділеннях можна придбати паливні талони та інвестиційні злитки — запитуйте наявність у касі або за телефоном.</p>
       </div>
       <div class="extra__list">
-        <div class="extra__item"><b>Гравіювання клавіатури</b><span>Від 1 дня</span></div>
-        <div class="extra__item"><b>Гравіювання MacBook</b><span>Без втрати гарантії</span></div>
-        <div class="extra__item"><b>Механічні клавіатури</b><span>Покейсно</span></div>
+        <div class="extra__item"><b>Талони на пальне</b><span>ОККО · УКРНАФТА · WOG</span></div>
+        <div class="extra__item"><b>Золоті злитки</b><span>Під замовлення</span></div>
+        <div class="extra__item"><b>Обмін з доставкою</b><span>По Івано-Франківську</span></div>
       </div>
     </div>
   </div>
@@ -1840,13 +1853,13 @@ body::before{
     <div class="benefits__grid">
       <article class="card ben reveal">
         <h3 class="h-card">Фіксація курсу</h3>
-        <p>Після створення заявки курс не змінюється протягом часу резервування.</p>
+        <p>Після створення заявки курс не змінюється протягом часу резервування — для клієнтів, які теж виконують домовленості.</p>
         <span class="ben__num">100%</span>
       </article>
 
       <article class="card ben reveal" style="transition-delay:.06s">
         <h3 class="h-card">Без прихованих комісій</h3>
-        <p>Жодних додаткових платежів після підтвердження заявки оператором.</p>
+        <p>За купюри в доброму стані комісії немає. Пошкоджені банкноти — за мінімальною комісією.</p>
         <span class="ben__num">0%</span>
       </article>
 
@@ -1896,7 +1909,7 @@ body::before{
         <h2 class="h-section">Оберіть відділення<br>у <span class="accent">своєму районі</span></h2>
       </div>
       <div class="section-head__aside">
-        <p class="lede">Три пункти в Івано-Франківську — центр, Лепкого та Вовчинецька. Курс однаковий у всіх відділеннях мережі.</p>
+        <p class="lede">Три пункти в Івано-Франківську — центр, Лепкого та Вовчинецька. Курс однаковий у всіх відділеннях мережі в робочий час. За більші суми можливий торг — напишіть суму, валюту, напрямок обміну та бажаний курс, і ми постараємось його погодити.</p>
       </div>
     </div>
 
@@ -2005,7 +2018,7 @@ body::before{
         <article class="card sec-card">
           <span class="sec-card__ico"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M9.2 1.5 3.5 9h4l-.2 5.5L12.5 7H8.8z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
           <h3 class="h-card">Прозорі умови</h3>
-          <p>Ви завжди бачите актуальний курс і фінальну суму до підтвердження заявки. Жодних перерахунків уже в касі.</p>
+          <p>Ви завжди бачите актуальний курс і фінальну суму до підтвердження заявки. Для сум від 5000 у.о. можливий торг — напишіть нам, і ми опрацюємо вашу суму окремо.</p>
         </article>
       </div>
     </div>
@@ -2165,7 +2178,7 @@ body::before{
           <h3>Чи є додаткова комісія за послуги?</h3>
           <span class="acc__chev" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 4.5 6 9l4.5-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
         </button>
-        <div class="acc__panel"><div><p>Ні. Курс, який ви бачите на сайті та чуєте від оператора, — фінальний. Ми не додаємо комісій, відсотків за перерахунок чи плати за великі суми. Єдиний нюанс: оптовий курс діє від 500 у.о., для менших сум курс може незначно відрізнятися.</p></div></div>
+        <div class="acc__panel"><div><p>За купюри в доброму стані комісії немає — курс, який ви бачите на сайті та чуєте від оператора, фінальний. Мінімальна комісія діє лише для пошкоджених банкнот: надривів, плям, написів, старих серій. Оптовий курс діє від 500 у.о., для менших сум працює роздрібний.</p></div></div>
       </article>
 
       <article class="card acc">
