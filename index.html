@@ -29,17 +29,17 @@
   "location": [
     {
       "@type": "LocalBusiness",
-      "name": "BEST — вул. Чорновола, 4",
-      "address": { "@type": "PostalAddress", "streetAddress": "вул. Чорновола, 4", "addressLocality": "Івано-Франківськ", "addressCountry": "UA" },
-      "telephone": ["+380664972619", "+380989248391"],
-      "openingHours": ["Mo-Fr 09:00-18:30", "Sa 09:00-17:30"]
-    },
-    {
-      "@type": "LocalBusiness",
       "name": "BEST — вул. Лепкого, 14",
       "address": { "@type": "PostalAddress", "streetAddress": "вул. Лепкого, 14", "addressLocality": "Івано-Франківськ", "addressCountry": "UA" },
       "telephone": ["+380996469697", "+380676781337"],
       "openingHours": ["Mo-Su 08:00-19:00"]
+    },
+    {
+      "@type": "LocalBusiness",
+      "name": "BEST — вул. Чорновола, 4",
+      "address": { "@type": "PostalAddress", "streetAddress": "вул. Чорновола, 4", "addressLocality": "Івано-Франківськ", "addressCountry": "UA" },
+      "telephone": ["+380664972619", "+380989248391"],
+      "openingHours": ["Mo-Fr 09:00-18:30", "Sa 09:00-17:30"]
     },
     {
       "@type": "LocalBusiness",
@@ -1320,8 +1320,8 @@ body::before{
           <span class="branch-pick__plus" aria-hidden="true">+</span>
         </button>
         <div class="branch-menu" id="branchMenu">
-          <a href="#branch-1"><b>вул. Чорновола, 4</b><span>Пн–Пт 9:00–18:30 · Сб 9:00–17:30</span></a>
           <a href="#branch-2"><b>вул. Лепкого, 14</b><span>Без вихідних · 8:00–19:00</span></a>
+          <a href="#branch-1"><b>вул. Чорновола, 4</b><span>Пн–Пт 9:00–18:30 · Сб 9:00–17:30</span></a>
           <a href="#branch-3"><b>вул. Вовчинецька, 190</b><span>Пн–Сб 9:00–18:30 · Нд 9:00–19:00</span></a>
         </div>
       </div>
@@ -1703,8 +1703,8 @@ body::before{
           <span class="field__k">Відділення</span>
           <span class="field__row">
             <select id="branchSelect" class="field__select--text" aria-label="Відділення">
-              <option>вул. Чорновола, 4</option>
               <option>вул. Лепкого, 14</option>
+              <option>вул. Чорновола, 4</option>
               <option>вул. Вовчинецька, 190</option>
               <option>Обмін з доставкою за адресою</option>
             </select>
@@ -1919,41 +1919,15 @@ body::before{
         <h2 class="h-section">Оберіть відділення<br>у <span class="accent">своєму районі</span></h2>
       </div>
       <div class="section-head__aside">
-        <p class="lede">Три пункти в Івано-Франківську — центр, Лепкого та Вовчинецька. Курс однаковий у всіх відділеннях мережі в робочий час. За більші суми можливий торг — напишіть суму, валюту, напрямок обміну та бажаний курс, і ми постараємось його погодити.</p>
+        <p class="lede">Три пункти в Івано-Франківську — Лепкого, центр міста та Вовчинецька. Курс однаковий у всіх відділеннях мережі в робочий час. За більші суми можливий торг — напишіть суму, валюту, напрямок обміну та бажаний курс, і ми постараємось його погодити.</p>
       </div>
     </div>
 
 
     <div class="branch-list">
-      <article class="card branch reveal" id="branch-1">
+      <article class="card branch reveal" id="branch-2">
         <div class="branch__media">
           <span class="branch__idx">Відділення 01</span>
-          <img decoding="async" src="images/branch-1.webp" alt="Інтерʼєр обмінного пункту на вулиці Чорновола" loading="lazy" width="900" height="672">
-        </div>
-        <div class="branch__body">
-          <span class="badge-open"><i></i>Центр міста</span>
-          <h3 class="branch__addr">вул. Чорновола, 4</h3>
-          <div class="branch__meta">
-            <div>
-              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 2.5 3 3.5c-.7 3.6 3.9 8.2 7.5 7.5l1-2.5-2.2-1.4-1.1 1.1c-.9-.5-1.9-1.5-2.4-2.4l1.1-1.1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-              <span class="branch__phones"><a href="tel:+380664972619">(066) 49-72-619</a><a href="tel:+380989248391">(098) 92-48-391</a></span>
-            </div>
-            <div>
-              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.5V8l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-              <span class="branch__hours"><span>Пн–Пт 9:00–18:30</span><span>Сб 9:00–17:30</span><span style="color:var(--text-4)">Нд — вихідний</span></span>
-            </div>
-          </div>
-          <div class="branch__foot">
-            <a class="btn btn--sm" href="https://maps.google.com/?q=Івано-Франківськ, вулиця Чорновола, 4" target="_blank" rel="noopener">Маршрут
-              <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-          </div>
-        </div>
-      </article>
-
-      <article class="card branch reveal" id="branch-2" style="transition-delay:.08s">
-        <div class="branch__media">
-          <span class="branch__idx">Відділення 02</span>
           <img decoding="async" src="images/branch-2.webp" alt="Обмінний пункт на вулиці Лепкого ввечері" loading="lazy" width="900" height="672">
         </div>
         <div class="branch__body">
@@ -1971,6 +1945,32 @@ body::before{
           </div>
           <div class="branch__foot">
             <a class="btn btn--sm" href="https://maps.google.com/?q=Івано-Франківськ, вулиця Лепкого, 14" target="_blank" rel="noopener">Маршрут
+              <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card branch reveal" id="branch-1" style="transition-delay:.08s">
+        <div class="branch__media">
+          <span class="branch__idx">Відділення 02</span>
+          <img decoding="async" src="images/branch-1.webp" alt="Інтерʼєр обмінного пункту на вулиці Чорновола" loading="lazy" width="900" height="672">
+        </div>
+        <div class="branch__body">
+          <span class="badge-open"><i></i>Центр міста</span>
+          <h3 class="branch__addr">вул. Чорновола, 4</h3>
+          <div class="branch__meta">
+            <div>
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 2.5 3 3.5c-.7 3.6 3.9 8.2 7.5 7.5l1-2.5-2.2-1.4-1.1 1.1c-.9-.5-1.9-1.5-2.4-2.4l1.1-1.1z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+              <span class="branch__phones"><a href="tel:+380664972619">(066) 49-72-619</a><a href="tel:+380989248391">(098) 92-48-391</a></span>
+            </div>
+            <div>
+              <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.5V8l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              <span class="branch__hours"><span>Пн–Пт 9:00–18:30</span><span>Сб 9:00–17:30</span><span style="color:var(--text-4)">Нд — вихідний</span></span>
+            </div>
+          </div>
+          <div class="branch__foot">
+            <a class="btn btn--sm" href="https://maps.google.com/?q=Івано-Франківськ, вулиця Чорновола, 4" target="_blank" rel="noopener">Маршрут
               <svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 9.5 9.5 2.5M4 2.5h5.5V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
           </div>
