@@ -77,6 +77,30 @@ function markdown(src) {
   return out.join('\n');
 }
 
+/* ============================================================
+   EDITABLE TEXT — data/texts.json fills {{key}} placeholders left
+   in the parts. In a heading, a blank line is a line break and
+   **word** is the gold accent, so the admin never types HTML.
+   ============================================================ */
+const TEXTS = JSON.parse(read('data/texts.json'));
+const RATES = JSON.parse(read('data/rates.json'));
+
+const accentHeading = (v) => esc(v).split('\n')
+  .map(line => line.replace(/\*\*(.+?)\*\*/g, '<span class="accent">$1</span>'))
+  .join('<br>');
+
+/* Body text is escaped and then given back only **bold** — the admin can
+   never put markup (or a script tag) into the page by typing it. */
+const richText = (v) => esc(v).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+
+function applyTexts(html) {
+  return html.replace(/\{\{([a-z]+\.[a-zA-Z0-9]+)(\|head)?\}\}/g, (all, key, head) => {
+    if (!(key in TEXTS)) throw new Error('no text for placeholder ' + all);
+    const v = String(TEXTS[key]).replace('{headline}', RATES.headline);
+    return head ? accentHeading(v) : richText(v);
+  });
+}
+
 const postsDir = 'content/posts';
 const posts = (fs.existsSync(postsDir) ? fs.readdirSync(postsDir) : [])
   .filter(x => x.endsWith('.md'))
@@ -104,6 +128,41 @@ const posts = (fs.existsSync(postsDir) ? fs.readdirSync(postsDir) : [])
   .sort((a, b) => b.ts - a.ts);
 
 /* ============================================================
+   RATES — data/rates.json is the single source for the table and
+   for the calculator, so the two can never disagree.
+   ============================================================ */
+/* Show a rate the way it was typed: never fewer than two decimals,
+   never more than the number actually carries (0.142 stays 0.142). */
+const fmtRate = (n) => {
+  const dec = (String(n).split('.')[1] || '').length;
+  return Number(n).toFixed(Math.max(2, dec));
+};
+const cellText = (tier, side) => tier.unit === '%' ? `+${tier[side]}%` : fmtRate(tier[side]);
+
+function rateRow(row, t) {
+  const tier = row[t];
+  const label = tier.label || row.label;
+  return `        <div class="rate-row${row.featured ? ' is-featured' : ''}">
+          <div class="rate-row__cur"><span class="cur-badge"><svg class="flag" role="img" aria-label="${esc(label)}"><use href="#fl-${esc(row.flag)}"/></svg></span><span><span class="rate-row__code">${esc(row.code)}</span><span class="rate-row__label">${esc(label)}</span></span></div>
+          <div class="rate-row__num is-buy" data-rate="${row.id}.${t}.buy">${cellText(tier, 'buy')}</div>
+          <div class="rate-row__num" data-rate="${row.id}.${t}.sell">${cellText(tier, 'sell')}</div>
+        </div>`;
+}
+
+function ratePanel(t, id, hidden) {
+  const rows = RATES.rows.filter(r => r[t]);
+  const split = Math.ceil(rows.length / 2);
+  const head = '        <div class="rate-row rate-row--head"><span>Валюта</span><span class="ta-right">Купівля</span><span class="ta-right">Продаж</span></div>';
+  const col = (list) => `      <div class="rate-table__col">\n${head}\n\n${list.map(r => rateRow(r, t)).join('\n')}\n      </div>`;
+  return `    <div class="card rate-table" id="${id}" role="tabpanel"${hidden ? ' hidden' : ''}>
+${col(rows.slice(0, split))}
+${col(rows.slice(split))}
+    </div>`;
+}
+
+const ratesTable = () => ratePanel('w', 'rt-w', false) + '\n\n' + ratePanel('r', 'rt-r', true);
+
+/* ============================================================
    SHARED CHUNKS — header and footer come straight out of the
    main page's parts, so the blog can never drift from the site.
    ============================================================ */
@@ -114,8 +173,8 @@ const slice = (src, from, to) => {
 };
 const body01 = read(p + 'body-01.html');
 const body06 = read(p + 'body-06.html');
-const headerHtml = slice(body01, '<header class="site-header"', '</header>');
-const footerHtml = slice(body06, '<footer class="site-footer"', '</footer>');
+const headerHtml = applyTexts(slice(body01, '<header class="site-header"', '</header>'));
+const footerHtml = applyTexts(slice(body06, '<footer class="site-footer"', '</footer>'));
 
 /* On a sub-page every in-page anchor has to point back at the home
    page, and every asset path has to be root-absolute — /blog/<slug>
@@ -154,6 +213,9 @@ home += '</style>\n</head>\n<body>\n';
 for (const b of pick(/^body-\d+\.html$/)) home += read(p + b);
 home += read(p + 'zz-tail.html');
 home = home.replace('<!--{{LATEST_POSTS}}-->', posts.slice(0, 3).map((x, i) => card(x, i)).join('\n'));
+home = home.replace('<!--{{RATES_TABLE}}-->', ratesTable());
+home = home.replace('/*{{RATES_DATA}}*/', 'window.__RATES__ = ' + JSON.stringify(RATES) + ';');
+home = applyTexts(home);
 fs.writeFileSync('index.html', home);
 
 /* ============================================================
@@ -326,4 +388,13 @@ ${others.map((x, i) => card(x, i, { root: true })).join('\n')}
   fs.writeFileSync(path.join('blog', post.slug + '.html'), page);
 }
 
-console.log(`index.html ${home.length}b · blog/index.html ${listing.length}b · ${posts.length} post page(s) · assets/site.css ${css.length}b`);
+/* ============================================================
+   ADMIN — one self-contained page at /admin
+   ============================================================ */
+fs.mkdirSync('admin', { recursive: true });
+const adminPage = read(p + 'admin.html')
+  .replace('/*{{ADMIN_CSS}}*/', () => read(p + 'admin.css'))
+  .replace('/*{{ADMIN_JS}}*/', () => read(p + 'admin.js'));
+fs.writeFileSync('admin/index.html', adminPage);
+
+console.log(`index.html ${home.length}b · admin ${adminPage.length}b · blog/index.html ${listing.length}b · ${posts.length} post page(s) · assets/site.css ${css.length}b`);

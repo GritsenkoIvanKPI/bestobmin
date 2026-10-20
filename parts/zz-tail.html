@@ -40,41 +40,47 @@
     if (e.key === 'Escape') { pick.setAttribute('aria-expanded', 'false'); }
   });
 
-  /* ---------- rates timestamp ---------- */
-  var t = document.getElementById('ratesTime');
-  if (t) {
-    var d = new Date();
-    t.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-  }
-
   /* ---------- exchange calculator ---------- */
-  /* Rates are quoted against UAH: `buy` is what the office pays the client
-     for 1 unit, `sell` is what the client pays to get 1 unit. */
-  /* Published on bestobmin.com.ua, 24.09. Two tiers: `w` wholesale, from
-     500 у.о.; `r` retail below that. Quoted against UAH — buy is what the
-     office pays for 1 unit, sell is what the client pays to get 1 unit. */
-  var WHOLESALE_MIN = 500;
-  var CUR = {
-    UAH:    { flag:'uah',  code:'UAH',  w:{buy:1,     sell:1    }, r:{buy:1,     sell:1    } },
-    USD100: { flag:'usd',  code:'USD',  w:{buy:44.80, sell:45.17}, r:{buy:44.75, sell:45.20} },
-    USD:    { flag:'usd',  code:'USD',  w:{buy:44.70, sell:45.07}, r:{buy:44.65, sell:45.10} },
-    EUR:    { flag:'eur',  code:'EUR',  w:{buy:51.25, sell:51.63}, r:{buy:51.20, sell:51.70} },
-    GBP:    { flag:'gbp',  code:'GBP',  w:{buy:59.15, sell:59.77}, r:{buy:59.10, sell:59.90} },
-    PLN:    { flag:'pln',  code:'PLN',  w:{buy:11.67, sell:11.85}, r:{buy:11.65, sell:11.90} },
-    CHF:    { flag:'chf',  code:'CHF',  w:{buy:54.30, sell:55.49}, r:{buy:54.20, sell:55.60} },
-    CAD:    { flag:'cad',  code:'CAD',  w:{buy:31.20, sell:31.87}, r:{buy:31.10, sell:32.00} },
-    CZK:    { flag:'czk',  code:'CZK',  w:{buy:2.00,  sell:2.11 }, r:{buy:1.97,  sell:2.16 } },
-    SEK:    { flag:'sek',  code:'SEK',  w:{buy:3.97,  sell:4.20 }, r:{buy:3.95,  sell:4.30 } },
-    HUF:    { flag:'huf',  code:'HUF',  w:{buy:0.12,  sell:0.142}, r:{buy:0.11,  sell:0.145} },
-    /* wholesale USDT is a spread on the dollar (+1.8% / +2.9%); retail is quoted outright */
-    USDT:   { flag:'usdt', code:'USDT', w:{buy:44.80*1.018, sell:45.17*1.029}, r:{buy:45.52, sell:46.40} }
-  };
+  /* Rates live in data/rates.json. They are baked into the page at build
+     time (so the table is right before any script runs) and then refreshed
+     from /api/public/rates, which is how an edit in the admin reaches a
+     visitor without rebuilding the site. */
+  /*{{RATES_DATA}}*/
+  var RATES = window.__RATES__ || { wholesaleMin: 500, rows: [] };
+  var WHOLESALE_MIN, CUR, CROSS;
 
-  /* Published EUR/USD cross wins over the one derived through UAH. */
-  var CROSS = {
-    'EUR>USD100': 1.139, 'EUR>USD': 1.139,
-    'USD100>EUR': 1 / 1.149, 'USD>EUR': 1 / 1.149
-  };
+  function rateRowById(data, id) {
+    for (var i = 0; i < data.rows.length; i++) if (data.rows[i].id === id) return data.rows[i];
+    return null;
+  }
+  /* A tier quoted in per cent is a spread on another row's rate — that is
+     how wholesale USDT is priced off the dollar. */
+  function tierRate(data, row, t) {
+    var v = row[t] || row.r || row.w;
+    if (v && v.unit === '%') {
+      var base = rateRowById(data, v.base);
+      var b = base && (base[t] || base.w);
+      if (b) return { buy: b.buy * (1 + v.buy / 100), sell: b.sell * (1 + v.sell / 100) };
+    }
+    return { buy: v.buy, sell: v.sell };
+  }
+  function applyRates(data) {
+    RATES = data;
+    WHOLESALE_MIN = data.wholesaleMin || 500;
+    CUR = { UAH: { flag: 'uah', code: 'UAH', w: { buy: 1, sell: 1 }, r: { buy: 1, sell: 1 } } };
+    CROSS = {};
+    data.rows.forEach(function (row) {
+      if (!row.inCalc) return;
+      CUR[row.id] = { flag: row.calcFlag || row.flag, code: row.code,
+                      w: tierRate(data, row, 'w'), r: tierRate(data, row, 'r') };
+    });
+    var x = rateRowById(data, 'EURUSD');
+    if (x && x.w) {
+      CROSS['EUR>USD100'] = x.w.buy;      CROSS['EUR>USD'] = x.w.buy;
+      CROSS['USD100>EUR'] = 1 / x.w.sell; CROSS['USD>EUR'] = 1 / x.w.sell;
+    }
+  }
+  applyRates(RATES);
 
   function nf(n, dec) {
     return n.toLocaleString('uk-UA', { minimumFractionDigits: dec, maximumFractionDigits: dec })
@@ -150,6 +156,7 @@
 
     return {
       state: state,
+      recalc: function () { recalc('from'); },
       set: function (from, to, give) {
         cf.value = from; ct.value = to; af.value = nf(give, give % 1 ? 2 : 0); recalc('from');
       }
@@ -283,6 +290,55 @@
       document.getElementById('cHours').innerHTML = b.hours;
       document.getElementById('cRoute').href = 'https://maps.google.com/?q=' + encodeURIComponent(b.q);
     });
+  });
+
+  /* ---------- live rates ---------- */
+  /* Poll the public endpoint so a rate saved in the admin reaches an open
+     page too. Everything here fails silently: if the API is unreachable
+     the visitor keeps the rates that were baked into the page. */
+  function fmtRate(n) {
+    var dec = (String(n).split('.')[1] || '').length;
+    return Number(n).toFixed(Math.max(2, dec));
+  }
+  function paintRates(data) {
+    data.rows.forEach(function (row) {
+      ['w', 'r'].forEach(function (t) {
+        var v = row[t];
+        if (!v) return;
+        ['buy', 'sell'].forEach(function (side) {
+          var el = document.querySelector('[data-rate="' + row.id + '.' + t + '.' + side + '"]');
+          if (el) el.textContent = v.unit === '%' ? '+' + v[side] + '%' : fmtRate(v[side]);
+        });
+      });
+    });
+  }
+  function stampRates(iso) {
+    var el = document.getElementById('ratesTime');
+    if (!el) return;
+    var d = iso ? new Date(iso) : new Date();
+    if (isNaN(d)) d = new Date();
+    el.textContent = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+  function refreshRates() {
+    if (!window.fetch) return;
+    fetch('/api/public/rates', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !Array.isArray(d.rows) || !d.rows.length) return;
+        if (d.updatedAt === RATES.updatedAt) return;
+        applyRates(d);
+        paintRates(d);
+        stampRates(d.updatedAt);
+        if (mainCalc) mainCalc.recalc();
+        if (heroCalc) heroCalc.recalc();
+      })
+      .catch(function () {});
+  }
+  stampRates(RATES.updatedAt);
+  refreshRates();
+  setInterval(refreshRates, 120000);
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') refreshRates();
   });
 
   /* ---------- smooth anchor scroll ---------- */

@@ -29,3 +29,9 @@ screenshot.mjs
 # client brief and loose source copies (logo lives in images/)
 content.txt
 /logo.svg
+
+# admin runtime state — secrets and live content, never committed
+data/auth.json
+data/.sessions.json
+data/.backups/
+data/audit.log
