@@ -29,7 +29,12 @@ const MIME = {
 http.createServer((req, res) => {
   let urlPath = req.url.split('?')[0];
   if (urlPath === '/') urlPath = '/index.html';
-  const filePath = path.join(__dirname, urlPath);
+  let filePath = path.join(__dirname, urlPath);
+  // cleanUrls, as Vercel serves them: /blog -> blog.html
+  if (!path.extname(filePath)) {
+    if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) filePath = path.join(filePath, 'index.html');
+    else if (fs.existsSync(filePath + '.html')) filePath += '.html';
+  }
   const ext = path.extname(filePath).toLowerCase();
   const mime = MIME[ext] || 'application/octet-stream';
 
