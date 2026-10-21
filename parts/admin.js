@@ -346,6 +346,56 @@
      ============================================================ */
   var TAGS = ['Курси', 'Валюти', 'Поради', 'Новини', 'Блог'];
 
+  /* A photo straight off a phone is several megabytes and far larger than
+     the page ever displays. Shrink and re-encode to WebP here, so what
+     travels to the server — and later to every visitor — is small. */
+  var MAX_EDGE = 1600;
+  function prepareImage(file) {
+    return new Promise(function (resolve, reject) {
+      if (!/^image\//.test(file.type)) return reject(new Error('Це не зображення'));
+      if (file.size > 25 * 1024 * 1024) return reject(new Error('Файл більший за 25 МБ'));
+      var url = URL.createObjectURL(file);
+      var img = new Image();
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var scale = Math.min(1, MAX_EDGE / Math.max(img.width, img.height));
+        var w = Math.max(1, Math.round(img.width * scale));
+        var h = Math.max(1, Math.round(img.height * scale));
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        canvas.toBlob(function (blob) {
+          /* a browser without WebP encoding falls back to the original file */
+          if (blob && blob.type === 'image/webp') resolve({ blob: blob, name: file.name, w: w, h: h });
+          else resolve({ blob: file, name: file.name, w: img.width, h: img.height });
+        }, 'image/webp', 0.82);
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('Не вдалося прочитати зображення')); };
+      img.src = url;
+    });
+  }
+
+  function uploadImage(file) {
+    if (DEMO) return Promise.reject(new Error('Демо-режим: завантаження працює тільки на робочому сервері'));
+    return prepareImage(file).then(function (ready) {
+      return fetch('/api/admin/upload', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': ready.blob.type || 'application/octet-stream',
+          'X-CSRF-Token': CSRF,
+          'X-File-Name': encodeURIComponent(ready.name),
+        },
+        body: ready.blob,
+      }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (d) {
+          if (!r.ok) throw new Error(d.error || ('Помилка ' + r.status));
+          return d;
+        });
+      });
+    });
+  }
+
   function viewPosts(main) {
     var mine = ++renderSeq;
     main.innerHTML = '';
@@ -444,30 +494,90 @@
       /* image picker */
       var imgWrap = el('div', 'field');
       imgWrap.appendChild(el('span', 'field__k', 'Обкладинка'));
+
+      var drop = el('div', 'imgdrop');
+      var pick = el('input');
+      pick.type = 'file';
+      pick.accept = 'image/jpeg,image/png,image/webp';
+      pick.multiple = true;
+      pick.hidden = true;
+      var upBtn = el('button', 'btn btn--sm', 'Завантажити з компʼютера');
+      upBtn.type = 'button';
+      upBtn.onclick = function () { pick.click(); };
+      var dropHint = el('span', 'imgdrop__hint', 'або перетягніть файли сюди');
+      drop.appendChild(upBtn);
+      drop.appendChild(dropHint);
+      drop.appendChild(pick);
+
       var grid = el('div', 'imgs');
-      var none = el('button', '', '');
+      var none = el('button', 'imgs__none', 'Без');
       none.type = 'button';
-      none.style.display = 'grid'; none.style.placeItems = 'center'; none.style.fontSize = '.8rem';
-      none.textContent = 'Без';
       none.onclick = function () { state.image = ''; paintImgs(); markPost(); };
-      grid.appendChild(none);
-      images.forEach(function (src) {
+
+      function tile(src) {
         var b = el('button'); b.type = 'button';
         var im = el('img'); im.src = '/' + src; im.alt = src; im.loading = 'lazy';
         b.appendChild(im);
         b.onclick = function () { state.image = src; paintImgs(); markPost(); };
         b.dataset.src = src;
-        grid.appendChild(b);
-      });
+        return b;
+      }
+      function paintGrid() {
+        grid.innerHTML = '';
+        grid.appendChild(none);
+        images.forEach(function (src) { grid.appendChild(tile(src)); });
+        paintImgs();
+      }
       function paintImgs() {
         none.classList.toggle('is-on', !state.image);
         [].forEach.call(grid.querySelectorAll('button[data-src]'), function (b) {
           b.classList.toggle('is-on', b.dataset.src === state.image);
         });
       }
-      paintImgs();
+      paintGrid();
+
+      function takeFiles(list) {
+        var files = [].slice.call(list || []).filter(function (f) { return /^image\//.test(f.type); });
+        if (!files.length) return;
+        drop.classList.add('is-busy');
+        upBtn.disabled = true;
+        var was = upBtn.textContent;
+        upBtn.textContent = files.length > 1 ? 'Завантажуємо ' + files.length + '…' : 'Завантажуємо…';
+        var done = 0;
+        files.reduce(function (chain, f) {
+          return chain.then(function () {
+            return uploadImage(f).then(function (r) {
+              done++;
+              if (images.indexOf(r.path) < 0) images.unshift(r.path);
+              state.image = r.path;
+              paintGrid();
+              markPost();
+            });
+          }).catch(function (e) { toast(e.message, 'err'); });
+        }, Promise.resolve()).then(function () {
+          drop.classList.remove('is-busy');
+          upBtn.disabled = false;
+          upBtn.textContent = was;
+          if (done) toast(done > 1 ? done + ' зображення завантажено' : 'Зображення завантажено');
+        });
+      }
+
+      pick.onchange = function () { takeFiles(pick.files); pick.value = ''; };
+      ['dragenter', 'dragover'].forEach(function (ev) {
+        drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('is-over'); });
+        grid.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('is-over'); });
+      });
+      ['dragleave', 'drop'].forEach(function (ev) {
+        drop.addEventListener(ev, function () { drop.classList.remove('is-over'); });
+        grid.addEventListener(ev, function () { drop.classList.remove('is-over'); });
+      });
+      [drop, grid].forEach(function (zone) {
+        zone.addEventListener('drop', function (e) { e.preventDefault(); takeFiles(e.dataTransfer && e.dataTransfer.files); });
+      });
+
+      imgWrap.appendChild(drop);
       imgWrap.appendChild(grid);
-      imgWrap.appendChild(el('p', 'hint', 'Файли беруться з теки images/. Щоб додати нову картинку, покладіть її туди на сервері.'));
+      imgWrap.appendChild(el('p', 'hint', 'JPG, PNG або WebP. Велике фото зменшується до 1600 px і стискається просто тут, у браузері, — на сервер і до відвідувачів їде вже легкий файл.'));
       body.appendChild(imgWrap);
       body.appendChild(field('Опис зображення', 'imageAlt', 'input', 'Що зображено — для пошуку і читалок'));
 

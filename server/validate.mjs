@@ -138,3 +138,28 @@ export function validatePost(input) {
     body: str(input.body, { max: 40000, min: 1, name: 'Текст' }),
   };
 }
+
+/* ---------- uploaded image ----------
+   The type is read from the bytes, never from the name or the declared
+   Content-Type: a file called photo.webp that is really something else is
+   refused. SVG is not accepted at all — it can carry script. */
+export function sniffImage(buf) {
+  if (buf.length < 12) fail('файл порожній або пошкоджений');
+  const hex = buf.subarray(0, 12);
+  if (hex[0] === 0xff && hex[1] === 0xd8 && hex[2] === 0xff) return 'jpg';
+  if (hex[0] === 0x89 && hex[1] === 0x50 && hex[2] === 0x4e && hex[3] === 0x47
+      && hex[4] === 0x0d && hex[5] === 0x0a && hex[6] === 0x1a && hex[7] === 0x0a) return 'png';
+  if (hex.toString('latin1', 0, 4) === 'RIFF' && hex.toString('latin1', 8, 12) === 'WEBP') return 'webp';
+  fail('підтримуються лише JPG, PNG і WebP');
+}
+
+/* The stored name is built here, never taken from the browser. */
+export function safeImageName(hint, ext, digest) {
+  const base = String(hint || '')
+    .toLowerCase()
+    .replace(/\.[a-z0-9]+$/, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40) || 'photo';
+  return `${base}-${digest.slice(0, 8)}.${ext}`;
+}

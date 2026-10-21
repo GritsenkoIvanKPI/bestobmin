@@ -350,3 +350,18 @@ textarea.input{min-height:7rem;resize:vertical;line-height:1.6}
   .tprev{position:static;order:-1;margin:var(--pad) var(--pad) 0}
   .panel__split > .panel__body{order:1}
 }
+
+/* ---------- image upload ---------- */
+.imgdrop{
+  display:flex;align-items:center;gap:.9rem;flex-wrap:wrap;
+  margin-bottom:.75rem;padding:.75rem .9rem;
+  border:1px dashed var(--line-2);border-radius:var(--r-sm);
+  background:rgba(255,255,255,.015);
+  transition:border-color .25s var(--ease),background-color .25s var(--ease);
+}
+.imgdrop.is-over{border-color:var(--accent-600);background:rgba(204,163,119,.1)}
+.imgdrop.is-busy{opacity:.7;pointer-events:none}
+.imgdrop__hint{font-size:.875rem;color:var(--text-dim)}
+.imgs__none{
+  display:grid;place-items:center;font-size:.8125rem;color:var(--text-dim);
+}

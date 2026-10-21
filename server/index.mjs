@@ -6,6 +6,7 @@
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 import { execFile } from 'child_process';
 import {
   ROOT, readJSON, writeJSON, listPosts, readPost, writePost, deletePost,
@@ -15,12 +16,13 @@ import {
   checkPassword, loadCredentials, loadSessions, createSession, getSession,
   dropSession, sameSecret, throttleState, noteFailure, clearFailures,
 } from './auth.mjs';
-import { Invalid, validateRates, validateBranches, validateTexts, validatePost } from './validate.mjs';
+import { Invalid, validateRates, validateBranches, validateTexts, validatePost, sniffImage, safeImageName } from './validate.mjs';
 
 const PORT = Number(process.env.PORT || 4199);
 const TRUST_PROXY = process.env.TRUST_PROXY === '1';
 const SECURE_COOKIES = process.env.SECURE_COOKIES === '1';
 const MAX_BODY = 256 * 1024;
+const MAX_UPLOAD = 8 * 1024 * 1024;
 
 loadSessions();
 
@@ -73,13 +75,29 @@ function readBody(req) {
   });
 }
 
+/* Uploads arrive as the raw file, so there is no multipart parser to get
+   wrong — the browser sends the bytes and nothing else. */
+function readRaw(req, limit) {
+  return new Promise((resolve, reject) => {
+    let size = 0;
+    const chunks = [];
+    req.on('data', (c) => {
+      size += c.length;
+      if (size > limit) { reject(new Invalid(`файл завеликий (максимум ${Math.round(limit / 1048576)} МБ)`)); req.destroy(); return; }
+      chunks.push(c);
+    });
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
+  });
+}
+
 /* The admin page may only talk to its own origin and may not be framed. */
 const ADMIN_CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
-  "img-src 'self' data:",
+  "img-src 'self' data: blob:",   // blob: is how the picker previews a chosen file
   "connect-src 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",
@@ -295,6 +313,24 @@ async function api(req, res, urlPath) {
       ? fs.readdirSync(dir).filter(f => /\.(webp|jpg|jpeg|png|svg)$/i.test(f)).sort()
       : [];
     return json(res, 200, { images: files.map(f => 'images/' + f) });
+  }
+
+  if (resource === 'upload' && method === 'POST') {
+    const buf = await readRaw(req, MAX_UPLOAD);
+    const ext = sniffImage(buf);                       // throws Invalid on anything else
+    const digest = crypto.createHash('sha1').update(buf).digest('hex');
+    const name = safeImageName(req.headers['x-file-name'], ext, digest);
+    const dir = path.join(ROOT, 'images');
+    fs.mkdirSync(dir, { recursive: true });
+    const file = path.join(dir, name);
+    if (path.dirname(file) !== dir) return json(res, 400, { error: 'погана назва файлу' });
+    if (!fs.existsSync(file)) {                        // same bytes, same name — upload once
+      const tmp = file + '.tmp';
+      fs.writeFileSync(tmp, buf);
+      fs.renameSync(tmp, file);
+    }
+    logChange({ what: 'image.upload', name, bytes: buf.length, ip: clientIP(req) });
+    return json(res, 200, { path: 'images/' + name, bytes: buf.length });
   }
 
   if (resource === 'audit' && method === 'GET') return json(res, 200, { entries: readAudit() });
