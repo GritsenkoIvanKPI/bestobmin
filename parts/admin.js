@@ -678,17 +678,29 @@
   /* ============================================================
      TEXTS
      ============================================================ */
+  /* Each block says where it lives on the site, so the client can jump
+     straight to it and see the real thing next to the fields. */
   var TEXT_GROUPS = [
-    ['Перший екран', 'hero.'],
-    ['Курси валют', 'rates.'],
-    ['Послуги', 'services.'],
-    ['Перевірка готівки', 'check.'],
-    ['Додатково', 'extra.'],
-    ['Переваги', 'benefits.'],
-    ['Відділення', 'branches.'],
-    ['Безпека', 'security.'],
-    ['Новини', 'news.'],
-    ['Підвал сайту', 'footer.'],
+    { title: 'Перший екран', pre: 'hero.', at: '#top',
+      note: 'Найперше, що бачить відвідувач: плашка, великий заголовок і опис під ним.' },
+    { title: 'Курси валют', pre: 'rates.', at: '#rates',
+      note: 'Шапка таблиці курсів і дві примітки під нею про стан купюр.' },
+    { title: 'Послуги', pre: 'services.', at: '#services',
+      note: 'Заголовок розділу з доставкою, пошкодженими банкнотами та монетами.' },
+    { title: 'Перевірка готівки', pre: 'check.', at: '#services',
+      note: 'Широка картка в «Послугах» про безкоштовну перевірку купюр.' },
+    { title: 'Не тільки валюта', pre: 'extra.', at: '#services',
+      note: 'Картка про паливні талони та злитки — одразу під перевіркою готівки.' },
+    { title: 'Переваги', pre: 'benefits.', at: '#benefits',
+      note: 'Заголовок блоку з фіксацією курсу, комісією та часом обслуговування.' },
+    { title: 'Відділення', pre: 'branches.', at: '#branches',
+      note: 'Шапка розділу з трьома відділеннями. Самі адреси — у розділі «Відділення».' },
+    { title: 'Безпека', pre: 'security.', at: '#security',
+      note: 'Заголовок блоку про захист даних і перевірку купюр.' },
+    { title: 'Новини', pre: 'news.', at: '#news',
+      note: 'Шапка блоку новин на головній. Самі статті — у розділі «Новини».' },
+    { title: 'Підвал сайту', pre: 'footer.', at: '#contacts',
+      note: 'Опис компанії та два рядки внизу кожної сторінки.' },
   ];
   var TEXT_LABELS = {
     badge: 'Плашка над заголовком', line1: 'Заголовок, перший рядок', line2: 'Заголовок, другий рядок (золотий)',
@@ -698,28 +710,123 @@
     about: 'Опис компанії', legal: 'Копірайт', meta: 'Правий напис',
   };
 
+  /* The preview mirrors how the block is built on the page: a small mono
+     label, a heading where **word** turns gold, then body copy. It is
+     rebuilt from the fields on every keystroke, so what the client reads
+     here is what the site will show. */
+  var ROLE = {
+    eyebrow: 'label', badge: 'label',
+    heading: 'head', line1: 'head', line2: 'head-accent', title: 'head',
+    lede: 'body', lead: 'body', note1: 'body', note2: 'body',
+    about: 'body', legal: 'small', meta: 'small',
+  };
+
+  var headlineNow = '';   /* the date the build drops into {headline} */
+
+  function renderPreview(box, group, state) {
+    box.innerHTML = '';
+    var keys = Object.keys(state).filter(function (k) { return k.indexOf(group.pre) === 0; });
+    keys.forEach(function (key) {
+      var short = key.split('.')[1];
+      var role = ROLE[short] || 'body';
+      var value = String(state[key] || '').replace('{headline}', headlineNow);
+      if (!value.trim()) return;
+      if (role === 'label') { box.appendChild(el('span', 'tprev__label', value)); return; }
+      if (role === 'small') { box.appendChild(el('p', 'tprev__small', value)); return; }
+      if (role === 'body')  { box.appendChild(richLine(el('p', 'tprev__body'), value)); return; }
+
+      var h = el('p', 'tprev__head');
+      if (role === 'head-accent') h.className += ' accent';
+      value.split('\n').forEach(function (line, i) {
+        if (i) h.appendChild(document.createElement('br'));
+        accentInto(h, line);
+      });
+      box.appendChild(h);
+    });
+    if (!box.children.length) box.appendChild(el('p', 'tprev__body muted', 'Поля порожні'));
+  }
+
+  /* **word** becomes gold; everything else stays text, never markup */
+  function accentInto(node, line) {
+    var re = /\*\*(.+?)\*\*/g, last = 0, m;
+    while ((m = re.exec(line))) {
+      if (m.index > last) node.appendChild(document.createTextNode(line.slice(last, m.index)));
+      node.appendChild(el('span', 'accent', m[1]));
+      last = re.lastIndex;
+    }
+    if (last < line.length) node.appendChild(document.createTextNode(line.slice(last)));
+  }
+  function richLine(node, value) {
+    value.split('\n').forEach(function (line, i) {
+      if (i) node.appendChild(document.createElement('br'));
+      var re = /\*\*(.+?)\*\*/g, last = 0, m;
+      while ((m = re.exec(line))) {
+        if (m.index > last) node.appendChild(document.createTextNode(line.slice(last, m.index)));
+        node.appendChild(el('b', null, m[1]));
+        last = re.lastIndex;
+      }
+      if (last < line.length) node.appendChild(document.createTextNode(line.slice(last)));
+    });
+    return node;
+  }
+
   function viewTexts(main) {
     var mine = ++renderSeq;
     main.innerHTML = '';
     setDirty(null);
-    api('GET', '/api/admin/texts').then(function (data) {
+    Promise.all([api('GET', '/api/admin/texts'), api('GET', '/api/admin/rates')]).then(function (res) {
       if (stale(mine)) return;
+      var data = res[0];
+      headlineNow = (res[1] && res[1].headline) || '';
       var state = JSON.parse(JSON.stringify(data));
 
       var top = el('div', 'page-top');
       var left = el('div');
       left.appendChild(el('h1', null, 'Тексти сайту'));
-      left.appendChild(el('p', null, 'Заголовки та описи секцій. У заголовках: новий рядок — це перенос, а **слово в зірочках** стає золотим.'));
+      left.appendChild(el('p', null, 'Оберіть блок ліворуч — побачите, де він на сайті та як виглядатиме після правки. У заголовках новий рядок означає перенос, а слово в **двох зірочках** стає золотим.'));
       top.appendChild(left);
       main.appendChild(top);
 
-      TEXT_GROUPS.forEach(function (grp) {
-        var keys = Object.keys(data).filter(function (k) { return k.indexOf(grp[1]) === 0; });
+      var layout = el('div', 'texts');
+      var nav = el('nav', 'texts__nav');
+      nav.setAttribute('aria-label', 'Блоки сайту');
+      var cols = el('div', 'texts__cols');
+      layout.appendChild(nav);
+      layout.appendChild(cols);
+      main.appendChild(layout);
+
+      var panels = [];
+      TEXT_GROUPS.forEach(function (group, gi) {
+        var keys = Object.keys(data).filter(function (k) { return k.indexOf(group.pre) === 0; });
         if (!keys.length) return;
+
+        var link = el('button', 'texts__link', group.title);
+        link.type = 'button';
+        link.onclick = function () { show(gi); };
+        nav.appendChild(link);
+
         var panel = el('div', 'panel');
+        panel.hidden = true;
         var head = el('div', 'panel__head');
-        head.appendChild(el('h2', null, grp[0]));
+        var hl = el('div');
+        hl.appendChild(el('h2', null, group.title));
+        hl.appendChild(el('p', null, group.note));
+        head.appendChild(hl);
+        var open = el('a', 'btn btn--sm', 'Подивитись на сайті');
+        open.href = '/' + group.at;
+        open.target = '_blank';
+        open.rel = 'noopener';
+        head.appendChild(open);
         panel.appendChild(head);
+
+        /* fields on the left, the preview pinned on the right, so it stays
+           in view while the client works down the form */
+        var split = el('div', 'panel__split');
+        var prevWrap = el('aside', 'tprev');
+        prevWrap.appendChild(el('span', 'tprev__tag', 'Так це виглядатиме на сайті'));
+        var prevBox = el('div', 'tprev__body-box');
+        prevWrap.appendChild(prevBox);
+
         var body = el('div', 'panel__body stack');
         keys.forEach(function (key) {
           var short = key.split('.')[1];
@@ -729,13 +836,35 @@
           var input = el(long ? 'textarea' : 'input', 'input');
           input.value = data[key];
           if (long) input.rows = Math.min(6, Math.ceil(String(data[key]).length / 70) + 1);
-          input.oninput = function () { state[key] = input.value; mark(); };
+          input.oninput = function () {
+            state[key] = input.value;
+            renderPreview(prevBox, group, state);
+            mark();
+          };
           wrap.appendChild(input);
+          if (String(data[key]).indexOf('{headline}') >= 0) {
+            wrap.appendChild(el('p', 'hint', '{headline} сюди підставляється дата з розділу «Курси валют» — зараз «' + headlineNow + '». Лишіть це слово на місці, щоб дата оновлювалась сама.'));
+          }
           body.appendChild(wrap);
         });
-        panel.appendChild(body);
-        main.appendChild(panel);
+        split.appendChild(body);
+        split.appendChild(prevWrap);
+        panel.appendChild(split);
+        panel.className = 'panel panel--split';
+        cols.appendChild(panel);
+        renderPreview(prevBox, group, state);
+        panels.push({ link: link, panel: panel });
       });
+
+      function show(i) {
+        panels.forEach(function (x, j) {
+          x.panel.hidden = j !== i;
+          x.link.classList.toggle('is-on', j === i);
+        });
+        try { history.replaceState(null, '', '#texts/' + i); } catch (e) {}
+      }
+      var want = /^#texts\/(\d+)$/.exec(location.hash);
+      show(want && panels[+want[1]] ? +want[1] : 0);
 
       function mark() {
         var n = Object.keys(state).filter(function (k) { return state[k] !== data[k]; }).length;
