@@ -154,9 +154,11 @@ textarea.input{min-height:7rem;resize:vertical;line-height:1.6}
   gap:.75rem;align-items:center;
 }
 .rates-head{
-  padding:0 var(--pad) .7rem;font-family:var(--ff-mono);font-size:.6875rem;
+  /* the row sat flush against the divider above it */
+  padding:1.1rem var(--pad) .55rem;font-family:var(--ff-mono);font-size:.6875rem;
   letter-spacing:.13em;text-transform:uppercase;color:var(--text-dim);
 }
+.rates-head--sub{padding-top:0;padding-bottom:.85rem}
 .rates-head span{text-align:center}
 .rates-head span:first-child{text-align:left}
 .rates-head .grp{grid-column:span 2;text-align:center;color:var(--accent-600)}
@@ -637,10 +639,9 @@ textarea.input{min-height:7rem;resize:vertical;line-height:1.6}
       heads.appendChild(el('span', 'grp', 'Оптовий (від ' + data.wholesaleMin + ' у.о.)'));
       heads.appendChild(el('span', 'grp', 'Роздрібний'));
       panel.appendChild(heads);
-      var sub = el('div', 'rates-head');
+      var sub = el('div', 'rates-head rates-head--sub');
       sub.appendChild(el('span', null, ''));
       ['Купівля', 'Продаж', 'Купівля', 'Продаж'].forEach(function (t) { sub.appendChild(el('span', null, t)); });
-      sub.style.paddingBottom = '.5rem';
       panel.appendChild(sub);
 
       /* Show a rate the way the site prints it — two decimals unless the

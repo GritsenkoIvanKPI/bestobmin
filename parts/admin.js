@@ -196,10 +196,9 @@
       heads.appendChild(el('span', 'grp', 'Оптовий (від ' + data.wholesaleMin + ' у.о.)'));
       heads.appendChild(el('span', 'grp', 'Роздрібний'));
       panel.appendChild(heads);
-      var sub = el('div', 'rates-head');
+      var sub = el('div', 'rates-head rates-head--sub');
       sub.appendChild(el('span', null, ''));
       ['Купівля', 'Продаж', 'Купівля', 'Продаж'].forEach(function (t) { sub.appendChild(el('span', null, t)); });
-      sub.style.paddingBottom = '.5rem';
       panel.appendChild(sub);
 
       /* Show a rate the way the site prints it — two decimals unless the
