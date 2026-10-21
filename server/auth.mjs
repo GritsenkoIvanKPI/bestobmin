@@ -31,6 +31,10 @@ export function loadCredentials() {
 
 export function saveCredentials(record) {
   fs.mkdirSync(path.dirname(AUTH_FILE), { recursive: true });
+  /* keep the previous hash, so a mistyped change is recoverable */
+  if (fs.existsSync(AUTH_FILE)) {
+    try { fs.copyFileSync(AUTH_FILE, AUTH_FILE + '.prev'); fs.chmodSync(AUTH_FILE + '.prev', 0o600); } catch {}
+  }
   fs.writeFileSync(AUTH_FILE, JSON.stringify(record, null, 2) + '\n', { mode: 0o600 });
 }
 
@@ -94,21 +98,27 @@ function sweep() {
   if (dirty) persist();
 }
 
-export function createSession() {
+/* The session remembers which browser it was issued to. A cookie copied
+   out of this machine and replayed from another agent does not match and
+   is dropped. */
+const agentPrint = (ua) => crypto.createHash('sha256').update(String(ua || '')).digest('hex').slice(0, 32);
+
+export function createSession(userAgent) {
   sweep();
   const id = crypto.randomBytes(32).toString('base64url');
   const csrf = crypto.randomBytes(32).toString('base64url');
-  sessions.set(id, { csrf, born: Date.now(), seen: Date.now() });
+  sessions.set(id, { csrf, born: Date.now(), seen: Date.now(), ua: agentPrint(userAgent) });
   persist();
   return { id, csrf };
 }
 
-export function getSession(id) {
+export function getSession(id, userAgent) {
   if (!id) return null;
   const s = sessions.get(id);
   if (!s) return null;
   const now = Date.now();
   if (s.seen + SESSION_TTL < now || s.born + SESSION_MAX < now) { sessions.delete(id); persist(); return null; }
+  if (s.ua && !sameSecret(s.ua, agentPrint(userAgent))) return null;
   s.seen = now;
   return { id, ...s };
 }

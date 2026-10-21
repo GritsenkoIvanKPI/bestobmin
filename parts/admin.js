@@ -26,6 +26,14 @@
           if (url === '/api/admin/branches') return resolve(clone(snap.branches));
           if (url === '/api/admin/texts') return resolve(clone(snap.texts));
           if (url === '/api/admin/images') return resolve({ images: snap.images.slice() });
+          if (url === '/api/admin/audit') {
+            var t = Date.now();
+            return resolve({ entries: [
+              { at: new Date(t - 6e5).toISOString(), what: 'login.ok', ip: '—' },
+              { at: new Date(t - 9e5).toISOString(), what: 'rates.save', ip: '—' },
+              { at: new Date(t - 3.6e6).toISOString(), what: 'login.fail', ip: '—' },
+            ] });
+          }
           if (url === '/api/admin/posts') {
             return resolve({ posts: snap.posts.map(function (x) {
               return { slug: x.slug, title: x.title, date: x.date, tag: x.tag, draft: x.draft };
@@ -63,7 +71,12 @@
     return fetch(url, opts).then(function (r) {
       if (r.status === 401) { showLogin('Сесія завершилась — увійдіть знову'); throw new Error('auth'); }
       return r.json().catch(function () { return {}; }).then(function (d) {
-        if (!r.ok) throw new Error(d.error || ('Помилка ' + r.status));
+        if (!r.ok) {
+          var err = new Error(d.error || ('Помилка ' + r.status));
+          err.status = r.status;
+          err.payload = d;
+          throw err;
+        }
         return d;
       });
     });
@@ -302,6 +315,63 @@
         return bad === 0;
       }
 
+      /* The server refuses a rate that jumps more than 15 % unless the save
+         says so outright. That is the moment to show what moved — a typo
+         and a hijacked session look identical until someone reads it. */
+      function commit(confirmed) {
+        if (!validate()) { toast('Виправте підсвічені рядки', 'err'); return; }
+        $('#save').disabled = true;
+        var payload = JSON.parse(JSON.stringify(edited));
+        if (confirmed) payload.confirmBigMoves = true;
+        api('PUT', '/api/admin/rates', payload).then(function () {
+          setDirty(null);
+          toast('Курси збережено — за кілька секунд зʼявляться на сайті');
+          $('#save').disabled = false;
+          viewRates(main);
+        }).catch(function (e) {
+          $('#save').disabled = false;
+          if (e.status === 409 && e.payload && e.payload.moves) return askBigMoves(e.payload.moves);
+          toast(e.message, 'err');
+        });
+      }
+
+      function askBigMoves(moves) {
+        var scrim = el('div', 'scrim');
+        var box = el('div', 'dialog');
+        box.appendChild(el('h2', null, 'Перевірте: курс змінюється дуже сильно'));
+        box.appendChild(el('p', null, moves.length === 1
+          ? 'Один курс рухається більш ніж на 15 %. Якщо це не помилка — підтвердьте.'
+          : moves.length + ' курси рухаються більш ніж на 15 %. Якщо це не помилка — підтвердьте.'));
+        var list = el('div', 'bigmoves');
+        moves.slice(0, 8).forEach(function (m) {
+          var row = el('div', 'bigmoves__row');
+          row.appendChild(el('b', null, m.code + ' · ' + m.tier + ' · ' + m.side));
+          var num = el('span');
+          num.appendChild(el('s', null, String(m.was)));
+          num.appendChild(document.createTextNode(' → '));
+          num.appendChild(el('u', null, String(m.now)));
+          if (m.pct !== null && m.pct !== undefined) num.appendChild(el('i', null, ' (' + (m.pct > 0 ? '+' : '') + m.pct + '%)'));
+          row.appendChild(num);
+          list.appendChild(row);
+        });
+        if (moves.length > 8) list.appendChild(el('div', 'bigmoves__row muted', '…і ще ' + (moves.length - 8)));
+        box.appendChild(list);
+        var acts = el('div', 'dialog__actions');
+        var no = el('button', 'btn btn--sm', 'Повернутись і виправити');
+        var yes = el('button', 'btn btn--sm btn--primary', 'Так, курс саме такий');
+        acts.appendChild(no); acts.appendChild(yes);
+        box.appendChild(acts);
+        scrim.appendChild(box);
+        document.body.appendChild(scrim);
+        no.focus();
+        var close = function () { scrim.remove(); document.removeEventListener('keydown', onKey); };
+        var onKey = function (e) { if (e.key === 'Escape') close(); };
+        document.addEventListener('keydown', onKey);
+        no.onclick = close;
+        scrim.onclick = function (e) { if (e.target === scrim) close(); };
+        yes.onclick = function () { close(); commit(true); };
+      }
+
       function mark() {
         var n = cells.filter(function (c) { return String(c.input.value) !== String(c.original); }).length;
         var fieldsChanged = String(edited.headline) !== String(data.headline)
@@ -310,20 +380,7 @@
         setDirty({
           count: n || 1,
           label: n ? plural(n, 'курс змінено', 'курси змінено', 'курсів змінено') : 'поле змінено',
-          save: function () {
-            if (!validate()) { toast('Виправте підсвічені рядки', 'err'); return; }
-            $('#save').disabled = true;
-            api('PUT', '/api/admin/rates', edited).then(function (r) {
-              setDirty(null);
-              toast('Курси збережено — за кілька секунд зʼявляться на сайті');
-              $('#save').disabled = false;
-              viewRates(main);
-              if (r.saved) stamp.lastChild.textContent = 'Оновлено щойно';
-            }).catch(function (e) {
-              $('#save').disabled = false;
-              toast(e.message, 'err');
-            });
-          },
+          save: function () { commit(false); },
           revert: function () { setDirty(null); viewRates(main); },
         });
       }
@@ -994,6 +1051,67 @@
   }
 
   /* ============================================================
+     LOG — so an attack is noticed, not only repelled
+     ============================================================ */
+  var EVENTS = {
+    'login.ok':           { t: 'Вхід в адмінку', kind: 'ok' },
+    'login.fail':         { t: 'Невдала спроба входу', kind: 'warn' },
+    'login.locked':       { t: 'Вхід заблоковано — підозріла активність', kind: 'bad' },
+    'rates.save':         { t: 'Збережено курси', kind: 'ok' },
+    'rates.bigmove.held': { t: 'Відхилено надто велику зміну курсу', kind: 'bad' },
+    'branches.save':      { t: 'Збережено відділення', kind: 'ok' },
+    'texts.save':         { t: 'Збережено тексти', kind: 'ok' },
+    'post.save':          { t: 'Збережено статтю', kind: 'ok' },
+    'post.delete':        { t: 'Видалено статтю', kind: 'warn' },
+    'image.upload':       { t: 'Завантажено зображення', kind: 'ok' },
+  };
+
+  function viewLog(main) {
+    var mine = ++renderSeq;
+    main.innerHTML = '';
+    setDirty(null);
+    api('GET', '/api/admin/audit').then(function (d) {
+      if (stale(mine)) return;
+      var top = el('div', 'page-top');
+      var left = el('div');
+      left.appendChild(el('h1', null, 'Журнал'));
+      left.appendChild(el('p', null, 'Останні дії та спроби входу. Якщо тут зʼявилось багато невдалих входів або відхилених змін курсу — комусь цікавий ваш сайт.'));
+      top.appendChild(left);
+      main.appendChild(top);
+
+      var fails = d.entries.filter(function (e) { return e.what === 'login.fail' || e.what === 'login.locked'; }).length;
+      var held = d.entries.filter(function (e) { return e.what === 'rates.bigmove.held'; }).length;
+      if (fails > 3 || held) {
+        var warn = el('div', 'alert');
+        warn.appendChild(el('b', null, 'Варто подивитись уважно. '));
+        warn.appendChild(document.createTextNode(
+          (fails ? fails + ' невдалих спроб входу. ' : '') +
+          (held ? held + ' відхилених спроб різко змінити курс. ' : '') +
+          'Якщо це були не ви — змініть пароль командою node server/set-password.mjs.'));
+        main.appendChild(warn);
+      }
+
+      var panel = el('div', 'panel');
+      var rows = el('div', 'rows');
+      if (!d.entries.length) rows.appendChild(el('div', 'row-item muted', 'Поки порожньо.'));
+      d.entries.forEach(function (e) {
+        var meta = EVENTS[e.what] || { t: e.what, kind: 'ok' };
+        var item = el('div', 'row-item');
+        var m = el('div', 'row-item__main');
+        m.appendChild(el('b', null, meta.t + (e.slug ? ' · ' + e.slug : '') + (e.name ? ' · ' + e.name : '')));
+        var when = new Date(e.at);
+        m.appendChild(el('span', null,
+          (isNaN(when) ? e.at : when.toLocaleString('uk-UA')) + (e.ip ? ' · ' + e.ip : '')));
+        item.appendChild(m);
+        item.appendChild(el('span', 'pill pill--' + meta.kind, meta.kind === 'ok' ? 'Дія' : meta.kind === 'warn' ? 'Увага' : 'Загроза'));
+        rows.appendChild(item);
+      });
+      panel.appendChild(rows);
+      main.appendChild(panel);
+    }).catch(fail(main));
+  }
+
+  /* ============================================================
      shell
      ============================================================ */
   function fail(main) {
@@ -1008,7 +1126,7 @@
     };
   }
 
-  var VIEWS = { rates: viewRates, posts: viewPosts, branches: viewBranches, texts: viewTexts };
+  var VIEWS = { rates: viewRates, posts: viewPosts, branches: viewBranches, texts: viewTexts, log: viewLog };
 
   function go(name) {
     var run = function () {

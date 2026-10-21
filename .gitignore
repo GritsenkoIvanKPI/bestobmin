@@ -35,3 +35,5 @@ data/auth.json
 data/.sessions.json
 data/.backups/
 data/audit.log
+data/.known-ips.json
+data/auth.json.prev

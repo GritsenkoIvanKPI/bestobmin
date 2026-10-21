@@ -24,7 +24,48 @@ const num = (v, { min = 0, max = 1e6, name = 'число' } = {}) => {
 
 const arr = (v, name) => (Array.isArray(v) ? v : fail(`${name}: очікується список`));
 
-/* ---------- rates ---------- */
+/* ---------- rates ----------
+   A rate that jumps further than this in one save is refused unless the
+   request explicitly confirms it. Two things this stops: a fat-finger in
+   the cashier's hands, and a hijacked session quietly repricing the
+   window — which is the attack that actually pays, because rates reach
+   visitors within seconds and need no rebuild. */
+const MAX_MOVE = 0.15;          // 15 %
+const MAX_PCT_MOVE = 5;         // percentage-point move for a spread tier
+
+export function rateMoves(input, current) {
+  const byId = new Map(current.rows.map(r => [r.id, r]));
+  const moves = [];
+  for (const row of Array.isArray(input.rows) ? input.rows : []) {
+    const base = byId.get(row.id);
+    if (!base) continue;
+    for (const t of ['w', 'r']) {
+      if (!base[t] || !row[t]) continue;
+      for (const side of ['buy', 'sell']) {
+        const was = Number(base[t][side]);
+        const now = typeof row[t][side] === 'number'
+          ? row[t][side]
+          : parseFloat(String(row[t][side]).replace(',', '.'));
+        if (!isFinite(was) || !isFinite(now) || was === now) continue;
+        const pct = base[t].unit === '%';
+        const over = pct
+          ? Math.abs(now - was) > MAX_PCT_MOVE
+          : was > 0 && Math.abs(now - was) / was > MAX_MOVE;
+        if (over) {
+          moves.push({
+            id: row.id, code: base.code, label: base[t].label || base.label,
+            tier: t === 'w' ? 'оптовий' : 'роздрібний',
+            side: side === 'buy' ? 'купівля' : 'продаж',
+            was, now,
+            pct: pct ? null : Math.round(((now - was) / was) * 1000) / 10,
+          });
+        }
+      }
+    }
+  }
+  return moves;
+}
+
 export function validateRates(input, current) {
   const byId = new Map(current.rows.map(r => [r.id, r]));
   const seen = new Set();

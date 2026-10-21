@@ -16,7 +16,8 @@ import {
   checkPassword, loadCredentials, loadSessions, createSession, getSession,
   dropSession, sameSecret, throttleState, noteFailure, clearFailures,
 } from './auth.mjs';
-import { Invalid, validateRates, validateBranches, validateTexts, validatePost, sniffImage, safeImageName } from './validate.mjs';
+import { take, LIMITS, hardenServer, noteGlobalFailure, loginsLocked, clearGlobalFailures, rememberGoodIP, isKnownIP } from './guard.mjs';
+import { Invalid, validateRates, validateBranches, validateTexts, validatePost, sniffImage, safeImageName, rateMoves } from './validate.mjs';
 
 const PORT = Number(process.env.PORT || 4199);
 const TRUST_PROXY = process.env.TRUST_PROXY === '1';
@@ -114,6 +115,21 @@ const SECURITY_HEADERS = {
 const setCookie = (name, value, maxAge) =>
   `${name}=${value}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${maxAge}` + (SECURE_COOKIES ? '; Secure' : '');
 
+/* The rates endpoint is the one every visitor's page polls. Serving it
+   from memory means a flood costs no disk reads, and an ETag means a
+   repeat caller usually gets 304 with no body at all. */
+let ratesCache = null;
+function publicRates() {
+  if (!ratesCache) {
+    const rates = readJSON('rates');
+    if (!rates) return null;
+    const body = Buffer.from(JSON.stringify(rates));
+    ratesCache = { body, etag: `W/"${crypto.createHash('sha1').update(body).digest('hex').slice(0, 16)}"` };
+  }
+  return ratesCache;
+}
+const dropRatesCache = () => { ratesCache = null; };
+
 /* ============================================================
    rebuild — content changes need the static pages regenerated.
    Debounced so a burst of saves rebuilds once.
@@ -189,7 +205,7 @@ function serveStatic(req, res, urlPath) {
 /* ============================================================
    API
    ============================================================ */
-const requireSession = (req) => getSession(cookies(req).sid);
+const requireSession = (req) => getSession(cookies(req).sid, req.headers['user-agent']);
 
 /* A valid session is not enough for a write: the request must also echo the
    session's CSRF token in a header, which only our own page can read. */
@@ -206,36 +222,64 @@ function requireWrite(req, session) {
   return null;
 }
 
+const tooFast = (res, wait) => json(res, 429, { error: `Забагато запитів. Спробуйте через ${wait} с` }, { 'Retry-After': String(wait) });
+
 async function api(req, res, urlPath) {
   const method = req.method;
+  const ip = clientIP(req);
+
+  /* Buckets are sized so normal use never notices: a visitor's page asks
+     for rates every two minutes, and a cashier saves a handful of times
+     an hour. */
+  const bucket = urlPath === '/api/public/rates' ? LIMITS.publicRates
+    : urlPath === '/api/login' ? LIMITS.login
+    : urlPath === '/api/admin/upload' ? LIMITS.upload
+    : LIMITS.api;
+  const wait = take(urlPath.split('/').slice(0, 3).join('/') + '|' + ip, bucket);
+  if (wait) return tooFast(res, wait);
 
   /* ---------- public ---------- */
-  if (urlPath === '/api/public/rates' && method === 'GET') {
-    const rates = readJSON('rates');
-    if (!rates) return json(res, 503, { error: 'немає даних' });
-    return json(res, 200, rates, {
+  /* HEAD as well as GET: uptime monitors ping with HEAD, and a 404 there
+     would read as an outage. */
+  if (urlPath === '/api/public/rates' && (method === 'GET' || method === 'HEAD')) {
+    const hit = publicRates();
+    if (!hit) return json(res, 503, { error: 'немає даних' });
+    if (req.headers['if-none-match'] === hit.etag) {
+      return send(res, 304, '', { ETag: hit.etag, 'Cache-Control': 'public, max-age=15' });
+    }
+    return send(res, 200, method === 'HEAD' ? '' : hit.body, {
+      'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': 'public, max-age=15, stale-while-revalidate=120',
       'Access-Control-Allow-Origin': '*',
+      ETag: hit.etag,
     });
   }
 
   /* ---------- session ---------- */
   if (urlPath === '/api/login' && method === 'POST') {
-    const ip = clientIP(req);
     const t = throttleState(ip);
     if (t.blocked) return json(res, 429, { error: `Забагато спроб. Спробуйте через ${t.retryIn} с` });
+    /* a spread-out guessing run never trips the per-IP backoff, so the
+       whole login route closes for a while instead */
+    if (loginsLocked() && !isKnownIP(ip)) {
+      logChange({ what: 'login.locked', ip });
+      return json(res, 429, { error: 'Вхід тимчасово заблоковано через підозрілу активність. Спробуйте за 15 хвилин.' });
+    }
     if (!loadCredentials()) return json(res, 503, { error: 'Пароль ще не налаштовано. Запустіть: node server/set-password.mjs' });
     const body = await readBody(req);
     const password = typeof body.password === 'string' ? body.password : '';
     if (!password || !checkPassword(password)) {
       noteFailure(ip);
+      noteGlobalFailure();
       logChange({ what: 'login.fail', ip });
       /* one fixed delay for every failure — no timing hint about the password */
       await new Promise(r => setTimeout(r, 400));
       return json(res, 401, { error: 'Невірний пароль' });
     }
     clearFailures(ip);
-    const s = createSession();
+    clearGlobalFailures();
+    rememberGoodIP(ip);
+    const s = createSession(req.headers['user-agent']);
     logChange({ what: 'login.ok', ip });
     return json(res, 200, { ok: true, csrf: s.csrf }, { 'Set-Cookie': setCookie('sid', s.id, 12 * 60 * 60) });
   }
@@ -273,8 +317,17 @@ async function api(req, res, urlPath) {
     if (method === 'GET') return json(res, 200, readJSON(doc.name));
     if (method === 'PUT') {
       const body = await readBody(req);
-      const next = doc.check(body, readJSON(doc.name));
+      const before = readJSON(doc.name);
+      if (doc.name === 'rates' && body.confirmBigMoves !== true) {
+        const moves = rateMoves(body, before);
+        if (moves.length) {
+          logChange({ what: 'rates.bigmove.held', count: moves.length, ip: clientIP(req) });
+          return json(res, 409, { error: 'Незвично велика зміна курсу', moves });
+        }
+      }
+      const next = doc.check(body, before);
       writeJSON(doc.name, next);
+      if (doc.name === 'rates') dropRatesCache();
       logChange({ what: `${doc.name}.save`, ip: clientIP(req) });
       scheduleRebuild();
       return json(res, 200, { ok: true, saved: next });
@@ -351,6 +404,8 @@ const server = http.createServer(async (req, res) => {
   try {
     if (urlPath.startsWith('/api/')) return await api(req, res, urlPath);
     if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, 'Method not allowed', { 'Content-Type': 'text/plain; charset=utf-8' });
+    const wait = take('static|' + clientIP(req), LIMITS.static);
+    if (wait) return send(res, 429, 'Too many requests', { 'Content-Type': 'text/plain; charset=utf-8', 'Retry-After': String(wait) });
     return serveStatic(req, res, urlPath === '/' ? '/index.html' : urlPath);
   } catch (err) {
     if (err instanceof Invalid) return json(res, 400, { error: err.message });
@@ -358,6 +413,13 @@ const server = http.createServer(async (req, res) => {
     return json(res, 500, { error: 'внутрішня помилка' });
   }
 });
+
+hardenServer(server);
+
+/* A bug in one request must not take the whole site off the air. Log it
+   and keep serving; systemd restarts only if the process truly dies. */
+process.on('uncaughtException', (err) => console.error('[uncaught]', err));
+process.on('unhandledRejection', (err) => console.error('[unhandled]', err));
 
 server.listen(PORT, () => {
   const where = `http://localhost:${PORT}`;

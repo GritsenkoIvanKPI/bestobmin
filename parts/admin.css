@@ -278,13 +278,15 @@ textarea.input{min-height:7rem;resize:vertical;line-height:1.6}
   font-size:.875rem;color:var(--warn);text-align:center;
 }
 .login__demo b{font-family:var(--ff-mono);color:var(--accent-200);letter-spacing:.04em}
-.demo-note{
-  margin:clamp(1.25rem,2.5vw,2.25rem) clamp(1.25rem,3vw,2.75rem) -.5rem;
+.demo-note,.alert{
   padding:.9rem 1.15rem;border-radius:var(--r-sm);
   border:1px solid rgba(240,195,122,.3);background:rgba(240,195,122,.07);
   font-size:.9375rem;line-height:1.5;color:var(--text);
 }
+.demo-note{margin:clamp(1.25rem,2.5vw,2.25rem) clamp(1.25rem,3vw,2.75rem) -.5rem}
+.alert{margin-bottom:1rem;border-color:rgba(240,150,138,.4);background:rgba(240,150,138,.08)}
 .demo-note b{color:var(--warn);font-weight:500}
+.alert b{color:var(--err);font-weight:500}
 
 /* ---------- texts: block nav + live preview ---------- */
 .texts{display:grid;grid-template-columns:14rem minmax(0,1fr);gap:1.25rem;align-items:start}
@@ -365,3 +367,19 @@ textarea.input{min-height:7rem;resize:vertical;line-height:1.6}
 .imgs__none{
   display:grid;place-items:center;font-size:.8125rem;color:var(--text-dim);
 }
+
+/* ---------- confirmation for an implausible rate move ---------- */
+.bigmoves{
+  display:grid;gap:.5rem;margin:0 0 1.4rem;padding:.9rem 1rem;
+  border:1px solid rgba(240,195,122,.3);border-radius:var(--r-sm);
+  background:rgba(240,195,122,.07);
+}
+.bigmoves__row{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:.9375rem}
+.bigmoves__row b{font-weight:500;color:#fff}
+.bigmoves__row span{font-family:var(--ff-mono);font-size:.875rem;white-space:nowrap}
+.bigmoves__row s{color:var(--text-dim)}
+.bigmoves__row u{text-decoration:none;color:var(--warn)}
+.bigmoves__row i{font-style:normal;color:var(--err)}
+.pill--ok{border-color:rgba(143,212,154,.35);color:var(--ok)}
+.pill--warn{border-color:rgba(240,195,122,.35);color:var(--warn)}
+.pill--bad{border-color:rgba(240,150,138,.45);color:var(--err)}
