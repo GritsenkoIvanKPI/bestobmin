@@ -346,7 +346,7 @@ for (const post of posts) {
       mainEntityOfPage: `${SITE}/blog/${post.slug}`,
     },
   }) + `<article class="page-head">
-  <div class="shell"><div class="page-head__inner">
+  <div class="shell"><div class="page-head__inner page-head__inner--mid">
     <nav class="crumbs" aria-label="Хлібні крихти">
       <a href="/">Головна</a><i>/</i><a href="/blog">Блог</a><i>/</i><span class="is-here" aria-current="page">${esc(post.tag)}</span>
     </nav>
