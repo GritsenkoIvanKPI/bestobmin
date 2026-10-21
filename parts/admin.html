@@ -25,6 +25,7 @@
       <input class="input" type="password" id="pw" name="password" autocomplete="current-password" required>
     </label>
     <p class="hint" id="loginErr" role="alert" style="color:var(--err)" hidden></p>
+    <p class="login__demo" id="loginDemo" hidden>Демонстраційна версія · пароль <b id="demoPass"></b></p>
     <button class="btn btn--primary" type="submit" id="loginBtn">Увійти</button>
   </form>
 </div>
@@ -69,7 +70,13 @@
     </div>
   </nav>
 
-  <main class="main" id="main"></main>
+  <div class="main-wrap">
+    <div class="demo-note" id="demoNote" hidden>
+      <b>Демонстраційна версія.</b> Так панель виглядає й працює в житті, але це вітрина:
+      зміни лишаються на екрані до перезавантаження сторінки й на сайт не потрапляють.
+    </div>
+    <main class="main" id="main"></main>
+  </div>
 </div>
 
 <div class="toasts" id="toasts" aria-live="polite"></div>

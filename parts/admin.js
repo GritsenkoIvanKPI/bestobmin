@@ -7,7 +7,53 @@
   var CSRF = null;
   var dirty = null;          // { label, save(), revert() } while there are unsaved edits
 
+  /* ---------- showcase mode ----------
+     With no server behind it (a static preview host), the panel runs on a
+     snapshot so the client can walk through every screen. Nothing is
+     stored and nothing can be: there is no endpoint to store it in. The
+     real deployment answers /api/me, so this never switches on there. */
+  var DEMO = false;
+  var DEMO_PASS = 'demo2026';
+  var snap = null;
+  var clone = function (v) { return JSON.parse(JSON.stringify(v)); };
+
+  function demoApi(method, url, body) {
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        var post = /^\/api\/admin\/posts\/(.+)$/.exec(url);
+        if (method === 'GET') {
+          if (url === '/api/admin/rates') return resolve(clone(snap.rates));
+          if (url === '/api/admin/branches') return resolve(clone(snap.branches));
+          if (url === '/api/admin/texts') return resolve(clone(snap.texts));
+          if (url === '/api/admin/images') return resolve({ images: snap.images.slice() });
+          if (url === '/api/admin/posts') {
+            return resolve({ posts: snap.posts.map(function (x) {
+              return { slug: x.slug, title: x.title, date: x.date, tag: x.tag, draft: x.draft };
+            }) });
+          }
+          if (post) {
+            var found = snap.posts.filter(function (x) { return x.slug === post[1]; })[0];
+            return resolve(found ? clone(found) : {});
+          }
+          return resolve({});
+        }
+        /* keep the edit on screen for the rest of the visit, then forget it */
+        if (url === '/api/admin/rates') snap.rates = clone(body);
+        if (url === '/api/admin/branches') snap.branches = clone(body);
+        if (url === '/api/admin/texts') snap.texts = clone(body);
+        if (post) {
+          var slug = post[1];
+          var rest = snap.posts.filter(function (x) { return x.slug !== slug; });
+          if (method === 'PUT') rest.unshift(Object.assign({ slug: slug }, clone(body)));
+          snap.posts = rest;
+        }
+        resolve({ ok: true });
+      }, 120);
+    });
+  }
+
   function api(method, url, body) {
+    if (DEMO) return demoApi(method, url, body);
     var opts = { method: method, headers: {}, credentials: 'same-origin' };
     if (body !== undefined) {
       opts.headers['Content-Type'] = 'application/json';
@@ -23,6 +69,11 @@
     });
   }
 
+  /* Views fetch before they paint. If the user switches screens meanwhile,
+     the older fetch must not land on top of the newer screen. */
+  var renderSeq = 0;
+  var stale = function (mine) { return mine !== renderSeq; };
+
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
   var el = function (tag, cls, text) {
     var n = document.createElement(tag);
@@ -32,6 +83,7 @@
   };
 
   function toast(msg, kind) {
+    if (DEMO && kind !== 'err') msg = 'Демо-режим: зміни видно на екрані, але вони не зберігаються';
     var t = el('div', 'toast toast--' + (kind || 'ok'), msg);
     $('#toasts').appendChild(t);
     setTimeout(function () {
@@ -89,14 +141,18 @@
      RATES — the screen the cashier opens every morning
      ============================================================ */
   function viewRates(main) {
+    var mine = ++renderSeq;
     main.innerHTML = '';
     api('GET', '/api/admin/rates').then(function (data) {
+      if (stale(mine)) return;
       var edited = JSON.parse(JSON.stringify(data));
 
       var top = el('div', 'page-top');
       var left = el('div');
       left.appendChild(el('h1', null, 'Курси валют'));
-      left.appendChild(el('p', null, 'Зміна зберігається одразу й зʼявляється на сайті протягом кількох секунд — перезбірка не потрібна.'));
+      left.appendChild(el('p', null, DEMO
+        ? 'У робочій панелі збережена зміна зʼявляється на сайті протягом кількох секунд — перезбірка не потрібна.'
+        : 'Зміна зберігається одразу й зʼявляється на сайті протягом кількох секунд — перезбірка не потрібна.'));
       top.appendChild(left);
       var stamp = el('span', 'stamp');
       stamp.appendChild(el('i'));
@@ -292,13 +348,17 @@
   var TAGS = ['Курси', 'Валюти', 'Поради', 'Новини', 'Блог'];
 
   function viewPosts(main) {
+    var mine = ++renderSeq;
     main.innerHTML = '';
     setDirty(null);
     api('GET', '/api/admin/posts').then(function (d) {
+      if (stale(mine)) return;
       var top = el('div', 'page-top');
       var left = el('div');
       left.appendChild(el('h1', null, 'Новини'));
-      left.appendChild(el('p', null, 'Статті блогу. Після збереження сайт перезбирається автоматично — зміна зʼявиться приблизно за хвилину.'));
+      left.appendChild(el('p', null, DEMO
+        ? 'Статті блогу. У робочій панелі після збереження сайт перезбирається автоматично.'
+        : 'Статті блогу. Після збереження сайт перезбирається автоматично — зміна зʼявиться приблизно за хвилину.'));
       top.appendChild(left);
       var add = el('button', 'btn btn--primary', 'Нова стаття');
       add.onclick = function () { editPost(main, null); };
@@ -346,6 +406,7 @@
   }
 
   function editPost(main, slug) {
+    var mine = ++renderSeq;
     main.innerHTML = '';
     var loading = slug
       ? api('GET', '/api/admin/posts/' + slug)
@@ -353,6 +414,7 @@
                           image: '', imageAlt: '', excerpt: '', draft: true, body: '' });
 
     Promise.all([loading, api('GET', '/api/admin/images')]).then(function (res) {
+      if (stale(mine)) return;
       var post = res[0], images = res[1].images;
       var state = JSON.parse(JSON.stringify(post));
       var nextSlug = slug || '';
@@ -478,9 +540,11 @@
      BRANCHES
      ============================================================ */
   function viewBranches(main) {
+    var mine = ++renderSeq;
     main.innerHTML = '';
     setDirty(null);
     api('GET', '/api/admin/branches').then(function (data) {
+      if (stale(mine)) return;
       var state = JSON.parse(JSON.stringify(data));
 
       var top = el('div', 'page-top');
@@ -635,9 +699,11 @@
   };
 
   function viewTexts(main) {
+    var mine = ++renderSeq;
     main.innerHTML = '';
     setDirty(null);
     api('GET', '/api/admin/texts').then(function (data) {
+      if (stale(mine)) return;
       var state = JSON.parse(JSON.stringify(data));
 
       var top = el('div', 'page-top');
@@ -725,6 +791,7 @@
   });
   $('#burger').onclick = function () { $('#rail').classList.toggle('is-open'); };
   $('#logout').onclick = function () {
+    if (DEMO) return showLogin('Ви вийшли');
     api('POST', '/api/logout').then(function () { CSRF = null; showLogin('Ви вийшли'); });
   };
 
@@ -748,6 +815,15 @@
   $('#loginForm').onsubmit = function (e) {
     e.preventDefault();
     var btn = $('#loginBtn'), err = $('#loginErr');
+    if (DEMO) {
+      if ($('#pw').value.trim() !== DEMO_PASS) {
+        err.textContent = 'Невірний пароль'; err.style.color = 'var(--err)'; err.hidden = false;
+        $('#pw').select();
+        return;
+      }
+      $('#pw').value = ''; err.hidden = true; showApp();
+      return;
+    }
     btn.disabled = true; btn.textContent = 'Перевіряємо…';
     fetch('/api/login', {
       method: 'POST', credentials: 'same-origin',
@@ -773,8 +849,27 @@
       });
   };
 
+  function startDemo() {
+    return fetch('/assets/demo.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d) { showLogin('Сервер недоступний'); return; }
+        DEMO = true;
+        snap = d;
+        document.body.classList.add('is-demo');
+        $('#demoNote').hidden = false;
+        $('#loginDemo').hidden = false;
+        $('#demoPass').textContent = DEMO_PASS;
+        showLogin();
+      })
+      .catch(function () { showLogin('Сервер недоступний'); });
+  }
+
   fetch('/api/me', { credentials: 'same-origin' })
-    .then(function (r) { return r.json(); })
+    .then(function (r) {
+      if (!r.ok) throw new Error('no api');
+      return r.json();
+    })
     .then(function (d) { if (d.authed) { CSRF = d.csrf; showApp(); } else showLogin(); })
-    .catch(function () { showLogin('Сервер недоступний'); });
+    .catch(startDemo);
 })();

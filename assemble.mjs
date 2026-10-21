@@ -401,6 +401,28 @@ ${others.map((x, i) => card(x, i, { root: true })).join('\n')}
 
 /* ============================================================
    ADMIN — one self-contained page at /admin
+
+   On static hosting there is no API, so the page falls back to a
+   read-only showcase fed by this file. It is a preview for the client,
+   never a way in: on the real server /api/me answers and the fallback
+   never engages.
+   ============================================================ */
+fs.writeFileSync('assets/demo.json', JSON.stringify({
+  rates: RATES,
+  branches: JSON.parse(read('data/branches.json')),
+  texts: TEXTS,
+  posts: posts.map(x => ({
+    slug: x.slug, title: x.title, date: x.iso, tag: x.tag, image: x.image,
+    imageAlt: x.imageAlt, excerpt: x.excerpt, draft: x.draft,
+    body: frontMatter(read(path.join(postsDir, x.slug + '.md'))).body.trim(),
+  })),
+  images: fs.existsSync('images')
+    ? fs.readdirSync('images').filter(x => /\.(webp|jpg|jpeg|png|svg)$/i.test(x)).sort().map(x => 'images/' + x)
+    : [],
+}));
+
+/* ============================================================
+   ADMIN — one self-contained page at /admin
    ============================================================ */
 fs.mkdirSync('admin', { recursive: true });
 const adminPage = read(p + 'admin.html')
