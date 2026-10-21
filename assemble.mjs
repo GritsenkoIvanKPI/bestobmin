@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 const p = 'parts/';
 const SITE = 'https://bestobmin.vercel.app';
@@ -224,7 +225,17 @@ fs.writeFileSync('index.html', home);
 let css = '';
 for (const c of pick(/^css-\d+\.css$/)) css += read(p + c);
 css += read(p + 'blog.css');
+/* The filename carries a hash of the contents: a changed stylesheet gets a
+   new URL, so a browser (or a CDN) can cache it hard and still never show a
+   page styled by the previous build. */
+const cssName = `site.${crypto.createHash('sha1').update(css).digest('hex').slice(0, 10)}.css`;
 fs.mkdirSync('assets', { recursive: true });
+fs.writeFileSync(path.join('assets', cssName), css);
+for (const old of fs.readdirSync('assets')) {
+  if (/^site\.[0-9a-f]+\.css$/.test(old) && old !== cssName) fs.unlinkSync(path.join('assets', old));
+}
+/* A browser that still holds the pre-hash HTML asks for the old path;
+   keep a current copy there so such a page is styled, not bare. */
 fs.writeFileSync('assets/site.css', css);
 
 const head = ({ title, desc, url, image, article }) => `<!DOCTYPE html>
@@ -248,7 +259,7 @@ const head = ({ title, desc, url, image, article }) => `<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/${cssName}">
 ${article ? `<script type="application/ld+json">${JSON.stringify(article)}</script>\n` : ''}</head>
 <body>
 ${toRoot(headerHtml)}
@@ -397,4 +408,4 @@ const adminPage = read(p + 'admin.html')
   .replace('/*{{ADMIN_JS}}*/', () => read(p + 'admin.js'));
 fs.writeFileSync('admin/index.html', adminPage);
 
-console.log(`index.html ${home.length}b · admin ${adminPage.length}b · blog/index.html ${listing.length}b · ${posts.length} post page(s) · assets/site.css ${css.length}b`);
+console.log(`index.html ${home.length}b · admin ${adminPage.length}b · blog/index.html ${listing.length}b · ${posts.length} post page(s) · ${cssName} ${css.length}b`);
